@@ -404,6 +404,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             showMediaController()
             return true
         }
+        else if (itemId == R.id.itemSave){
+            Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
+            val intent = Intent(FolioReader.ACTION_SAVE_READ_LOCATOR)
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            Toast.makeText(this, "Kaldığınız yer kaydedildi", Toast.LENGTH_LONG).show();
+            return true
+        }
 
         return super.onOptionsItemSelected(item)
     }

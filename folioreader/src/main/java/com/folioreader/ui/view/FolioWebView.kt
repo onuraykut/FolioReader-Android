@@ -325,6 +325,10 @@ class FolioWebView : WebView {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
                 uiHandler.post { showDictDialog(selectedText) }
             }
+            R.id.translateSelection -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> translateSelection -> $selectedText")
+                uiHandler.post { showDictDialog(selectedText) }
+            }
             else -> {
                 Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
             }
@@ -338,7 +342,13 @@ class FolioWebView : WebView {
         dictionaryFragment.arguments = bundle
         dictionaryFragment.show(parentFragment.fragmentManager, DictionaryFragment::class.java.name)
     }
-
+    private fun showTransDialog(selectedText: String?) {
+        val dictionaryFragment = DictionaryFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
+        dictionaryFragment.arguments = bundle
+        dictionaryFragment.show(parentFragment.fragmentManager, DictionaryFragment::class.java.name)
+    }
     private fun onHighlightColorItemsClicked(style: HighlightStyle, isAlreadyCreated: Boolean) {
         parentFragment.highlight(style, isAlreadyCreated)
         dismissPopupWindow()

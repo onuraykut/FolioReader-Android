@@ -23,6 +23,7 @@
     <string name="share">Share</string>
     <string name="define">Define</string>
     <string name="highlight">Highlight</string>
+    <string name="translate_select">Translate</string>
 
     <string name="pages_left">%1$d pages left</string>
     <string name="page_left">%1$d page left</string>
@@ -115,5 +116,6 @@
     <string name="callScrollToCfi" translatable="false">javascript:scrollToCfi(\"%s\")</string>
     <string name="callHighlightSearchLocator" translatable="false">javascript:highlightSearchLocator(\"%s\")</string>
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
-
+    <string name="savedToast">Saved current page</string>
+    <string name="save_button">Save</string>
 </resources>
