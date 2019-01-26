@@ -52,7 +52,7 @@ public class TranslateWord {
     public void setTrans_word(String trans_word) {
         Trans_word = trans_word;
     }
-    private String Word;
+    private String Word="hello";
     private String Trans_word;
     private Context mContext;
 

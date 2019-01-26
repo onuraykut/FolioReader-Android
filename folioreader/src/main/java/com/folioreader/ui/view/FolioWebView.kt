@@ -25,6 +25,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.folioreader.Config
 import com.folioreader.Constants
 import com.folioreader.R
+import com.folioreader.TranslateWord
 import com.folioreader.model.DisplayUnit
 import com.folioreader.model.HighLight
 import com.folioreader.model.HighlightImpl.HighlightStyle
@@ -327,8 +328,8 @@ class FolioWebView : WebView {
             }
             R.id.translateSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> translateSelection -> $selectedText")
-              //  val trans = TranslateWord(selectedText,context)
-               // trans.getTranslate()
+                val trans = TranslateWord(selectedText,context)
+                trans.getTranslate()
               //  uiHandler.post { showDictDialog(selectedText) }
             }
             else -> {
