@@ -65,7 +65,7 @@ public class TranslateWord {
     //public void getTranslate(final String word,final VolleyCallback callback){
     public void getTranslate(){
         Log.d("trans","girdi1");
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20190109T114910Z.72960f07c2ac5c38.bab26975446fda26cee90eda1419b93890e3eaf5",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20190109T114910Z.72960f07c2ac5c38.bab26975446fda26cee90eda1419b93890e3eaf5&text=pussy&lang=en-tr&format=plain",
                 new Response.Listener<String>() {
 
                     @Override
