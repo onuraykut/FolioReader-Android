@@ -59,26 +59,22 @@ public class TranslateWord {
     public TranslateWord(String word, Context mcontext){
         this.Word=word;
         this.mContext=mcontext;
-        Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dictionarytr);
-        TextView edit=(TextView) dialog.findViewById(R.id.textViewTrans);
-        edit.setText(Trans_word);
-        dialog.setTitle("Türkçesi");
-        dialog.setCancelable(true);
-        dialog.show();
+        Log.d("trans","girdi0");
     }
 
     //public void getTranslate(final String word,final VolleyCallback callback){
     public void getTranslate(){
+        Log.d("trans","girdi1");
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20190109T114910Z.72960f07c2ac5c38.bab26975446fda26cee90eda1419b93890e3eaf5",
                 new Response.Listener<String>() {
+
                     @Override
                     public void onResponse(String response) {
                         //    Toast.makeText(SearchActivity.this,response,Toast.LENGTH_LONG).show();
                         try {
                             //converting the string to json array object
                             JSONArray array = new JSONArray(response);
-
+                            Log.d("trans","girdi2");
                             //traversing through all the object
                             for (int i = 0; i < array.length(); i++) {
 
@@ -99,7 +95,7 @@ public class TranslateWord {
                                 dialog.show();
                             }
                            // callback.onSuccess(response);
-
+                            Log.d("trans","girdi3");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -110,6 +106,7 @@ public class TranslateWord {
                     public void onErrorResponse(VolleyError error) {
                         //   Toast.makeText(SearchActivity.this,error.toString(),Toast.LENGTH_LONG).show();
                         Toast.makeText(mContext,"Bağlantı hatası oluştu,internet bağlantısını kontrol ediniz",Toast.LENGTH_LONG).show();
+                        Log.d("trans","girdi4");
                     }
                 }){
             @Override
