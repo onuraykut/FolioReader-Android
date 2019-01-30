@@ -77,13 +77,13 @@ public class TranslateWord {
                             Log.d("trans","girdi2");
                             //traversing through all the object
                             for (int i = 0; i < array.length(); i++) {
-
+                                Log.d("trans","girdi6");
                                 //getting product object from json array
                                 JSONObject product = array.getJSONObject(i);
                                 //Timber.d("girdi_iceri");
                                 //adding the product to product list
 
-                               Trans_word=product.getJSONArray("text").getString(0);
+                               Trans_word=product.getJSONObject("text").toString();
                                         Log.d("trans",Trans_word);
 
                                Dialog dialog = new Dialog(mContext);
