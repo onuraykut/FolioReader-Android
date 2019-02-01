@@ -60,6 +60,16 @@ public class TranslateWord {
         this.Word=word;
         this.mContext=mcontext;
         Log.d("trans","girdi0");
+
+        Log.d("trans",Trans_word);
+
+        Dialog dialog = new Dialog(mContext);
+        dialog.setContentView(R.layout.dictionarytr);
+        TextView edit=(TextView) dialog.findViewById(R.id.textViewTrans);
+        edit.setText(Trans_word);
+        dialog.setTitle("Türkçesi");
+        dialog.setCancelable(true);
+        dialog.show();
     }
 
     //public void getTranslate(final String word,final VolleyCallback callback){
