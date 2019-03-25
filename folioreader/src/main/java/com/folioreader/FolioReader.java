@@ -79,6 +79,7 @@ public class FolioReader {
         }
     };
 
+
     private BroadcastReceiver readLocatorReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

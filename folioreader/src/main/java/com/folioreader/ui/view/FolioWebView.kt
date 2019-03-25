@@ -304,6 +304,10 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+      /*  viewTextSelection.translateSelection.setOnClickListener {
+            dismissPopupWindow()
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        } */
     }
 
     @JavascriptInterface
@@ -325,12 +329,12 @@ class FolioWebView : WebView {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
                 uiHandler.post { showDictDialog(selectedText) }
             }
-            R.id.translateSelection -> {
+      /*      R.id.translateSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> translateSelection -> $selectedText")
-              //  val trans = TranslateWord(selectedText,context)
-               // trans.getTranslate()
+                val trans = TranslateWord(selectedText,context)
+                trans.getTranslate()
               //  uiHandler.post { showDictDialog(selectedText) }
-            }
+            } */
             else -> {
                 Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
             }

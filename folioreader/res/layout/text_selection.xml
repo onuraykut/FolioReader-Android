@@ -51,7 +51,7 @@
                         style="@style/TextViewTextSelector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:text="@string/translate_select" />
 
             </LinearLayout>
