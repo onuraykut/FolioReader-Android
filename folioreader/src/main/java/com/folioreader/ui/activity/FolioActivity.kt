@@ -873,6 +873,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 mediaControllerFragment!!.setPlayButtonDrawable()
                 currentChapterIndex = position
                 getNUmber.number=position
+                
             }
 
             override fun onPageScrollStateChanged(state: Int) {
