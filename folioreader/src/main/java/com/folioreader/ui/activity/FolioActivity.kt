@@ -874,8 +874,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 currentChapterIndex = position
 
             page.number=position;
-
-
             }
 
             override fun onPageScrollStateChanged(state: Int) {
