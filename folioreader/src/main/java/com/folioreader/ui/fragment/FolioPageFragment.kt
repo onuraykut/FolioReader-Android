@@ -167,6 +167,10 @@ class FolioPageFragment : Fragment(),
         mMinutesLeftTextView = mRootView!!.findViewById<View>(R.id.minutesLeft) as TextView
 
         mConfig = AppUtil.getSavedConfig(context)
+        if (mActivityCallback!!.direction == Config.Direction.HORIZONTAL) {
+            mPagesLeftTextView!!.visibility = View.INVISIBLE
+            mMinutesLeftTextView!!.visibility = View.INVISIBLE
+        }
 
         loadingView = mRootView!!.findViewById(R.id.loadingView)
         initSeekbar()

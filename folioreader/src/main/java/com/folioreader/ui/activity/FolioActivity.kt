@@ -36,6 +36,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -102,7 +103,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var direction: Config.Direction = Config.Direction.VERTICAL
     private var portNumber: Int = Constants.DEFAULT_PORT_NUMBER
     private var streamerUri: Uri? = null
-
+    private var mRootView: View? = null
     private var searchUri: Uri? = null
     private var searchAdapterDataBundle: Bundle? = null
     private var searchQuery: CharSequence? = null
@@ -312,6 +313,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else {
             setDayMode()
         }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val color: Int
