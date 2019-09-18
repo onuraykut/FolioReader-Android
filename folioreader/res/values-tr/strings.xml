@@ -12,9 +12,9 @@
     <string name="lora_font">fonts/lora/Lora-Regular.ttf</string>
     <string name="raleway_font">fonts/raleway/Raleway-Regular.ttf</string>
 
-    <string name="minutes_left">%1$d minutes ·&#160;</string>
-    <string name="minute_left">%1$d minute ·&#160;</string>
-    <string name="less_than_minute">Less than a minute ·&#160;</string>
+    <string name="minutes_left">%1$d dakika ·&#160;</string>
+    <string name="minute_left">%1$d dakika ·&#160;</string>
+    <string name="less_than_minute">Bir dakikadan az kaldı ·&#160;</string>
 
     <string name="copied">Kopyalandı</string>
     <string name="send_to">Şuraya gönder</string>
@@ -25,8 +25,8 @@
     <string name="highlight">Vurgula</string>
     <string name="translate_select">Çeviri</string>
 
-    <string name="pages_left">%1$d pages left</string>
-    <string name="page_left">%1$d page left</string>
+    <string name="pages_left">%1$d sayfa kaldı</string>
+    <string name="page_left">%1$d sayfa kaldı</string>
     <string name="highlights">Vurgular</string>
     <string name="half_speed">1/2x</string>
     <string name="onex">1x</string>
@@ -62,8 +62,8 @@
     <string name="SetSizeTitle">Upper Panel Size:</string>
     <string name="LanguageChooserTitle">Choose two languages:</string>
     <string name="parallelTextBool">parallelTextBool</string>
-    <string name="loading">Loading</string>
-    <string name="please_wait">please wait...</string>
+    <string name="loading">Yükleniyor</string>
+    <string name="please_wait">lütfen bekleyiniz...</string>
     <string name="one_and_half_speed"><![CDATA[1<sup>1</sup>/<sub>2</sub>x]]></string>
     <string name="half_speed_text"><![CDATA[<sup>1</sup>/<sub>2</sub>x]]></string>
     <string name="please_wait_till_audio_is_parsed">please wait till audio is been parsed, Retry after some time</string>
