@@ -150,8 +150,16 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             activityCallback.onDirectionChange(Config.Direction.HORIZONTAL)
             buttonHorizontal.isSelected = true
             buttonVertical.isSelected = false
-            mRootView!!.findViewById<View>(R.id.indicatorLayout).visibility=View.INVISIBLE
+            val butonn = mRootView!!.findViewById<View>(R.id.indicatorLayout)
+            butonn.showOrInvisible(false)
 
+        }
+    }
+    fun View.showOrInvisible(show: Boolean) {
+        visibility = if(show) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
         }
     }
 
