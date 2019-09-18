@@ -25,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.activity_content_highlight.view.*
+import kotlinx.android.synthetic.main.folio_page_fragment.*
 import kotlinx.android.synthetic.main.view_config.*
 import org.greenrobot.eventbus.EventBus
 
@@ -144,24 +145,20 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         buttonHorizontal.setOnClickListener {
+            indicatorLayout.visibility = View.INVISIBLE
             config = AppUtil.getSavedConfig(context)!!
             config.direction = Config.Direction.HORIZONTAL
             AppUtil.saveConfig(context, config)
             activityCallback.onDirectionChange(Config.Direction.HORIZONTAL)
             buttonHorizontal.isSelected = true
             buttonVertical.isSelected = false
-            val butonn = mRootView!!.findViewById<View>(R.id.indicatorLayout)
-            butonn.showOrInvisible(false)
+
+           // mRootView!!.findViewById<View>(R.id.indicatorLayout).visibility = View.GONE
+
 
         }
     }
-    fun View.showOrInvisible(show: Boolean) {
-        visibility = if(show) {
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }
-    }
+
 
     private fun configFonts() {
 
