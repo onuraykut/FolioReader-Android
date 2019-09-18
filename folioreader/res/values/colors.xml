@@ -2,7 +2,8 @@
 <resources>
 
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#FFC107</color>
+    <color name="colorPrimaryDark2">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="default_theme_accent_color">#71C951</color>
@@ -12,7 +13,8 @@
     <color name="black2">#000000</color>
     <color name="night">#FFC107</color>
     <color name="night2">#322D32</color>
-    <color name="dark_night">#090609</color>
+    <color name="dark_night">#FFC107</color>
+    <color name="dark_night2">#090609</color>
     <color name="app_gray">#bcbcbc</color>
 
     <color name="gray_text">#B6B6B6</color>
