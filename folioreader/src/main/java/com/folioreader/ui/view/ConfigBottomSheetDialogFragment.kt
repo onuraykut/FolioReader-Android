@@ -42,9 +42,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private lateinit var config: Config
     private var isNightMode = false
     private lateinit var activityCallback: FolioActivityCallback
-    private var mRootView: View? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mRootView = inflater.inflate(R.layout.folio_page_fragment, container, false)
         return inflater.inflate(R.layout.view_config, container)
     }
 
@@ -150,9 +148,6 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             activityCallback.onDirectionChange(Config.Direction.HORIZONTAL)
             buttonHorizontal.isSelected = true
             buttonVertical.isSelected = false
-            mRootView!!.findViewById<View>(R.id.indicatorLayout).visibility = View.GONE
-
-
         }
     }
 
