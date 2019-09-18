@@ -27,8 +27,7 @@
     <!-- FolioNightTheme -->
 
     <color name="night_background_color">@color/webview_night</color>
-    <color name="night_popup_window_background">@color/black</color>
-    <color name="night_popup_window_background2">#070707</color>
+    <color name="night_popup_window_background">#070707</color>
     <color name="night_default_font_color">#767676</color>
     <color name="night_highlight_delete_fill_color">#888888</color>
     <color name="night_underline_icon_fill_color_top">#888888</color>
