@@ -21,9 +21,17 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/view_config_ib_yellow_mode"
         app:layout_constraintStart_toEndOf="@+id/view_config_ib_day_mode"
         app:srcCompat="@drawable/icon_moon_sel" />
+    <ImageButton
+            android:id="@+id/view_config_ib_yellow_mode"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_config_ib_night_mode"
+            app:srcCompat="@drawable/icon_moon_sel" />
 
     <View
         android:id="@+id/view3"
