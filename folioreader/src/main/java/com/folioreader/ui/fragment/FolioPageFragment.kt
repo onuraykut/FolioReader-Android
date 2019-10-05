@@ -133,6 +133,8 @@ class FolioPageFragment : Fragment(),
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+try {
+
 
         this.savedInstanceState = savedInstanceState
         uiHandler = Handler()
@@ -177,7 +179,10 @@ class FolioPageFragment : Fragment(),
         initAnimations()
         initWebView()
         updatePagesLeftTextBg()
-
+} catch (e: Exception) {
+    Log.e("FolioTest02", "onCreateView", e);
+    throw e;
+}
         return mRootView
     }
 
