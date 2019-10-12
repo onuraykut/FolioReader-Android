@@ -246,8 +246,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this) {}
         mInterstitialAd = InterstitialAd(this)
-        mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
         mInterstitialAd.loadAd(AdRequest.Builder().build())
+        mInterstitialAd.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+        }
+
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -382,11 +388,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
-        if (mInterstitialAd.isLoaded) {
-            mInterstitialAd.show()
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.")
-        }
+
 
         val itemId = item.itemId
 
@@ -423,6 +425,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             Toast.makeText(this, "Kaldığınız yer kaydedildi", Toast.LENGTH_LONG).show();
             return true
+        }
+        if (mInterstitialAd.isLoaded) {
+            mInterstitialAd.show()
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.")
         }
 
         return super.onOptionsItemSelected(item)
