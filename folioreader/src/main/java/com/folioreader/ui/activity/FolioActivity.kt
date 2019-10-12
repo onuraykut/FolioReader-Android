@@ -71,6 +71,10 @@ import org.readium.r2.streamer.parser.EpubParser
 import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
 import java.lang.ref.WeakReference
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -113,6 +117,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
+    private lateinit var mInterstitialAd: InterstitialAd
 
     companion object {
 
@@ -239,6 +244,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this) {}
+        mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -373,6 +382,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
+        if (mInterstitialAd.isLoaded) {
+            mInterstitialAd.show()
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.")
+        }
 
         val itemId = item.itemId
 

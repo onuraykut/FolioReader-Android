@@ -87,6 +87,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'org.slf4j:slf4j-android:1.7.25'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
