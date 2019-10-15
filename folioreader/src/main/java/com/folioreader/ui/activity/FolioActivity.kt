@@ -244,10 +244,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MobileAds.initialize(this) {}
+        MobileAds.initialize(this,"ca-app-pub-8363194691553414~2023542270") {}
         mInterstitialAd = InterstitialAd(this)
-       // mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
-        mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
+      //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
         mInterstitialAd.loadAd(AdRequest.Builder().build())
         mInterstitialAd.adListener = object : AdListener() {
