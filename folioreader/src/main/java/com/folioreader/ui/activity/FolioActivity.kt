@@ -390,7 +390,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
-
+        if (mInterstitialAd.isLoaded) {
+            mInterstitialAd.show()
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.")
+        }
 
         val itemId = item.itemId
 
@@ -428,11 +432,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             Toast.makeText(this, "Kaldığınız yer kaydedildi", Toast.LENGTH_LONG).show();
             return true
         }
-        if (mInterstitialAd.isLoaded) {
-            mInterstitialAd.show()
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.")
-        }
+
 
         return super.onOptionsItemSelected(item)
     }
