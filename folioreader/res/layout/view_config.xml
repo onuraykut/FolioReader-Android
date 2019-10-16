@@ -31,7 +31,7 @@
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view_config_ib_night_mode"
-            android:visibility="visible"
+            android:visibility="gone"
             app:srcCompat="@drawable/icon_moon_sel" />
 
     <View

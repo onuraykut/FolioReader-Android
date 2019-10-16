@@ -128,11 +128,6 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             setToolBarColor()
             setAudioPlayerBackground()
         }
-        view_config_ib_yellow_mode.setOnClickListener {
-            val webViewLayout = mRootView!!.findViewById<FrameLayout>(R.id.webViewLayout)
-            webViewLayout.setBackgroundColor(Color.parseColor("#d67676"));
-            Log.v("configdeneme", "girdiii1")
-        }
 
         if (activityCallback.direction == Config.Direction.HORIZONTAL) {
             buttonHorizontal.isSelected = true
