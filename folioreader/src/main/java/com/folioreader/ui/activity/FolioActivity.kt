@@ -241,6 +241,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         Log.v(LOG_TAG, "-> onStop")
         topActivity = false
     }
+    override fun onStart() {
+        super.onStart()
+        Log.v(LOG_TAG, "-> onStart")
+        if (mInterstitialAd.isLoaded) {
+            mInterstitialAd.show()
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -427,7 +436,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
         else if (itemId == R.id.itemSave){
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
-            val intent = Intent(FolioReader.ACTION_CLOSE_FOLIOREADER)
+            val intent = Intent(FolioReader.ACTION_FOLIOREADER_CLOSED)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             Toast.makeText(this, "Kaldığınız yer kaydedildi", Toast.LENGTH_LONG).show();
             return true
