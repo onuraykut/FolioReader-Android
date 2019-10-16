@@ -201,7 +201,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private fun toggleBlackTheme() {
 
         val day = ContextCompat.getColor(context!!, R.color.white)
-        val night = ContextCompat.getColor(context!!, R.color.night)
+        val night = ContextCompat.getColor(context!!, R.color.red)
 
         val colorAnimation = ValueAnimator.ofObject(
             ArgbEvaluator(),
