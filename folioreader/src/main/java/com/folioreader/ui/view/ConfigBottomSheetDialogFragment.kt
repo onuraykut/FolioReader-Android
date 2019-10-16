@@ -27,6 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.activity_content_highlight.view.*
 import kotlinx.android.synthetic.main.view_config.*
 import org.greenrobot.eventbus.EventBus
+import android.graphics.Color
+import android.util.Log
 
 /**
  * Created by mobisys2 on 11/16/2016.
@@ -78,7 +80,8 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         selectFont(config.font, false)
         isNightMode = config.isNightMode
         if (isNightMode) {
-            container.setBackgroundColor(ContextCompat.getColor(context!!, R.color.night))
+            //container.setBackgroundColor(ContextCompat.getColor(context!!, R.color.night))
+            container.setBackgroundColor(Color.parseColor("#FF0000"))
         } else {
             container.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
         }
@@ -124,6 +127,9 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_night_mode.drawable)
             setToolBarColor()
             setAudioPlayerBackground()
+        }
+        view_config_ib_yellow_mode.setOnClickListener {
+            Log.v("configdeneme", "girdiii1")
         }
 
         if (activityCallback.direction == Config.Direction.HORIZONTAL) {

@@ -433,7 +433,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             return true
         }
 
-
         return super.onOptionsItemSelected(item)
     }
 

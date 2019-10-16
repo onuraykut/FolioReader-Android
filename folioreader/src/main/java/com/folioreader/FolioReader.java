@@ -27,6 +27,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by avez raj on 9/13/2017.
  */
@@ -51,6 +53,7 @@ public class FolioReader {
     private ReadLocatorListener readLocatorListener;
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
+    private String themeColor;
 
     @Nullable
     public Retrofit retrofit;
@@ -194,7 +197,18 @@ public class FolioReader {
         this.config = config;
         this.overrideConfig = overrideConfig;
         return singleton;
+
     }
+   /*  public FolioReader setThemeColor(String color,Context mContext) {
+        this.themeColor = color;
+       mContext.getSharedPreferences("FirstPreference", MODE_PRIVATE)
+                .edit()
+                .putInt("book_lang",islem_secim_index)
+                .putInt("app_lang",islem_secim_index_app)
+                //     .putInt("okuma_modu",okuma_modu)
+                .apply();
+        return singleton;
+    } */
 
     public FolioReader setPortNumber(int portNumber) {
         this.portNumber = portNumber;
