@@ -40,11 +40,12 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         @JvmField
         val LOG_TAG: String = ConfigBottomSheetDialogFragment::class.java.simpleName
     }
-
+    private var mRootView: View? = null
     private lateinit var config: Config
     private var isNightMode = false
     private lateinit var activityCallback: FolioActivityCallback
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mRootView = inflater.inflate(R.layout.folio_page_fragment, container, false)
         return inflater.inflate(R.layout.view_config, container)
     }
 
@@ -128,6 +129,8 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             setAudioPlayerBackground()
         }
         view_config_ib_yellow_mode.setOnClickListener {
+            val webViewLayout = mRootView!!.findViewById<FrameLayout>(R.id.webViewLayout)
+            webViewLayout.setBackgroundColor(Color.parseColor("#d67676"));
             Log.v("configdeneme", "girdiii1")
         }
 

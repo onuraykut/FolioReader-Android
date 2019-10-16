@@ -401,7 +401,6 @@ try {
 
         mWebview!!.settings.defaultTextEncodingName = "utf-8"
         HtmlTask(this).execute(chapterUrl.toString())
-        mWebview!!.setBackgroundColor(Color.parseColor("#d67676"));
     }
 
     private val webViewClient = object : WebViewClient() {
