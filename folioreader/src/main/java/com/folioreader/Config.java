@@ -21,7 +21,9 @@ public class Config implements Parcelable {
     public static final String CONFIG_FONT = "font";
     public static final String CONFIG_FONT_SIZE = "font_size";
     public static final String CONFIG_IS_NIGHT_MODE = "is_night_mode";
+    public static final String CONFIG_IS_PREMIUM = "is_premium";
     public static final String CONFIG_THEME_COLOR_INT = "theme_color_int";
+    public static final String BACKGROUND_COLOR_INT = "background_color_int";
     public static final String CONFIG_IS_TTS = "is_tts";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
@@ -33,8 +35,10 @@ public class Config implements Parcelable {
     private int font = 3;
     private int fontSize = 2;
     private boolean nightMode;
+    private boolean isPremium;
     @ColorInt
     private int themeColor = DEFAULT_THEME_COLOR_INT;
+    private int backgroundColor = 0;
     private boolean showTts = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
@@ -75,7 +79,9 @@ public class Config implements Parcelable {
         dest.writeInt(font);
         dest.writeInt(fontSize);
         dest.writeByte((byte) (nightMode ? 1 : 0));
+        dest.writeByte((byte) (isPremium ? 1 : 0));
         dest.writeInt(themeColor);
+        dest.writeInt(backgroundColor);
         dest.writeByte((byte) (showTts ? 1 : 0));
         dest.writeString(allowedDirection.toString());
         dest.writeString(direction.toString());
@@ -85,7 +91,9 @@ public class Config implements Parcelable {
         font = in.readInt();
         fontSize = in.readInt();
         nightMode = in.readByte() != 0;
+        isPremium = in.readByte() != 0;
         themeColor = in.readInt();
+        backgroundColor = in.readInt();
         showTts = in.readByte() != 0;
         allowedDirection = getAllowedDirectionFromString(LOG_TAG, in.readString());
         direction = getDirectionFromString(LOG_TAG, in.readString());
@@ -98,7 +106,9 @@ public class Config implements Parcelable {
         font = jsonObject.optInt(CONFIG_FONT);
         fontSize = jsonObject.optInt(CONFIG_FONT_SIZE);
         nightMode = jsonObject.optBoolean(CONFIG_IS_NIGHT_MODE);
+        isPremium = jsonObject.optBoolean(CONFIG_IS_PREMIUM);
         themeColor = getValidColorInt(jsonObject.optInt(CONFIG_THEME_COLOR_INT));
+        backgroundColor = jsonObject.optInt(BACKGROUND_COLOR_INT);
         showTts = jsonObject.optBoolean(CONFIG_IS_TTS);
         allowedDirection = getAllowedDirectionFromString(LOG_TAG,
                 jsonObject.optString(CONFIG_ALLOWED_DIRECTION));
@@ -158,9 +168,16 @@ public class Config implements Parcelable {
     public boolean isNightMode() {
         return nightMode;
     }
+    public boolean isPremium() {
+        return isPremium;
+    }
 
     public Config setNightMode(boolean nightMode) {
         this.nightMode = nightMode;
+        return this;
+    }
+    public Config setPremium(boolean nightMode) {
+        this.isPremium = nightMode;
         return this;
     }
 
@@ -178,6 +195,9 @@ public class Config implements Parcelable {
     public int getThemeColor() {
         return themeColor;
     }
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
 
     public Config setThemeColorRes(@ColorRes int colorResId) {
         try {
@@ -193,6 +213,10 @@ public class Config implements Parcelable {
 
     public Config setThemeColorInt(@ColorInt int colorInt) {
         this.themeColor = getValidColorInt(colorInt);
+        return this;
+    }
+    public Config setBackgroundColorInt(int backgroundColorInt){
+        this.backgroundColor = backgroundColorInt;
         return this;
     }
 
@@ -287,6 +311,7 @@ public class Config implements Parcelable {
                 ", fontSize=" + fontSize +
                 ", nightMode=" + nightMode +
                 ", themeColor=" + themeColor +
+                ", backgroundColor=" + backgroundColor +
                 ", showTts=" + showTts +
                 ", allowedDirection=" + allowedDirection +
                 ", direction=" + direction +

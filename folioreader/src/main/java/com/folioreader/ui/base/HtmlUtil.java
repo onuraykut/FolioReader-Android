@@ -19,9 +19,29 @@ public final class HtmlUtil {
      * @return modified raw html string
      */
     public static String getHtmlContent(Context context, String htmlContent, Config config) {
+        int backgroundColor = config.getBackgroundColor();
+        String cssPath="";
+        switch (backgroundColor) {
+            case 0:
+                cssPath =
+                        String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style.css");
+                break;
+            case 1:
+                cssPath =
+                        String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleYellow.css");
+                break;
+            case 2:
+                cssPath =
+                        String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleAcik.css");
+                break;
+            case 3:
+                cssPath =
+                        String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleGreen.css");
+                break;
+                default:
+                    break;
+        }
 
-        String cssPath =
-                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style.css");
 
         String jsPath = String.format(context.getString(R.string.script_tag),
                 "file:///android_asset/js/jsface.min.js") + "\n";

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="203dp"
+    android:layout_height="wrap_content"
     tools:layout_gravity="bottom">
 
     <ImageButton
@@ -43,6 +43,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_config_ib_night_mode" />
 
+    <ImageButton
+            android:id="@+id/view_config_white"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+
+    <ImageButton
+            android:id="@+id/view_config_yellowAcik"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/background_acik"
+            app:layout_constraintEnd_toEndOf="@+id/view_config_green"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintStart_toEndOf="@+id/view_config_white"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+    <ImageButton
+            android:id="@+id/view_config_green"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/background_yellow"
+            app:layout_constraintEnd_toEndOf="@+id/view_config_yellow"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintStart_toEndOf="@+id/view_config_yellowAcik"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+    <ImageButton
+            android:id="@+id/view_config_yellow"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/highlight_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintStart_toEndOf="@+id/view_config_green"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+
+    <View
+            android:id="@+id/view8"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/grey_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_config_white" />
+
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_andada"
         android:layout_width="0dp"
@@ -52,7 +100,7 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_lato"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_lato"
@@ -64,7 +112,7 @@
         app:folio_font="@string/lato_font"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_lora"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_andada"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_lora"
@@ -76,7 +124,7 @@
         app:folio_font="@string/lora_font"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_raleway"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_lato"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_raleway"
@@ -88,7 +136,7 @@
         app:folio_font="@string/raleway_font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_lora"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <View
         android:id="@+id/view4"

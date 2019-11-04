@@ -118,4 +118,6 @@
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
     <string name="savedToast">Saved current page</string>
     <string name="save_button">Save</string>
+
+    <string name="arkaplanPremium">You need to Premium user for change the background color</string>
 </resources>

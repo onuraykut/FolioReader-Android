@@ -118,4 +118,6 @@
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
     <string name="savedToast">Kaldığınız yer kaydedildi</string>
 
+    <string name="arkaplanPremium">Arkaplan rengi için Premium üye olmalısınız</string>
+
 </resources>

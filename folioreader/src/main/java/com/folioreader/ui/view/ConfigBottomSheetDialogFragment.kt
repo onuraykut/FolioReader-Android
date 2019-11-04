@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.view_config.*
 import org.greenrobot.eventbus.EventBus
 import android.graphics.Color
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 
 /**
  * Created by mobisys2 on 11/16/2016.
@@ -97,6 +98,12 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode!!.drawable)
             UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
         }
+        if (config.isPremium){
+            view_config_white.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+            view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+            view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+            view_config_green.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+        }
     }
 
     private fun inflateView() {
@@ -128,6 +135,52 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             setToolBarColor()
             setAudioPlayerBackground()
         }
+        if (config.isPremium) {
+        view_config_white.setOnClickListener {
+            isNightMode = true
+            config.setBackgroundColorInt(0)
+            toggleBlackTheme()
+            setToolBarColor()
+            setAudioPlayerBackground()
+            UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
+            UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode.drawable)
+        }
+        view_config_yellowAcik.setOnClickListener {
+            isNightMode = true
+            config.setBackgroundColorInt(2)
+            toggleBlackTheme()
+            setToolBarColor()
+            setAudioPlayerBackground()
+            UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
+            UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode.drawable)
+        }
+        view_config_green.setOnClickListener {
+            isNightMode = true
+            config.setBackgroundColorInt(1)
+            toggleBlackTheme()
+            setToolBarColor()
+            setAudioPlayerBackground()
+            UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
+            UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode.drawable)
+        }
+        view_config_yellow.setOnClickListener {
+            isNightMode = true
+            config.setBackgroundColorInt(3)
+            toggleBlackTheme()
+            setToolBarColor()
+            setAudioPlayerBackground()
+            UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
+            UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode.drawable)
+        }
+        }
+        else {
+            view_config_white.setOnClickListener {
+                arkaplanPremium()
+            }
+            view_config_yellowAcik.setOnClickListener {arkaplanPremium()}
+            view_config_green.setOnClickListener {arkaplanPremium()}
+            view_config_yellow.setOnClickListener {arkaplanPremium()}
+        }
 
         if (activityCallback.direction == Config.Direction.HORIZONTAL) {
             buttonHorizontal.isSelected = true
@@ -154,7 +207,18 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun arkaplanPremium() {
+        val builder = AlertDialog.Builder(context!!)
+        builder.setMessage(R.string.arkaplanPremium)
+        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
 
+        }
+
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+
+        }
+        builder.show()
+    }
     private fun configFonts() {
 
         val colorStateList = UiUtil.getColorList(

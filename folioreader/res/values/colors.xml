@@ -23,6 +23,9 @@
     <color name="webview_night">#131313</color>
     <color name="edit_text_hint_color">#AAAAAA</color>
 
+    <color name="background_acik">#ffe0b2</color>
+    <color name="background_yellow">#e3b32d</color>
+
     <color name="highlight_yellow">#FFEB6B</color>
     <color name="highlight_green">#C0ED72</color>
     <color name="highlight_blue">#ADD8FF</color>

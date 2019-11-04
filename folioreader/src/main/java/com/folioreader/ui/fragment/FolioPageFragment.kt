@@ -437,7 +437,9 @@ try {
                     mWebview!!.loadUrl(callHighlightSearchLocator)
 
                 } else if (isCurrentFragment) {
-                    val cfi = lastReadLocator!!.locations.cfi
+                    var cfi ="epubcfi(/0!/4/4/8/1:0)";
+                    if(lastReadLocator!!.locations.cfi!=null)
+                    cfi = lastReadLocator!!.locations.cfi!!
                     mWebview!!.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
 
                 } else {
@@ -667,8 +669,23 @@ try {
             mRootView!!.findViewById<View>(R.id.indicatorLayout)
                 .setBackgroundColor(Color.parseColor("#131313"))
         } else {
-            mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                .setBackgroundColor(Color.WHITE)
+            val backgroundColor = mConfig!!.getBackgroundColor()
+            when (backgroundColor) {
+                0 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
+                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                        R.color.white))
+                1 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
+                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                        R.color.background_yellow))
+                2 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
+                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                        R.color.background_acik))
+                3 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
+                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                        R.color.highlight_green))
+                else -> {
+                }
+            }
         }
     }
 

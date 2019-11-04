@@ -78,9 +78,14 @@ public class HomeActivity extends AppCompatActivity
                 ReadLocator readLocator = getLastReadLocator();
 
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
-                if (config == null)
+                if (config == null) {
                     config = new Config();
-                config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
+                    config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
+                    config.setBackgroundColorInt(2);
+
+                }
+
+
 
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)
