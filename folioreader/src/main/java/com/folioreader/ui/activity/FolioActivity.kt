@@ -253,20 +253,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MobileAds.initialize(this) {}
-        mInterstitialAd = InterstitialAd(this)
-        val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!config.isPremium) {
-            mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
-            //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
-            mInterstitialAd.loadAd(AdRequest.Builder().build())
-            mInterstitialAd.adListener = object : AdListener() {
-                override fun onAdClosed() {
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-            }
-        }
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -294,6 +281,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (savedInstanceState != null) {
             searchAdapterDataBundle = savedInstanceState.getBundle(SearchAdapter.DATA_BUNDLE)
             searchQuery = savedInstanceState.getCharSequence(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
+        }
+        MobileAds.initialize(this) {}
+        mInterstitialAd = InterstitialAd(this)
+        val config = AppUtil.getSavedConfig(applicationContext)!!
+        if (!config.isPremium) {
+            mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
+            //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+
+            mInterstitialAd.loadAd(AdRequest.Builder().build())
+            mInterstitialAd.adListener = object : AdListener() {
+                override fun onAdClosed() {
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+            }
         }
 
         mBookId = intent.getStringExtra(FolioReader.EXTRA_BOOK_ID)

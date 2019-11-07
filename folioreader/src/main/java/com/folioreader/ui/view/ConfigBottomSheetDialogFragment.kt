@@ -101,7 +101,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         if (config.isPremium){
             view_config_white.setImageResource(R.drawable.ic_brightness_5_black_24dp)
             view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
-            view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+            view_config_yellow.setImageResource(R.drawable.ic_brightness_5_black_24dp)
             view_config_green.setImageResource(R.drawable.ic_brightness_5_black_24dp)
         }
     }
@@ -210,13 +210,10 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private fun arkaplanPremium() {
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(R.string.arkaplanPremium)
-        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+        builder.setPositiveButton(android.R.string.ok) { dialog, which ->
 
         }
 
-        builder.setNegativeButton(android.R.string.no) { dialog, which ->
-
-        }
         builder.show()
     }
     private fun configFonts() {
