@@ -402,6 +402,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
+        val config = AppUtil.getSavedConfig(applicationContext)!!
+        if (!config.isPremium)
         if (mInterstitialAd.isLoaded) {
             mInterstitialAd.show()
         }

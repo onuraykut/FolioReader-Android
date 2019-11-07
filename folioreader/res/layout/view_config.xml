@@ -50,8 +50,7 @@
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
             app:layout_constraintTop_toBottomOf="@+id/view3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
             android:id="@+id/view_config_yellowAcik"
@@ -60,8 +59,7 @@
             android:background="@color/background_acik"
             app:layout_constraintEnd_toEndOf="@+id/view_config_green"
             app:layout_constraintTop_toBottomOf="@+id/view3"
-            app:layout_constraintStart_toEndOf="@+id/view_config_white"
-            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+            app:layout_constraintStart_toEndOf="@+id/view_config_white" />
     <ImageButton
             android:id="@+id/view_config_green"
             android:layout_width="0dp"
@@ -69,8 +67,7 @@
             android:background="@color/background_yellow"
             app:layout_constraintEnd_toEndOf="@+id/view_config_yellow"
             app:layout_constraintTop_toBottomOf="@+id/view3"
-            app:layout_constraintStart_toEndOf="@+id/view_config_yellowAcik"
-            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+            app:layout_constraintStart_toEndOf="@+id/view_config_yellowAcik" />
     <ImageButton
             android:id="@+id/view_config_yellow"
             android:layout_width="0dp"
@@ -79,8 +76,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_green"
-            android:visibility="visible"
-            app:srcCompat="@drawable/ic_lock_outline_black_24dp" />
+            android:visibility="visible" />
 
     <View
             android:id="@+id/view8"
