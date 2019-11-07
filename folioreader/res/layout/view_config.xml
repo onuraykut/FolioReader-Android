@@ -14,25 +14,18 @@
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toStartOf="@+id/view_config_ib_night_mode"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_sun_sel" />
 
     <ImageButton
         android:id="@+id/view_config_ib_night_mode"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="@+id/view_config_ib_yellow_mode"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintStart_toEndOf="@+id/view_config_ib_day_mode"
         app:srcCompat="@drawable/icon_moon_sel" />
-    <ImageButton
-            android:id="@+id/view_config_ib_yellow_mode"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view_config_ib_night_mode"
-            android:visibility="gone"
-            app:srcCompat="@drawable/icon_moon_sel" />
 
     <View
         android:id="@+id/view3"
@@ -42,6 +35,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_config_ib_night_mode" />
+    <ImageButton
+            android:id="@+id/view_config_ib_day_mode2"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toStartOf="@+id/view_config_ib_night_mode2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/icon_sun_sel" />
+
+    <ImageButton
+            android:id="@+id/view_config_ib_night_mode2"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="@+id/view0"
+            app:layout_constraintStart_toEndOf="@+id/view_config_ib_day_mode2"
+            app:srcCompat="@drawable/icon_moon_sel" />
+
+    <View
+            android:id="@+id/view0"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/grey_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_config_ib_night_mode" />
 
     <ImageButton
             android:id="@+id/view_config_white"
@@ -49,7 +68,7 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
-            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintTop_toBottomOf="@+id/view0"
             app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
@@ -58,7 +77,7 @@
             android:layout_height="50dp"
             android:background="@color/background_acik"
             app:layout_constraintEnd_toEndOf="@+id/view_config_green"
-            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintTop_toBottomOf="@+id/view0"
             app:layout_constraintStart_toEndOf="@+id/view_config_white" />
     <ImageButton
             android:id="@+id/view_config_green"
@@ -74,9 +93,8 @@
             android:layout_height="50dp"
             android:background="@color/highlight_green"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view3"
-            app:layout_constraintStart_toEndOf="@+id/view_config_green"
-            android:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@+id/view0"
+            app:layout_constraintStart_toEndOf="@+id/view_config_green" />
 
     <View
             android:id="@+id/view8"
