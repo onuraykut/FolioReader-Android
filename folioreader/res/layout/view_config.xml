@@ -36,48 +36,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_config_ib_night_mode" />
 
-    <View
-            android:id="@+id/view0"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/grey_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_config_ib_night_mode" />
 
     <ImageView
             android:id="@+id/view_config_white"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/icon_sun_sel"
             app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
-            app:layout_constraintTop_toBottomOf="@+id/view0"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
             android:id="@+id/view_config_yellowAcik"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@color/background_acik"
+            app:srcCompat="@drawable/icon_sun_sel"
             app:layout_constraintEnd_toEndOf="@+id/view_config_green"
-            app:layout_constraintTop_toBottomOf="@+id/view0"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_white" />
     <ImageView
             android:id="@+id/view_config_green"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@color/background_yellow"
-            app:layout_constraintEnd_toEndOf="@+id/view_config_yellow"
-            app:layout_constraintTop_toBottomOf="@+id/view0"
+            app:srcCompat="@drawable/icon_sun_sel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_yellowAcik" />
-    <ImageView
+  <!--  <ImageView
             android:id="@+id/view_config_yellow"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/highlight_green"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view0"
-            app:layout_constraintStart_toEndOf="@+id/view_config_green" />
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintStart_toEndOf="@+id/view_config_green" />-->
 
     <View
             android:id="@+id/view8"
