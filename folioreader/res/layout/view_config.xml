@@ -42,7 +42,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             app:srcCompat="@drawable/icon_sun_sel"
-            android:scaleType="centerInside"
             app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toStartOf="parent" />
@@ -54,7 +53,6 @@
             app:srcCompat="@drawable/icon_sun_sel"
             app:layout_constraintEnd_toEndOf="@+id/view_config_yellow"
             app:layout_constraintTop_toBottomOf="@+id/view3"
-            android:scaleType="centerInside"
             app:layout_constraintStart_toEndOf="@+id/view_config_white" />
     <ImageView
             android:id="@+id/view_config_yellow"
