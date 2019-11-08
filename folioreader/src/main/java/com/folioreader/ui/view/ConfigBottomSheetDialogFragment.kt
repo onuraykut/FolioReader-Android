@@ -135,7 +135,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             setToolBarColor()
             setAudioPlayerBackground()
         }
-     /*   if (config.isPremium) {
+        if (config.isPremium) {
         view_config_white.setOnClickListener {
             isNightMode = true
             config.setBackgroundColorInt(0)
@@ -180,7 +180,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             view_config_yellowAcik.setOnClickListener {arkaplanPremium()}
             view_config_green.setOnClickListener {arkaplanPremium()}
             view_config_yellow.setOnClickListener {arkaplanPremium()}
-        }*/
+        }
 
         if (activityCallback.direction == Config.Direction.HORIZONTAL) {
             buttonHorizontal.isSelected = true
