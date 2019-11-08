@@ -98,12 +98,12 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode!!.drawable)
             UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
         }
-       /* if (config.isPremium){
+        if (config.isPremium){
             view_config_white.setImageResource(R.drawable.ic_brightness_5_black_24dp)
             view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
             view_config_yellow.setImageResource(R.drawable.ic_brightness_5_black_24dp)
             view_config_green.setImageResource(R.drawable.ic_brightness_5_black_24dp)
-        }*/
+        }
     }
 
     private fun inflateView() {
