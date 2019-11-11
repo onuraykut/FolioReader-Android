@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:gravity="center"
-            android:background="@color/highlight_yellow"
+            android:background="@color/background_acik"
             app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             android:scaleType="centerInside"
             app:layout_constraintEnd_toStartOf="@+id/view_config_font_lora"
