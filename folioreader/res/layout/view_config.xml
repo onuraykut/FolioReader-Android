@@ -41,7 +41,9 @@
             android:id="@+id/view_config_white"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/icon_sun_sel"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp"
+            android:scaleType="centerInside"
+            android:background="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/view_config_yellowAcik"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toStartOf="parent" />
@@ -50,7 +52,9 @@
             android:id="@+id/view_config_yellowAcik"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/icon_sun_sel"
+            android:background="@color/highlight_yellow"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp"
+            android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="@+id/view_config_yellow"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_white" />
@@ -58,7 +62,9 @@
             android:id="@+id/view_config_yellow"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/icon_sun_sel"
+            android:scaleType="centerInside"
+            android:background="@color/background_yellow"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             app:layout_constraintEnd_toEndOf="@+id/view_config_green"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_yellowAcik" />
@@ -66,7 +72,9 @@
             android:id="@+id/view_config_green"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/icon_sun_sel"
+            android:background="@color/highlight_green"
+            app:srcCompat="@drawable/ic_lock_outline_black_24dp"
+            android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view3"
             app:layout_constraintStart_toEndOf="@+id/view_config_yellow" />

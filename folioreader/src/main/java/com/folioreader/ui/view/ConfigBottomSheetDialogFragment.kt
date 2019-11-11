@@ -99,10 +99,10 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
         }
         if (config.isPremium){
-            view_config_white.setImageResource(R.drawable.ic_brightness_5_black_24dp)
-            view_config_yellowAcik.setImageResource(R.drawable.ic_brightness_5_black_24dp)
-            view_config_yellow.setImageResource(R.drawable.ic_brightness_5_black_24dp)
-            view_config_green.setImageResource(R.drawable.ic_brightness_5_black_24dp)
+            view_config_white.setImageDrawable(null);
+            view_config_yellowAcik.setImageDrawable(null);
+            view_config_yellow.setImageDrawable(null);
+            view_config_green.setImageDrawable(null);
         }
     }
 
