@@ -128,11 +128,11 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void saveReadLocator(ReadLocator readLocator) {
-        String bookid = readLocator.getBookId();
+       /* String bookid = readLocator.getBookId();
         String locator = readLocator.toJson();
         assert locator != null;
         txt_yaz(bookid,locator);
-        Log.i(LOG_TAG, "-> saveReadLocator -> " + readLocator.toJson());
+        Log.i(LOG_TAG, "-> saveReadLocator -> " + readLocator.toJson());*/
     }
 
     /*

@@ -143,12 +143,21 @@ public class FolioReader {
     private FolioReader(Context context) {
         this.context = context;
         DbAdapter.initialize(context);
-        mInterstitialAd = new InterstitialAd(context);
+        mInterstitialAd = new InterstitialAd(this.context);
         //   mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // test ad
         mInterstitialAd.setAdUnitId("ca-app-pub-8363194691553414/9360053927"); // gerçek reklam
         //  mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build());
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
+
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         localBroadcastManager.registerReceiver(highlightReceiver,
                 new IntentFilter(HighlightImpl.BROADCAST_EVENT));
         localBroadcastManager.registerReceiver(readLocatorReceiver,
