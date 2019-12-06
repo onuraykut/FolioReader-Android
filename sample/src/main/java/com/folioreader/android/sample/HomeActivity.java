@@ -15,12 +15,17 @@
  */
 package com.folioreader.android.sample;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.folioreader.Config;
@@ -33,6 +38,9 @@ import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -55,7 +63,7 @@ public class HomeActivity extends AppCompatActivity
                 .setReadLocatorListener(this)
                 .setOnClosedListener(this);
 
-        getHighlightsAndSave();
+//        getHighlightsAndSave();
 
         findViewById(R.id.btn_raw).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +82,15 @@ public class HomeActivity extends AppCompatActivity
         findViewById(R.id.btn_assest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED){
+                }
+                else {
+                    ActivityCompat.requestPermissions(HomeActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                }
+                File file = new File(getFilesDir().getAbsolutePath()+"/save/12345.json");
+                ReadLocator readLocator;
 
-                ReadLocator readLocator = getLastReadLocator();
 
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
                 if (config == null) {
@@ -85,23 +100,38 @@ public class HomeActivity extends AppCompatActivity
 
                 }
                 config.setPremium(true);
-
-
-                folioReader.setReadLocator(readLocator);
+                folioReader.setReadLocatorListener(new ReadLocatorListener() {
+                    @Override
+                    public void saveReadLocator(ReadLocator readLocator) {
+                        String bookid = readLocator.getBookId();
+                        String locator = readLocator.toJson();
+                        assert locator != null;
+                        txt_yaz(bookid,locator);
+                        Log.i(LOG_TAG, "-> saveReadLocator -> " + readLocator.toJson());
+                    }
+                });
+                if (file.exists()) {
+                    readLocator = getLastReadLocator("12345");
+                    folioReader.setReadLocator(readLocator);
+                }
                 folioReader.setConfig(config, true)
                         .openBook("file:///android_asset/TheSilverChair.epub");
             }
         });
     }
 
-    private ReadLocator getLastReadLocator() {
+    private ReadLocator getLastReadLocator(String bookid) {
 
-        String jsonString = loadAssetTextAsString("Locators/LastReadLocators/last_read_locator_1.json");
+        String jsonString = loadAssetTextAsString(bookid);
         return ReadLocator.fromJson(jsonString);
     }
 
     @Override
     public void saveReadLocator(ReadLocator readLocator) {
+        String bookid = readLocator.getBookId();
+        String locator = readLocator.toJson();
+        assert locator != null;
+        txt_yaz(bookid,locator);
         Log.i(LOG_TAG, "-> saveReadLocator -> " + readLocator.toJson());
     }
 
@@ -140,7 +170,8 @@ public class HomeActivity extends AppCompatActivity
         BufferedReader in = null;
         try {
             StringBuilder buf = new StringBuilder();
-            InputStream is = getAssets().open(name);
+            File file = new File(getFilesDir().getAbsolutePath()+"/save/"+name+".json");
+            FileInputStream is = new FileInputStream(file);
             in = new BufferedReader(new InputStreamReader(is));
 
             String str;
@@ -166,7 +197,25 @@ public class HomeActivity extends AppCompatActivity
         }
         return null;
     }
-
+    public void txt_yaz(String kitap,String locator){
+        FileOutputStream fos=null;
+        String folder = getFilesDir().getAbsolutePath()+"/save/"+kitap+".json";
+//        File file = new File(getFilesDir().getAbsolutePath()+"/save/"+kitap+".json");
+        try {
+            fos = new FileOutputStream(new File(folder));
+            fos.write(locator.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

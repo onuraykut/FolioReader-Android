@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Parcelable;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.folioreader.model.HighLight;
@@ -19,6 +21,10 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -54,7 +60,7 @@ public class FolioReader {
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
     private String themeColor;
-
+    private InterstitialAd mInterstitialAd;
     @Nullable
     public Retrofit retrofit;
     @Nullable
@@ -97,8 +103,22 @@ public class FolioReader {
     private BroadcastReceiver closedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (onClosedListener != null)
+            if (onClosedListener != null) {
                 onClosedListener.onFolioReaderClosed();
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    mInterstitialAd.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdLoaded() {
+                            // Code to be executed when an ad finishes loading.
+                            mInterstitialAd.show();
+                            Log.i("Ads", "onAdLoaded");
+                        }
+                    });
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
+            }
         }
     };
 
@@ -123,7 +143,11 @@ public class FolioReader {
     private FolioReader(Context context) {
         this.context = context;
         DbAdapter.initialize(context);
-
+        mInterstitialAd = new InterstitialAd(context);
+        //   mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // test ad
+        mInterstitialAd.setAdUnitId("ca-app-pub-8363194691553414/9360053927"); // gerçek reklam
+        //  mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build());
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         localBroadcastManager.registerReceiver(highlightReceiver,
                 new IntentFilter(HighlightImpl.BROADCAST_EVENT));
