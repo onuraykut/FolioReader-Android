@@ -82,8 +82,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     View.OnSystemUiVisibilityChangeListener {
     private val unityGameID = "3232718"
     private val testMode = false
-    private var isUnityShow = false
-    private var showAd = false
+    private var isUnityShow = true
+    private var showAd = true
     private val placementId = "kitapOrtasi"
     private var bookFileName: String? = null
 
@@ -238,11 +238,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private inner class UnityAdsListener : IUnityAdsListener {
 
         override fun onUnityAdsReady(placementIds: String) {
-          /*  if (isUnityShow && placementIds.equals(placementId)) {
+           if (isUnityShow && placementIds.equals(placementId)) {
                 UnityAds.show(this@FolioActivity, placementId)
                 Log.d("unitytest", "girdi3")
             }
-            Log.d("unitytest", placementIds)*/
+            Log.d("unitytest", placementIds)
         }
 
         override fun onUnityAdsStart(placementId: String) {
@@ -253,6 +253,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             Handler().postDelayed(
                 {
                     showAd=true;
+                    isUnityShow = true
                 },
                 30000 // value in milliseconds
             )
@@ -263,6 +264,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             Handler().postDelayed(
                 {
                     showAd=true;
+                    isUnityShow = true
                 },
                 30000 // value in milliseconds
             )
@@ -300,7 +302,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
-            if (showAd) {
+            if (showAd && isUnityShow) {
                 DisplayInterstitialAd()
             }
         else showAd=true
