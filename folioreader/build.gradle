@@ -118,5 +118,6 @@ dependencies {
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+    implementation project(path: ':unity-ads')
 }
 apply from: '../folioreader/bintray/bintrayv1.gradle'

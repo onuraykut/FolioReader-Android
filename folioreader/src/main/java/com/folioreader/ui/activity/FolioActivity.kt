@@ -75,10 +75,15 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
+import com.unity3d.ads.IUnityAdsListener
+import com.unity3d.ads.UnityAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
-
+    private val unityGameID = "3232718"
+    private val testMode = true
+    private var isUnityShow = false
+    private val placementId = "kitapOrtasi"
     private var bookFileName: String? = null
 
     private var mFolioPageViewPager: DirectionalViewpager? = null
@@ -223,7 +228,44 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
     }
+    fun unityAds() {
+        val myAdsListener = UnityAdsListener()
+        UnityAds.addListener(myAdsListener)
+        // Initialize the SDK:
+        UnityAds.initialize(this, unityGameID, testMode)
+    }
+    private inner class UnityAdsListener : IUnityAdsListener {
 
+        override fun onUnityAdsReady(placementId: String) {
+            if (isUnityShow) {
+                UnityAds.show(this@FolioActivity, placementId)
+                Log.d("unitytest", "girdi3")
+            }
+            Log.d("unitytest", placementId)
+        }
+
+        override fun onUnityAdsStart(placementId: String) {
+            isUnityShow = false
+        }
+
+        override fun onUnityAdsFinish(placementId: String, finishState: UnityAds.FinishState) {
+            // Implement functionality for a user finishing an ad.
+        }
+
+        override fun onUnityAdsError(error: UnityAds.UnityAdsError, message: String) {
+            Log.d("unitytesFt", message)
+        }
+    }
+
+    fun DisplayInterstitialAd() {
+        if (UnityAds.isReady(placementId)) {
+            Log.d("unitytest", "girdi1")
+            UnityAds.show(this, placementId)
+        } else {
+            isUnityShow = true
+            Log.d("unitytest", "girdi2")
+        }
+    }
     override fun onResume() {
         super.onResume()
         Log.v(LOG_TAG, "-> onResume")
@@ -244,17 +286,19 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
-        if (mInterstitialAd.isLoaded) {
+        DisplayInterstitialAd()
+       /* if (mInterstitialAd.isLoaded) {
             mInterstitialAd.show()
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.")
-        }
+        }*/
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        unityAds()
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
