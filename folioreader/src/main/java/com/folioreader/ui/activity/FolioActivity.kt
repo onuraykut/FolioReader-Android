@@ -81,7 +81,7 @@ import com.unity3d.ads.UnityAds
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
     private val unityGameID = "3232718"
-    private val testMode = true
+    private val testMode = false
     private var isUnityShow = false
     private var showAd = false
     private val placementId = "kitapOrtasi"
