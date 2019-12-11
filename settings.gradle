@@ -1,1 +1,1 @@
-include ':folioreader', ':sample', ':unity-ads'
+include ':folioreader', ':sample'

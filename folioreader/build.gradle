@@ -91,7 +91,7 @@ dependencies {
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-
+    implementation 'com.github.Unity-Technologies:unity-ads-android:3.4.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation "com.fasterxml.jackson.core:jackson-core:$versions.jackson"
@@ -118,6 +118,5 @@ dependencies {
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
-    implementation project(path: ':unity-ads')
 }
 apply from: '../folioreader/bintray/bintrayv1.gradle'
