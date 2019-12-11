@@ -83,6 +83,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private val unityGameID = "3232718"
     private val testMode = true
     private var isUnityShow = false
+    private var showAd = false
     private val placementId = "kitapOrtasi"
     private var bookFileName: String? = null
 
@@ -236,12 +237,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
     private inner class UnityAdsListener : IUnityAdsListener {
 
-        override fun onUnityAdsReady(placementId: String) {
-            if (isUnityShow) {
+        override fun onUnityAdsReady(placementIds: String) {
+          /*  if (isUnityShow && placementIds.equals(placementId)) {
                 UnityAds.show(this@FolioActivity, placementId)
                 Log.d("unitytest", "girdi3")
             }
-            Log.d("unitytest", placementId)
+            Log.d("unitytest", placementIds)*/
         }
 
         override fun onUnityAdsStart(placementId: String) {
@@ -249,11 +250,22 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
 
         override fun onUnityAdsFinish(placementId: String, finishState: UnityAds.FinishState) {
-            // Implement functionality for a user finishing an ad.
+            Handler().postDelayed(
+                {
+                    showAd=true;
+                },
+                30000 // value in milliseconds
+            )
         }
 
         override fun onUnityAdsError(error: UnityAds.UnityAdsError, message: String) {
             Log.d("unitytesFt", message)
+            Handler().postDelayed(
+                {
+                    showAd=true;
+                },
+                30000 // value in milliseconds
+            )
         }
     }
 
@@ -282,11 +294,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         super.onStop()
         Log.v(LOG_TAG, "-> onStop")
         topActivity = false
+
+
     }
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
-        DisplayInterstitialAd()
+            if (showAd) {
+                DisplayInterstitialAd()
+            }
+        else showAd=true
        /* if (mInterstitialAd.isLoaded) {
             mInterstitialAd.show()
         } else {
