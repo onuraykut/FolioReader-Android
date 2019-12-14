@@ -75,8 +75,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
-import com.unity3d.ads.IUnityAdsListener
-import com.unity3d.ads.UnityAds
+//import com.unity3d.ads.IUnityAdsListener
+//import com.unity3d.ads.UnityAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -271,7 +271,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
     }*/
 
-    fun DisplayInterstitialAd() {
+   /* fun DisplayInterstitialAd() {
         if (UnityAds.isReady(placementId)) {
             Log.d("unitytest", "girdi1")
             UnityAds.show(this, placementId)
@@ -279,7 +279,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             isUnityShow = true
             Log.d("unitytest", "girdi2")
         }
-    }
+    }*/
     override fun onResume() {
         super.onResume()
         Log.v(LOG_TAG, "-> onResume")
