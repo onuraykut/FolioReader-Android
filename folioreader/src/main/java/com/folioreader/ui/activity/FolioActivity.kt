@@ -229,13 +229,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
     }
-    fun unityAds() {
+   /* fun unityAds() {
         val myAdsListener = UnityAdsListener()
         UnityAds.addListener(myAdsListener)
         // Initialize the SDK:
         UnityAds.initialize(this, unityGameID, testMode)
-    }
-    private inner class UnityAdsListener : IUnityAdsListener {
+    }*/
+    /*private inner class UnityAdsListener : IUnityAdsListener {
 
         override fun onUnityAdsReady(placementIds: String) {
            if (isUnityShow && placementIds.equals(placementId)) {
@@ -269,7 +269,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 30000 // value in milliseconds
             )
         }
-    }
+    }*/
 
     fun DisplayInterstitialAd() {
         if (UnityAds.isReady(placementId)) {
@@ -302,22 +302,22 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
-            if (showAd && isUnityShow) {
+          /*  if (showAd && isUnityShow) {
                 DisplayInterstitialAd()
             }
-        else showAd=true
-       /* if (mInterstitialAd.isLoaded) {
+        else showAd=true*/
+        if (mInterstitialAd.isLoaded) {
             mInterstitialAd.show()
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.")
-        }*/
+        }
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        unityAds()
+//        unityAds()
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
