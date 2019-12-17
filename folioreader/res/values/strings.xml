@@ -120,4 +120,8 @@
     <string name="save_button">Save</string>
 
     <string name="arkaplanPremium">You need to Premium user for change the background color,if you want to buy,you can buy it from app settings</string>
+    <string name="premium_title">Premium Membership</string>
+    <string name="premium_desc">Sign up now to remove ads from the app. Only 0.99$ per month.You can get it from the Settings page.</string>
+    <string name="premium_kapat">Close</string>
+    <string name="bos" />
 </resources>

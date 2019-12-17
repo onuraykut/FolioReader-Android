@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
                 if (config == null)
                     config = new Config();
                 config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
-
+                config.setPremium(false);
                 folioReader.setConfig(config, true)
                         .openBook(R.raw.accessible_epub_3);
             }
@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
                     config.setBackgroundColorInt(2);
 
                 }
-                config.setPremium(true);
+                config.setPremium(false);
                 folioReader.setReadLocatorListener(new ReadLocatorListener() {
                     @Override
                     public void saveReadLocator(ReadLocator readLocator) {

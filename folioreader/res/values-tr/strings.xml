@@ -119,5 +119,8 @@
     <string name="savedToast">Kaldığınız yer kaydedildi</string>
 
     <string name="arkaplanPremium">Arkaplan rengi için Premium üye olmalısınız,uygulama ayarlarından üye olabilirsiniz</string>
+    <string name="premium_title">Reklamları Kaldırın</string>
+    <string name="premium_desc">Uygulamadaki reklamları kaldırarak reklamsız kitap okumak için hemen premium üye olun.Ayda sadece 2.99 TL . Ayarlar sayfasından alabilirsiniz.</string>
+    <string name="premium_kapat">Kapat</string>
 
 </resources>

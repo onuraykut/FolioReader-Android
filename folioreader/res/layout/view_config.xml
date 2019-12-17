@@ -40,7 +40,7 @@
             android:id="@+id/view_config_white"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@color/white"
             app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             android:scaleType="centerInside"
@@ -52,7 +52,7 @@
             android:id="@+id/view_config_yellowAcik"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:gravity="center"
             android:background="@color/background_acik"
             app:srcCompat="@drawable/ic_lock_outline_black_24dp"
@@ -65,7 +65,7 @@
             android:id="@+id/view_config_green"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             android:scaleType="centerInside"
             android:background="@color/background_yellow"
@@ -77,7 +77,7 @@
             android:id="@+id/view_config_yellow"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             android:background="@color/highlight_green"
             android:scaleType="centerInside"
@@ -125,7 +125,7 @@
             android:id="@+id/view8"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@color/grey_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,7 +140,7 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_lato"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_lato"
@@ -152,7 +152,7 @@
         app:folio_font="@string/lato_font"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_lora"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_andada"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_lora"
@@ -164,7 +164,7 @@
         app:folio_font="@string/lora_font"
         app:layout_constraintEnd_toStartOf="@+id/view_config_font_raleway"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_lato"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <com.folioreader.ui.view.StyleableTextView
         android:id="@+id/view_config_font_raleway"
@@ -176,7 +176,7 @@
         app:folio_font="@string/raleway_font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view_config_font_lora"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <View
         android:id="@+id/view4"

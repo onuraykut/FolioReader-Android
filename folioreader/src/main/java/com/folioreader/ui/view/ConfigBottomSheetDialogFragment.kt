@@ -291,18 +291,19 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            val attrs = intArrayOf(android.R.attr.navigationBarColor)
+           /* val attrs = intArrayOf(android.R.attr.navigationBarColor)
             val typedArray = activity?.theme?.obtainStyledAttributes(attrs)
             val defaultNavigationBarColor = typedArray?.getColor(
                 0,
                 ContextCompat.getColor(context!!, R.color.white)
-            )
+            )*/
             val black = ContextCompat.getColor(context!!, R.color.black)
+            val white = ContextCompat.getColor(context!!, R.color.white)
 
             val navigationColorAnim = ValueAnimator.ofObject(
                 ArgbEvaluator(),
-                if (isNightMode) black else defaultNavigationBarColor,
-                if (isNightMode) defaultNavigationBarColor else black
+                if (isNightMode) black else white,
+                if (isNightMode) white else black
             )
 
             navigationColorAnim.addUpdateListener { valueAnimator ->
