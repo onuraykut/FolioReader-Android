@@ -377,7 +377,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             unityAds()
             /*  MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)
-              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927"
+              mInterstitialAd.adUnitId = "xxxx" //reklam
               //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
               mInterstitialAd.loadAd(AdRequest.Builder().build())
