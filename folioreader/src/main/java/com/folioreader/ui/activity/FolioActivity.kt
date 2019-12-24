@@ -82,7 +82,7 @@ import com.unity3d.ads.UnityAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
-    private val unityGameID = "3232718"
+    private val unityGameID = "xxxx" //reklam kodu
     private val testMode = false
     private var isUnityShow = true
     private var showAd = true
