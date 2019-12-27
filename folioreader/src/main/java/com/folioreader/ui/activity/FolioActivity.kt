@@ -82,7 +82,7 @@ import com.unity3d.ads.UnityAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
-    private val unityGameID = "xxxx" //reklam kodu
+    private val unityGameID = "3232718" //reklam kodu
     private val testMode = false
     private var isUnityShow = true
     private var showAd = true
@@ -481,7 +481,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
         val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!config.isPremium)
+        if (!config.isPremium && isUnityShow)
             DisplayInterstitialAd()
             /*if (mInterstitialAd.isLoaded) {
                 mInterstitialAd.show()
