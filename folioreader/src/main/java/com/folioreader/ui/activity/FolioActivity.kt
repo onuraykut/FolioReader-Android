@@ -302,11 +302,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 DisplayInterstitialAd()
             }
         else showAd=true*/
-        /*if (mInterstitialAd.isLoaded) {
+        if (mInterstitialAd.isLoaded) {
             mInterstitialAd.show()
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.")
-        }*/
+        }
 
     }
 
@@ -374,10 +374,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
         if (!config.isPremium) {
             premiumMessage()
-            unityAds()
-            /*  MobileAds.initialize(this) {}
+            //unityAds()
+              MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)
-              mInterstitialAd.adUnitId = "xxxx" //reklam
+              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927" //reklam
               //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
               mInterstitialAd.loadAd(AdRequest.Builder().build())
@@ -385,12 +385,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                   override fun onAdClosed() {
                       mInterstitialAd.loadAd(AdRequest.Builder().build())
                   }
-              }*/
+              }
         }
 
     }
     fun premiumMessage() {
-        val config = RateThisApp.Config( 7,15)
+        val config = RateThisApp.Config( 7,12)
         config.setTitle(R.string.premium_title)
         config.setMessage(R.string.premium_desc)
         config.setYesButtonText(R.string.bos)
@@ -481,17 +481,21 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
         val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!config.isPremium && isUnityShow)
-            DisplayInterstitialAd()
-            /*if (mInterstitialAd.isLoaded) {
-                mInterstitialAd.show()
-            }*/
+        /*   if (!config.isPremium && isUnityShow)
+               DisplayInterstitialAd()
+               if (mInterstitialAd.isLoaded) {
+                   mInterstitialAd.show()
+               }*/
 
         val itemId = item.itemId
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
             startContentHighlightActivity()
+            if(!config.isPremium)
+                if (mInterstitialAd.isLoaded) {
+                    mInterstitialAd.show()
+                }
             return true
 
         } else if (itemId == R.id.itemSearch) {
@@ -509,6 +513,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemConfig) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             showConfigBottomSheetDialogFragment()
+            if(!config.isPremium)
+                if (mInterstitialAd.isLoaded) {
+                    mInterstitialAd.show()
+                }
             return true
 
         } else if (itemId == R.id.itemTts) {
