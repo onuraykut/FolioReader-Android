@@ -77,8 +77,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.kobakei.ratethisapp.RateThisApp
-import com.unity3d.ads.IUnityAdsListener
-import com.unity3d.ads.UnityAds
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -234,47 +232,47 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
     }
 
-    fun unityAds() {
-        val myAdsListener = UnityAdsListener()
-        UnityAds.addListener(myAdsListener)
-        // Initialize the SDK:
-        UnityAds.initialize(this, unityGameID, testMode,true)
-        UnityAds.load(placementId)
-    }
+    /*  fun unityAds() {
+          val myAdsListener = UnityAdsListener()
+          UnityAds.addListener(myAdsListener)
+          // Initialize the SDK:
+          UnityAds.initialize(this, unityGameID, testMode,true)
+          UnityAds.load(placementId)
+      }
 
-    private inner class UnityAdsListener : IUnityAdsListener {
+      private inner class UnityAdsListener : IUnityAdsListener {
 
-        override fun onUnityAdsReady(placementIds: String) {
-            Log.d("unityadsListener",placementIds)
-        }
+          override fun onUnityAdsReady(placementIds: String) {
+              Log.d("unityadsListener",placementIds)
+          }
 
-        override fun onUnityAdsStart(placementId: String) {
-            isUnityShow = false
-        }
+          override fun onUnityAdsStart(placementId: String) {
+              isUnityShow = false
+          }
 
-        override fun onUnityAdsFinish(placementIds: String, finishState: UnityAds.FinishState) {
-            /* Handler().postDelayed(
+          override fun onUnityAdsFinish(placementIds: String, finishState: UnityAds.FinishState) {
+              *//* Handler().postDelayed(
                 {
                     showAd=true;
                     isUnityShow = true
                 },
                 30000 // value in milliseconds
-            )*/
+            )*//*
             UnityAds.load(placementId)
         }
 
         override fun onUnityAdsError(error: UnityAds.UnityAdsError, message: String) {
             Log.d("unitytesFt", message)
         }
-    }
+    }*/
 
-    fun DisplayInterstitialAd() {
+   /* fun DisplayInterstitialAd() {
         if (UnityAds.isReady(placementId)) {
             Log.d("unitytest", "girdi1")
             UnityAds.show(this, placementId)
         }
     }
-
+*/
     override fun onResume() {
         super.onResume()
         Log.v(LOG_TAG, "-> onResume")
