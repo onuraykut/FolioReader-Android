@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
                     config.setBackgroundColorInt(2);
 
                 }
-                config.setPremium(false);
+                config.setPremium(true);
                 folioReader.setReadLocatorListener(new ReadLocatorListener() {
                     @Override
                     public void saveReadLocator(ReadLocator readLocator) {

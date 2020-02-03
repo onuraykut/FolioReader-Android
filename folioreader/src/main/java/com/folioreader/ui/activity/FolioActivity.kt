@@ -80,7 +80,7 @@ import com.kobakei.ratethisapp.RateThisApp
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
-    private val unityGameID = "3232718" //reklam kodu
+    private val unityGameID = "xxx" //reklam kodu
     private val testMode = false
     private var isUnityShow = true
     private var showAd = true
@@ -118,12 +118,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var searchAdapterDataBundle: Bundle? = null
     private var searchQuery: CharSequence? = null
     private var searchLocator: SearchLocator? = null
-
     private var displayMetrics: DisplayMetrics? = null
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
     private lateinit var mInterstitialAd: InterstitialAd
+    private var isPremium = false
 
     companion object {
 
@@ -300,18 +300,21 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 DisplayInterstitialAd()
             }
         else showAd=true*/
-        if (mInterstitialAd.isLoaded) {
-            mInterstitialAd.show()
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.")
+//        val config = AppUtil.getSavedConfig(applicationContext)!!
+        if (!isPremium) {
+            if (mInterstitialAd.isLoaded) {
+                mInterstitialAd.show()
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.")
+            }
         }
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        val config = AppUtil.getSavedConfig(applicationContext)!!
+        isPremium = config.isPremium
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -369,8 +372,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else {
             setupBook()
         }
-        val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!config.isPremium) {
+
+        if (!isPremium) {
             premiumMessage()
             //unityAds()
               MobileAds.initialize(this) {}
@@ -478,7 +481,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
-        val config = AppUtil.getSavedConfig(applicationContext)!!
+//        val config = AppUtil.getSavedConfig(applicationContext)!!
         /*   if (!config.isPremium && isUnityShow)
                DisplayInterstitialAd()
                if (mInterstitialAd.isLoaded) {
@@ -490,7 +493,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
             startContentHighlightActivity()
-            if(!config.isPremium)
+            if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
                 }
@@ -511,7 +514,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemConfig) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             showConfigBottomSheetDialogFragment()
-            if(!config.isPremium)
+            if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
                 }
