@@ -313,8 +313,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val config = AppUtil.getSavedConfig(applicationContext)!!
-        isPremium = config.isPremium
+
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -372,7 +371,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else {
             setupBook()
         }
-
+        val config = AppUtil.getSavedConfig(applicationContext)!!
+        isPremium = config.isPremium
         if (!isPremium) {
             premiumMessage()
             //unityAds()
