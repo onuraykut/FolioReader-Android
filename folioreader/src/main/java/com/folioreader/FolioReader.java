@@ -60,7 +60,7 @@ public class FolioReader {
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
     private String themeColor;
-    private InterstitialAd mInterstitialAd;
+//    private InterstitialAd mInterstitialAd;
     @Nullable
     public Retrofit retrofit;
     @Nullable
@@ -105,7 +105,7 @@ public class FolioReader {
         public void onReceive(Context context, Intent intent) {
             if (onClosedListener != null) {
                 onClosedListener.onFolioReaderClosed();
-                if (mInterstitialAd.isLoaded()) {
+              /*  if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                 } else {
                     mInterstitialAd.setAdListener(new AdListener() {
@@ -117,7 +117,7 @@ public class FolioReader {
                         }
                     });
                     Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }
+                }*/
             }
         }
     };
@@ -143,9 +143,9 @@ public class FolioReader {
     private FolioReader(Context context) {
         this.context = context;
         DbAdapter.initialize(context);
-        mInterstitialAd = new InterstitialAd(this.context);
+      /*  mInterstitialAd = new InterstitialAd(this.context);
         //   mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // test ad
-        mInterstitialAd.setAdUnitId("ca-app-pub-8363194691553414/9360053927"); // gerçek reklam
+        mInterstitialAd.setAdUnitId("ca-app-pub-8363194691553414/7590158097"); // gerçek reklam
         //  mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build());
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
@@ -155,7 +155,7 @@ public class FolioReader {
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
 
-        });
+        });*/
 
             LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         localBroadcastManager.registerReceiver(highlightReceiver,
