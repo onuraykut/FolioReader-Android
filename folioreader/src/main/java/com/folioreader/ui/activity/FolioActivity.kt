@@ -383,10 +383,22 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
               mInterstitialAd.loadAd(AdRequest.Builder().build())
               mInterstitialAd.adListener = object : AdListener() {
+                  override fun onAdOpened() {
+                      Log.d("FolioAdTest1","Ad is opening");
+                  }
+                  override fun onAdLoaded() {
+                      Log.d("FolioAdTest1","Ad is Loaded");
+                  }
+
+                  override fun onAdFailedToLoad(errorCode: Int) {
+                      Log.d("FolioAdTest1","Ad is Error");
+                  }
                   override fun onAdClosed() {
                       mInterstitialAd.loadAd(AdRequest.Builder().build())
+                      Log.d("FolioAdTest1","Ad is closed");
                   }
               }
+
         }
 
     }
