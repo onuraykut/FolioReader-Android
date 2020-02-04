@@ -494,11 +494,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
-            startContentHighlightActivity()
             if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
                 }
+            startContentHighlightActivity()
             return true
 
         } else if (itemId == R.id.itemSearch) {
