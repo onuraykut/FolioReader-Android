@@ -99,7 +99,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
         }
         if (config.isPremium){
-            view_config_white.setImageDrawable(null);
+//            view_config_white.setImageDrawable(null);
             view_config_yellowAcik.setImageDrawable(null);
             view_config_yellow.setImageDrawable(null);
             view_config_green.setImageDrawable(null);
@@ -135,7 +135,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             setToolBarColor()
             setAudioPlayerBackground()
         }
-        if (config.isPremium) {
+
         view_config_white.setOnClickListener {
             isNightMode = true
             config.setBackgroundColorInt(0)
@@ -145,6 +145,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             UiUtil.setColorResToDrawable(R.color.app_gray, view_config_ib_night_mode.drawable)
             UiUtil.setColorIntToDrawable(config.themeColor, view_config_ib_day_mode.drawable)
         }
+        if (config.isPremium) {
         view_config_yellowAcik.setOnClickListener {
             isNightMode = true
             config.setBackgroundColorInt(2)
@@ -174,9 +175,9 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
         }
         else {
-            view_config_white.setOnClickListener {
+           /* view_config_white.setOnClickListener {
                 arkaplanPremium()
-            }
+            }*/
             view_config_yellowAcik.setOnClickListener {arkaplanPremium()}
             view_config_green.setOnClickListener {arkaplanPremium()}
             view_config_yellow.setOnClickListener {arkaplanPremium()}

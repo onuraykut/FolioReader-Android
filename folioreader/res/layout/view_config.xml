@@ -42,7 +42,6 @@
             android:layout_height="50dp"
             android:visibility="visible"
             android:background="@color/white"
-            app:srcCompat="@drawable/ic_lock_outline_black_24dp"
             android:scaleType="centerInside"
             app:layout_constraintEnd_toStartOf="@+id/view_config_font_lato"
             app:layout_constraintStart_toStartOf="parent"
