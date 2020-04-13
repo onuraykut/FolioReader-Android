@@ -87,7 +87,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'org.slf4j:slf4j-android:1.7.25'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
-    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+    implementation 'com.google.android.gms:play-services-ads:19.0.1'
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
 //    implementation 'com.github.QuadFlask:colorpicker:0.0.13'
     //Kotlin

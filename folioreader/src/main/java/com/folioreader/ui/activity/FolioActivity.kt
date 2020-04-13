@@ -374,11 +374,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
         if (!isPremium) {
-            premiumMessage()
+            //premiumMessage()
             //unityAds()
               MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)
-              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927" //reklam
+              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/3480813657" //reklam tr sp
               //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
               mInterstitialAd.loadAd(AdRequest.Builder().build())
@@ -516,10 +516,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemConfig) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             showConfigBottomSheetDialogFragment()
-            if(!isPremium)
+          /*  if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
-                }
+                }*/
             return true
 
         } else if (itemId == R.id.itemTts) {

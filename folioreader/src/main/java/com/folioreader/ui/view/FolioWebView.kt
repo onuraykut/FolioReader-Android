@@ -346,14 +346,14 @@ class FolioWebView : WebView {
         val bundle = Bundle()
         bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
         dictionaryFragment.arguments = bundle
-        dictionaryFragment.show(parentFragment.fragmentManager, DictionaryFragment::class.java.name)
+        parentFragment.fragmentManager?.let { dictionaryFragment.show(it, DictionaryFragment::class.java.name) }
     }
     private fun showTransDialog(selectedText: String?) {
         val dictionaryFragment = DictionaryFragment()
         val bundle = Bundle()
         bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
         dictionaryFragment.arguments = bundle
-        dictionaryFragment.show(parentFragment.fragmentManager, DictionaryFragment::class.java.name)
+        parentFragment.fragmentManager?.let { dictionaryFragment.show(it, DictionaryFragment::class.java.name) }
     }
     private fun onHighlightColorItemsClicked(style: HighlightStyle, isAlreadyCreated: Boolean) {
         parentFragment.highlight(style, isAlreadyCreated)
