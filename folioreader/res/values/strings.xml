@@ -123,6 +123,10 @@
     <string name="premium_title">Premium Membership</string>
     <string name="premium_desc">Sign up now to remove ads from the app. Only 0.99$ per month.You can get it from the Settings page.</string>
     <string name="premium_kapat">Close</string>
-    <string name="bos" />
-    <string name="alintila">Alıntıla</string>
+    <string name="bos">Okey</string>
+    <string name="alintila">Cite</string>
+    <string name="alinti_giris"><![CDATA[You can use this feature after logging in. You can become a member from the Main Menu> My Profile screen.]]></string>
+    <string name="kaydedildi">Saved</string>
+    <string name="kaydediliyor">Saving...</string>
+    <string name="kayit_istiyormu">Do you want to save it in my citations? (You can access my quotes from the main menu)\n\n</string>
 </resources>

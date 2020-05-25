@@ -80,9 +80,9 @@
     <string name="underline_highlights">
         <span style="border-bottom: 1px solid #ff0000;">%s</span>
     </string>
-    <string name="edit_notes">Save your note</string>
-    <string name="save_note">Save note</string>
-    <string name="please_enter_note">please enter a note</string>
+    <string name="edit_notes">Notunuzu kaydedin</string>
+    <string name="save_note">Not kayıt</string>
+    <string name="please_enter_note">Lütfen not giriniz</string>
     <string name="contents">İçerikler</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -117,11 +117,14 @@
     <string name="callHighlightSearchLocator" translatable="false">javascript:highlightSearchLocator(\"%s\")</string>
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
     <string name="savedToast">Kaldığınız yer kaydedildi</string>
-
+    <string name="bos">Tamam</string>
     <string name="arkaplanPremium">Arkaplan rengi için Premium üye olmalısınız,uygulama ayarlarından üye olabilirsiniz</string>
     <string name="premium_title">Reklamları Kaldırın</string>
     <string name="premium_desc">Uygulamadaki reklamları kaldırarak reklamsız kitap okumak için hemen premium üye olun.Ayda sadece 2.99 TL . Ayarlar sayfasından alabilirsiniz.</string>
     <string name="premium_kapat">Kapat</string>
     <string name="alintila">Alıntıla</string>
-
+    <string name="alinti_giris"><![CDATA[Bu özelliği üye girişi yaptıktan sonra kullanabilirsiniz.Anamenü->Profilim ekranından üye olabilirsiniz.]]></string>
+    <string name="kaydedildi">Kaydedildi</string>
+    <string name="kaydediliyor">Kaydediliyor...</string>
+    <string name="kayit_istiyormu">Alıntılarıma kaydetmek istiyor musunuz? (Ana menüden alıntılarıma ulaşabilirsiniz)\n\n</string>
 </resources>

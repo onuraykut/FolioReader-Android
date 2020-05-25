@@ -375,7 +375,7 @@ class FolioWebView : WebView {
                         context
                     )
                 )
-                    .setMessage("Alıntılarıma kaydetmek istiyor musunuz? (Ana menüden alıntılarıma ulaşabilirsiniz)\n\n'$selectedText'")
+                    .setMessage( context.getString(R.string.kayit_istiyormu)+ "'$selectedText'")
                     .setPositiveButton("Evet") { dialog, which ->
                         //kaydetme işlemi
                         saveAlinti(selectedText)
@@ -896,12 +896,12 @@ class FolioWebView : WebView {
                     context
                 )
             )
-                .setMessage("Bu özelliği üye girişi yaptıktan sonra kullanabilirsiniz.Anamenü->Profilim ekranından üye olabilirsiniz.")
+                .setMessage(context.getString(R.string.alinti_giris))
                 .setPositiveButton("Tamam", null)
                 .show()
         }else {
         val dialogAlinti = ProgressDialog(context)
-        dialogAlinti.setMessage("Kaydediliyor...")
+        dialogAlinti.setMessage(context.getString(R.string.kaydediliyor))
         dialogAlinti.setCancelable(true)
         dialogAlinti.setInverseBackgroundForced(true)
         dialogAlinti.show()
@@ -910,9 +910,9 @@ class FolioWebView : WebView {
             val requestQueue = Volley.newRequestQueue(context)
             val mStringRequest = object : StringRequest(
                 Request.Method.POST,
-                "https://ucretsizkitapindir.com:8081/users/alinti/save",
+                "https://ucretsizkitapindir.com/bookapi/users/alinti/save",
                 Response.Listener { response ->
-                    Toast.makeText(context, "Kaydedildi", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.kaydedildi), Toast.LENGTH_SHORT).show()
                     dialogAlinti.dismiss()
                 },
                 Response.ErrorListener { error ->
