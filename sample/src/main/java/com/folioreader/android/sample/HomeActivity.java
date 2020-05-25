@@ -100,6 +100,10 @@ public class HomeActivity extends AppCompatActivity
 
                 }
                 config.setPremium(false);
+                config.setBookID(12366);
+                config.setUid("test1");
+                config.setBookName("kitap 1");
+                config.setAuthor("author 1");
                 folioReader.setReadLocatorListener(new ReadLocatorListener() {
                     @Override
                     public void saveReadLocator(ReadLocator readLocator) {

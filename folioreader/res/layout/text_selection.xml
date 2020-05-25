@@ -38,7 +38,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/share" />
-
+                <TextView
+                    android:id="@+id/alintiSelection"
+                    style="@style/TextViewTextSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:text="@string/alintila" />
                 <TextView
                     android:id="@+id/defineSelection"
                     style="@style/TextViewTextSelector"

@@ -122,5 +122,6 @@
     <string name="premium_title">Reklamları Kaldırın</string>
     <string name="premium_desc">Uygulamadaki reklamları kaldırarak reklamsız kitap okumak için hemen premium üye olun.Ayda sadece 2.99 TL . Ayarlar sayfasından alabilirsiniz.</string>
     <string name="premium_kapat">Kapat</string>
+    <string name="alintila">Alıntıla</string>
 
 </resources>

@@ -22,6 +22,10 @@ public class Config implements Parcelable {
     public static final String CONFIG_FONT_SIZE = "font_size";
     public static final String CONFIG_IS_NIGHT_MODE = "is_night_mode";
     public static final String CONFIG_IS_PREMIUM = "is_premium";
+    public static final String CONFIG_BOOKID = "book_id";
+    public static final String CONFIG_BOOK_NAME = "book_name";
+    public static final String CONFIG_UID = "uid";
+    public static final String CONFIG_AUTHOR = "author";
     public static final String CONFIG_THEME_COLOR_INT = "theme_color_int";
     public static final String BACKGROUND_COLOR_INT = "background_color_int";
     public static final String CONFIG_IS_TTS = "is_tts";
@@ -36,6 +40,10 @@ public class Config implements Parcelable {
     private int fontSize = 2;
     private boolean nightMode;
     private boolean isPremium;
+    private int bookID;
+    private String bookName;
+    private String uid;
+    private String author;
     @ColorInt
     private int themeColor = DEFAULT_THEME_COLOR_INT;
     private int backgroundColor = 0;
@@ -85,6 +93,10 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (showTts ? 1 : 0));
         dest.writeString(allowedDirection.toString());
         dest.writeString(direction.toString());
+        dest.writeInt(bookID);
+        dest.writeString(bookName);
+        dest.writeString(uid);
+        dest.writeString(author);
     }
 
     protected Config(Parcel in) {
@@ -97,6 +109,10 @@ public class Config implements Parcelable {
         showTts = in.readByte() != 0;
         allowedDirection = getAllowedDirectionFromString(LOG_TAG, in.readString());
         direction = getDirectionFromString(LOG_TAG, in.readString());
+        bookID = in.readInt();
+        bookName = in.readString();
+        uid = in.readString();
+        author = in.readString();
     }
 
     public Config() {
@@ -113,6 +129,11 @@ public class Config implements Parcelable {
         allowedDirection = getAllowedDirectionFromString(LOG_TAG,
                 jsonObject.optString(CONFIG_ALLOWED_DIRECTION));
         direction = getDirectionFromString(LOG_TAG, jsonObject.optString(CONFIG_DIRECTION));
+        bookID = jsonObject.optInt(CONFIG_BOOKID);
+        bookName = jsonObject.optString(CONFIG_BOOK_NAME);
+        uid = jsonObject.optString(CONFIG_UID);
+        author = jsonObject.optString(CONFIG_AUTHOR);
+
     }
 
     public static Direction getDirectionFromString(final String LOG_TAG, String directionString) {
@@ -179,6 +200,38 @@ public class Config implements Parcelable {
     public Config setPremium(boolean nightMode) {
         this.isPremium = nightMode;
         return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getBookID() {
+        return bookID;
+    }
+
+    public void setBookID(int bookID) {
+        this.bookID = bookID;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @ColorInt

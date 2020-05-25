@@ -99,6 +99,11 @@ class AppUtil {
                 obj.put(Config.CONFIG_IS_TTS, config.isShowTts)
                 obj.put(Config.CONFIG_ALLOWED_DIRECTION, config.allowedDirection.toString())
                 obj.put(Config.CONFIG_DIRECTION, config.direction.toString())
+                obj.put(Config.CONFIG_BOOKID,config.bookID)
+                obj.put(Config.CONFIG_BOOK_NAME,config.bookName)
+                obj.put(Config.CONFIG_UID,config.uid)
+                obj.put(Config.CONFIG_AUTHOR,config.author)
+
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()
