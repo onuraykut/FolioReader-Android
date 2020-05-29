@@ -378,8 +378,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             //unityAds()
               MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)
-              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927" //reklam
-              //  mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+              mInterstitialAd.adUnitId = "ca-app-pub-8363194691553414/9360053927" //reklam tr
 
               mInterstitialAd.loadAd(AdRequest.Builder().build())
               mInterstitialAd.adListener = object : AdListener() {
@@ -393,7 +392,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     }
     fun premiumMessage() {
-        val config = RateThisApp.Config( 7,12)
+        val config = RateThisApp.Config( 7,10)
         config.setTitle(R.string.premium_title)
         config.setMessage(R.string.premium_desc)
         config.setYesButtonText(R.string.bos)
@@ -516,10 +515,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemConfig) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             showConfigBottomSheetDialogFragment()
-            if(!isPremium)
+          /*  if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
-                }
+                }*/
             return true
 
         } else if (itemId == R.id.itemTts) {
