@@ -12,27 +12,27 @@
     <string name="lora_font">fonts/lora/Lora-Regular.ttf</string>
     <string name="raleway_font">fonts/raleway/Raleway-Regular.ttf</string>
 
-    <string name="minutes_left">%1$d dakika ·&#160;</string>
-    <string name="minute_left">%1$d dakika ·&#160;</string>
-    <string name="less_than_minute">Bir dakikadan az kaldı ·&#160;</string>
+    <string name="minutes_left">%1$d minuto ·&#160;</string>
+    <string name="minute_left">%1$d minuto ·&#160;</string>
+    <string name="less_than_minute">Queda menos de un minuto ·&#160;</string>
 
-    <string name="copied">Kopyalandı</string>
-    <string name="send_to">Şuraya gönder</string>
+    <string name="copied">Copiado</string>
+    <string name="send_to">Enviar a</string>
 
-    <string name="copy">Kopyala</string>
-    <string name="share">Paylaş</string>
-    <string name="define">Tanımla</string>
-    <string name="highlight">Vurgula</string>
-    <string name="translate_select">Çeviri</string>
+    <string name="copy">Copiar</string>
+    <string name="share">Compartir</string>
+    <string name="define">Definir</string>
+    <string name="highlight">Acentos</string>
+    <string name="translate_select">Traducción</string>
 
-    <string name="pages_left">%1$d sayfa kaldı</string>
-    <string name="page_left">%1$d sayfa kaldı</string>
-    <string name="highlights">Vurgular</string>
+    <string name="pages_left">%1$d quedan páginas</string>
+    <string name="page_left">%1$d quedan páginas</string>
+    <string name="highlights">Acentos</string>
     <string name="half_speed">1/2x</string>
     <string name="onex">1x</string>
     <string name="one_and_half">1&#160;1/2x</string>
     <string name="two_x">2x</string>
-    <string name="style">Style</string>
+    <string name="style">Estilo</string>
     <string name="style_underline"><![CDATA[<u style=\" border-bottom: 1px dashed #bcbcbc;   text-decoration: none;\">Style</u>]]></string>
     <string name="full_path">full-path</string>
     <string name="error_goToPage">goToPage error:</string>
@@ -62,8 +62,8 @@
     <string name="SetSizeTitle">Upper Panel Size:</string>
     <string name="LanguageChooserTitle">Choose two languages:</string>
     <string name="parallelTextBool">parallelTextBool</string>
-    <string name="loading">Yükleniyor</string>
-    <string name="please_wait">lütfen bekleyiniz...</string>
+    <string name="loading">Cargando</string>
+    <string name="please_wait">Por favor espera..</string>
     <string name="one_and_half_speed"><![CDATA[1<sup>1</sup>/<sub>2</sub>x]]></string>
     <string name="half_speed_text"><![CDATA[<sup>1</sup>/<sub>2</sub>x]]></string>
     <string name="please_wait_till_audio_is_parsed">please wait till audio is been parsed, Retry after some time</string>
@@ -80,10 +80,10 @@
     <string name="underline_highlights">
         <span style="border-bottom: 1px solid #ff0000;">%s</span>
     </string>
-    <string name="edit_notes">Notunuzu kaydedin</string>
-    <string name="save_note">Not kayıt</string>
-    <string name="please_enter_note">Lütfen not giriniz</string>
-    <string name="contents">İçerikler</string>
+    <string name="edit_notes">Guarda tu nota</string>
+    <string name="save_note">Nota de grabación</string>
+    <string name="please_enter_note">Por favor ingrese una nota</string>
+    <string name="contents">Contenido</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -91,24 +91,24 @@
     <string name="debug_start_unable_drag">Starting unable to drag!</string>
     <string name="dictionary">Sözlük</string>
     <string name="wikipedia">Wikipedia</string>
-    <string name="cannot_access_epub_message">Kitabın açılması için dosya izni gerekiyor !</string>
-    <string name="direction_horizontal">Yatay</string>
-    <string name="direction_vertical">Dikey</string>
+    <string name="cannot_access_epub_message">Se requiere permiso de archivo para abrir el libro !</string>
+    <string name="direction_horizontal">Horizontal</string>
+    <string name="direction_vertical">Vertical</string>
 
     <string name="xhtml_mime_type" translatable="false">application/xhtml+xml</string>
     <string name="html_mime_type" translatable="false">text/html</string>
 
-    <string name="menu_item_search">Ara</string>
+    <string name="menu_item_search">Buscar</string>
     <string name="menu_item_config">Configuration</string>
     <string name="menu_item_tts">Text To Speech</string>
 
-    <string name="search_hint">Kitabın içinde arayın</string>
-    <string name="search_empty_text">Sonuç yok.</string>
+    <string name="search_hint">Busca dentro del libro</string>
+    <string name="search_empty_text">No hay resultados</string>
     <string name="search_failure_text">Something wen\'t wrong.</string>
 
     <plurals name="numberOfSearchResults">
-        <item quantity="one">%d sonuç</item>
-        <item quantity="other">%d sonuçlar</item>
+        <item quantity="one">%d resultado</item>
+        <item quantity="other">%d resultados</item>
     </plurals>
 
     <!-- JS Calls -->
@@ -116,15 +116,15 @@
     <string name="callScrollToCfi" translatable="false">javascript:scrollToCfi(\"%s\")</string>
     <string name="callHighlightSearchLocator" translatable="false">javascript:highlightSearchLocator(\"%s\")</string>
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
-    <string name="savedToast">Kaldığınız yer kaydedildi</string>
-    <string name="bos">Tamam</string>
-    <string name="arkaplanPremium">Arkaplan rengi için Premium üye olmalısınız,uygulama ayarlarından üye olabilirsiniz</string>
-    <string name="premium_title">Reklamları Kaldırın</string>
-    <string name="premium_desc">Uygulamadaki reklamları kaldırarak reklamsız kitap okumak için hemen premium üye olun.Ayda sadece 2.99 TL . Ayarlar sayfasından alabilirsiniz.</string>
-    <string name="premium_kapat">Kapat</string>
-    <string name="alintila">Alıntıla</string>
-    <string name="alinti_giris"><![CDATA[Bu özelliği üye girişi yaptıktan sonra kullanabilirsiniz.Anamenü->Profilim ekranından üye olabilirsiniz.]]></string>
-    <string name="kaydedildi">Kaydedildi</string>
-    <string name="kaydediliyor">Kaydediliyor..</string>
-    <string name="kayit_istiyormu">Alıntılarıma kaydetmek istiyor musunuz? (Ana menüden alıntılarıma ulaşabilirsiniz)\n\n</string>
+    <string name="savedToast">Tu lugar guardado</string>
+    <string name="bos">Okay</string>
+    <string name="arkaplanPremium">Debe ser miembro Premium para el color de fondo, puede ser miembro de la configuración de la aplicación.</string>
+    <string name="premium_title">Quitar anuncios</string>
+    <string name="premium_desc">Conviértase en un miembro premium para leer libros sin anuncios eliminando los anuncios en la aplicación. Solo 1.99 € por mes. Puede obtenerlo desde la página de configuración.</string>
+    <string name="premium_kapat">Cerca</string>
+    <string name="alintila">Citado en</string>
+    <string name="alinti_giris"><![CDATA[Puede usar esta función después de iniciar sesión.Puedes registrarte desde el menú principal-> pantalla Mi perfil.]]></string>
+    <string name="kaydedildi">Fue grabado.</string>
+    <string name="kaydediliyor">Grabación..</string>
+    <string name="kayit_istiyormu">¿Quieres guardarlo en mis citas? (Puede acceder a mis citas desde el menú principal)\n\n</string>
 </resources>

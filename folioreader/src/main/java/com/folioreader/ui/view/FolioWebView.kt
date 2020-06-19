@@ -910,7 +910,7 @@ class FolioWebView : WebView {
             val requestQueue = Volley.newRequestQueue(context)
             val mStringRequest = object : StringRequest(
                 Request.Method.POST,
-                "https://ucretsizkitapindir.com/bookapi/users/alinti/save",
+                "https://ucretsizkitapindir.com/bookapi/users_sp/alinti/save",
                 Response.Listener { response ->
                     Toast.makeText(context, context.getString(R.string.kaydedildi), Toast.LENGTH_SHORT).show()
                     dialogAlinti.dismiss()

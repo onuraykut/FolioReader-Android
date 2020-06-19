@@ -374,7 +374,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
         if (!isPremium) {
-            premiumMessage()
+//            premiumMessage()
             //unityAds()
               MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)

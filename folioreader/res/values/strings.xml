@@ -130,7 +130,10 @@
     <string name="kaydediliyor">Saving...</string>
     <string name="kayit_istiyormu">Do you want to save it in my citations? (You can access my quotes from the main menu)\n\n</string>
     
-    <string name="app_id" translatable="false">ca-app-pub-7132242284683823~7749408299</string>
-    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/6843390859</string>
+ <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~7749408299</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/6843390859</string>-->
+
+       <string name="app_id" translatable="false">ca-app-pub-7132242284683823~6983215053</string>
+   <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/1733330759</string>
 
 </resources>
