@@ -127,4 +127,6 @@
     <string name="kaydedildi">Fue grabado.</string>
     <string name="kaydediliyor">Grabación..</string>
     <string name="kayit_istiyormu">¿Quieres guardarlo en mis citas? (Puede acceder a mis citas desde el menú principal)\n\n</string>
+    <string name="welcome_read">Bienvenido a la pantalla de lectura.</string>
+    <string name="okuma_ayarlari">Puede ajustar la configuración de la pantalla de lectura desde este botón. Desde aquí puede ajustar la fuente / tamaño, cambiarlo deslizando hacia abajo o tirando de las páginas. Puede hacer clic en un área vacía para acceder a la pantalla completa.</string>
 </resources>

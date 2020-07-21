@@ -29,7 +29,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Telephony
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
@@ -37,7 +36,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -64,6 +62,11 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
+import com.kobakei.ratethisapp.RateThisApp
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
 import org.readium.r2.shared.Publication
@@ -71,12 +74,8 @@ import org.readium.r2.streamer.parser.CbzParser
 import org.readium.r2.streamer.parser.EpubParser
 import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import java.lang.ref.WeakReference
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
-import com.kobakei.ratethisapp.RateThisApp
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -389,7 +388,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
               }
 
         }
+       /* val target = ViewTarget(R.id.appBarLayout, this)
+        ShowcaseView.Builder(this)
+            .withMaterialShowcase()
+            .setTarget(target)
+            .setContentTitle("ShowcaseView")
+            .setContentText("This is highlighting the Home button")
+            .hideOnTouchOutside()
+            .build()*/
 
+        //o
     }
     fun premiumMessage() {
         val config = RateThisApp.Config( 7,10)
@@ -440,6 +448,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             // Fix for appBarLayout.fitSystemWindows() not being called on API < 16
             appBarLayout!!.setTopMargin(statusBarHeight)
         }
+
+
     }
 
     override fun setDayMode() {
@@ -476,6 +486,36 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
+
+        val isFirstRunShowCase = getSharedPreferences(
+            "FirstPreferenceReading",
+            Context.MODE_PRIVATE
+        ).getBoolean("isFirstRunShowCase", true)
+        if (isFirstRunShowCase) {
+        Handler().post(object : Runnable {
+            override fun run() {
+                    val view = findViewById(R.id.itemConfig) as View
+                    GuideView.Builder(this@FolioActivity)
+                        .setTitle(getString(R.string.welcome_read))
+                        .setContentText(getString(R.string.okuma_ayarlari))
+                        .setTargetView(view)
+                        .setContentTextSize(12) //optional
+                        .setTitleTextSize(14) //optional
+                        .setDismissType(GuideView.DismissType.anywhere) //optiona
+                        .setGuideListener(GuideView.GuideListener {
+                            getSharedPreferences(
+                                "FirstPreferenceReading",
+                                Context.MODE_PRIVATE
+                            )
+                                .edit()
+                                .putBoolean("isFirstRunShowCase", false)
+                                .apply()
+                        })
+                        .build()    // l - default dismissible by TargetView
+                        .show()
+                }
+        })
+        }
 
         return true
     }
