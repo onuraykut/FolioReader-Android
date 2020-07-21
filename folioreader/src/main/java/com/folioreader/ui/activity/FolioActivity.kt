@@ -77,6 +77,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.kobakei.ratethisapp.RateThisApp
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -374,7 +375,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
         if (!isPremium) {
-            premiumMessage()
+//            premiumMessage()
             //unityAds()
               MobileAds.initialize(this) {}
               mInterstitialAd = InterstitialAd(this)
@@ -477,6 +478,35 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
 
+        val isFirstRunShowCase = getSharedPreferences(
+            "FirstPreferenceReading",
+            Context.MODE_PRIVATE
+        ).getBoolean("isFirstRunShowCase", true)
+        if (isFirstRunShowCase) {
+            Handler().post(object : Runnable {
+                override fun run() {
+                    val view = findViewById(R.id.itemConfig) as View
+                    GuideView.Builder(this@FolioActivity)
+                        .setTitle(getString(R.string.welcome_read))
+                        .setContentText(getString(R.string.okuma_ayarlari))
+                        .setTargetView(view)
+                        .setContentTextSize(12) //optional
+                        .setTitleTextSize(14) //optional
+                        .setDismissType(GuideView.DismissType.anywhere) //optiona
+                        .setGuideListener(GuideView.GuideListener {
+                            getSharedPreferences(
+                                "FirstPreferenceReading",
+                                Context.MODE_PRIVATE
+                            )
+                                .edit()
+                                .putBoolean("isFirstRunShowCase", false)
+                                .apply()
+                        })
+                        .build()    // l - default dismissible by TargetView
+                        .show()
+                }
+            })
+        }
         return true
     }
 

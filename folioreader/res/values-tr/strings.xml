@@ -127,4 +127,6 @@
     <string name="kaydedildi">Kaydedildi</string>
     <string name="kaydediliyor">Kaydediliyor...</string>
     <string name="kayit_istiyormu">Alıntılarıma kaydetmek istiyor musunuz? (Ana menüden alıntılarıma ulaşabilirsiniz)\n\n</string>
+    <string name="welcome_read">Okuma ekranına hoşgeldiniz</string>
+    <string name="okuma_ayarlari">Okuma ekranı ayarlarını bu butondan yapabilirsiniz.Buradan yazı fontu/büyüklüğü,sayfaları aşağı kaydırarak ya da yana çekerek değişeceği gibi ayarları yapabilirsiniz.Tam ekrana geçmek için boş bir alana tıklayabilirsiniz.</string>
 </resources>
