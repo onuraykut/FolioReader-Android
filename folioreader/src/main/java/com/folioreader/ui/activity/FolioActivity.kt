@@ -485,7 +485,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (isFirstRunShowCase) {
             Handler().post(object : Runnable {
                 override fun run() {
-                    val view = findViewById(R.id.itemConfig) as View
+                    val view = findViewById(R.id.itemConfig) as? View
+                    if(view!=null)
                     GuideView.Builder(this@FolioActivity)
                         .setTitle(getString(R.string.welcome_read))
                         .setContentText(getString(R.string.okuma_ayarlari))
@@ -504,6 +505,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                         })
                         .build()    // l - default dismissible by TargetView
                         .show()
+                    else getSharedPreferences(
+                        "FirstPreferenceReading",
+                        Context.MODE_PRIVATE
+                    )
+                        .edit()
+                        .putBoolean("isFirstRunShowCase", false)
+                        .apply()
                 }
             })
         }
