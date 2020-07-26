@@ -109,7 +109,7 @@ public class MediaController {
                     mTextToSpeech.setSpeechRate(0.70f);
                 }
 
-                mTextToSpeech.setOnUtteranceCompletedListener(
+                /*mTextToSpeech.setOnUtteranceCompletedListener(
                         new TextToSpeech.OnUtteranceCompletedListener() {
                             @Override
                             public void onUtteranceCompleted(String utteranceId) {
@@ -122,7 +122,7 @@ public class MediaController {
                                     }
                                 });
                             }
-                        });
+                        });*/
             }
         });
     }
