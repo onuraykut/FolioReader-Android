@@ -492,29 +492,37 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             Context.MODE_PRIVATE
         ).getBoolean("isFirstRunShowCase", true)
         if (isFirstRunShowCase) {
-        Handler().post(object : Runnable {
-            override fun run() {
-                    val view = findViewById(R.id.itemConfig) as View
-                    GuideView.Builder(this@FolioActivity)
-                        .setTitle(getString(R.string.welcome_read))
-                        .setContentText(getString(R.string.okuma_ayarlari))
-                        .setTargetView(view)
-                        .setContentTextSize(12) //optional
-                        .setTitleTextSize(14) //optional
-                        .setDismissType(GuideView.DismissType.anywhere) //optiona
-                        .setGuideListener(GuideView.GuideListener {
-                            getSharedPreferences(
-                                "FirstPreferenceReading",
-                                Context.MODE_PRIVATE
-                            )
-                                .edit()
-                                .putBoolean("isFirstRunShowCase", false)
-                                .apply()
-                        })
-                        .build()    // l - default dismissible by TargetView
-                        .show()
+            Handler().post(object : Runnable {
+                override fun run() {
+                    val view = findViewById(R.id.itemConfig) as? View
+                    if(view!=null)
+                        GuideView.Builder(this@FolioActivity)
+                            .setTitle(getString(R.string.welcome_read))
+                            .setContentText(getString(R.string.okuma_ayarlari))
+                            .setTargetView(view)
+                            .setContentTextSize(12) //optional
+                            .setTitleTextSize(14) //optional
+                            .setDismissType(GuideView.DismissType.anywhere) //optiona
+                            .setGuideListener(GuideView.GuideListener {
+                                getSharedPreferences(
+                                    "FirstPreferenceReading",
+                                    Context.MODE_PRIVATE
+                                )
+                                    .edit()
+                                    .putBoolean("isFirstRunShowCase", false)
+                                    .apply()
+                            })
+                            .build()    // l - default dismissible by TargetView
+                            .show()
+                    else getSharedPreferences(
+                        "FirstPreferenceReading",
+                        Context.MODE_PRIVATE
+                    )
+                        .edit()
+                        .putBoolean("isFirstRunShowCase", false)
+                        .apply()
                 }
-        })
+            })
         }
 
         return true
@@ -1153,7 +1161,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         outState.putCharSequence(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY, searchQuery)
     }
 
-    override fun storeLastReadLocator(lastReadLocator: ReadLocator) {
+    override fun storeLastReadLocator(lastReadLocator: ReadLocator?) {
         Log.v(LOG_TAG, "-> storeLastReadLocator")
         this.lastReadLocator = lastReadLocator
     }
