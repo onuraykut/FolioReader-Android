@@ -29,7 +29,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Telephony
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
@@ -37,7 +36,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -76,7 +74,6 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
-import com.kobakei.ratethisapp.RateThisApp
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
@@ -392,18 +389,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
 
     }
-    fun premiumMessage() {
-        val config = RateThisApp.Config( 7,10)
-        config.setTitle(R.string.premium_title)
-        config.setMessage(R.string.premium_desc)
-        config.setYesButtonText(R.string.bos)
-        config.setCancelButtonText(R.string.premium_kapat)
-        config.setNoButtonText(R.string.bos)
-
-        RateThisApp.init(config)
-        RateThisApp.onCreate(this)
-        RateThisApp.showRateDialogIfNeeded(this)
-    }
     private fun initActionBar() {
 
         appBarLayout = findViewById(R.id.appBarLayout)
@@ -531,10 +516,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
-            if(!isPremium)
+           /* if(!isPremium)
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
-                }
+                }*/
             startContentHighlightActivity()
             return true
 
