@@ -29,6 +29,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
@@ -62,6 +63,11 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
+import com.mcxiaoke.koi.ext.cancelAll
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
 import org.readium.r2.shared.Publication
@@ -69,12 +75,9 @@ import org.readium.r2.streamer.parser.CbzParser
 import org.readium.r2.streamer.parser.EpubParser
 import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
-import java.lang.ref.WeakReference
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import java.lang.ref.WeakReference
+
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -91,7 +94,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var toolbar: Toolbar? = null
     private var distractionFreeMode: Boolean = false
     private var handler: Handler? = null
-
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var entryReadLocator: ReadLocator? = null
@@ -306,29 +308,30 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 Log.d("TAG", "The interstitial wasn't loaded yet.")
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
 
         // Need to add when vector drawables support library is used.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
-        handler = Handler()
+
         val display = windowManager.defaultDisplay
         displayMetrics = resources.displayMetrics
         display.getRealMetrics(displayMetrics)
         density = displayMetrics!!.density
         LocalBroadcastManager.getInstance(this).registerReceiver(
-            closeBroadcastReceiver,
-            IntentFilter(FolioReader.ACTION_CLOSE_FOLIOREADER)
+                closeBroadcastReceiver,
+                IntentFilter(FolioReader.ACTION_CLOSE_FOLIOREADER)
         )
 
         // Fix for screen get turned off while reading
         // TODO -> Make this configurable
-        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        handlerScreen = Handler()
+//        handlerScreen!!.postDelayed({ window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }, 60000)
 
         setConfig(savedInstanceState)
         initDistractionFreeMode(savedInstanceState)
@@ -357,14 +360,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         initMediaController()
 
         if (ContextCompat.checkSelfPermission(
-                this@FolioActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
+                        this@FolioActivity,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                this@FolioActivity,
-                Constants.getWriteExternalStoragePerms(),
-                Constants.WRITE_EXTERNAL_STORAGE_REQUEST
+                    this@FolioActivity,
+                    Constants.getWriteExternalStoragePerms(),
+                    Constants.WRITE_EXTERNAL_STORAGE_REQUEST
             )
         } else {
             setupBook()
@@ -382,7 +385,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
               mInterstitialAd.adListener = object : AdListener() {
                   override fun onAdClosed() {
                       mInterstitialAd.loadAd(AdRequest.Builder().build())
-                      Log.d("FolioAdTest1","Ad is closed");
+                      Log.d("FolioAdTest1", "Ad is closed");
                   }
               }
 
@@ -432,7 +435,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         Log.v(LOG_TAG, "-> setDayMode")
 
         actionBar!!.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(this, R.color.white))
+                ColorDrawable(ContextCompat.getColor(this, R.color.white))
         )
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
     }
@@ -441,7 +444,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         Log.v(LOG_TAG, "-> setNightMode")
 
         actionBar!!.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(this, R.color.black))
+                ColorDrawable(ContextCompat.getColor(this, R.color.black))
         )
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
     }
@@ -464,39 +467,39 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             menu.findItem(R.id.itemTts).isVisible = false
 
         val isFirstRunShowCase = getSharedPreferences(
-            "FirstPreferenceReading",
-            Context.MODE_PRIVATE
+                "FirstPreferenceReading",
+                Context.MODE_PRIVATE
         ).getBoolean("isFirstRunShowCase", true)
         if (isFirstRunShowCase) {
             Handler().post(object : Runnable {
                 override fun run() {
                     val view = findViewById(R.id.itemConfig) as? View
-                    if(view!=null)
-                    GuideView.Builder(this@FolioActivity)
-                        .setTitle(getString(R.string.welcome_read))
-                        .setContentText(getString(R.string.okuma_ayarlari))
-                        .setTargetView(view)
-                        .setContentTextSize(12) //optional
-                        .setTitleTextSize(14) //optional
-                        .setDismissType(GuideView.DismissType.anywhere) //optiona
-                        .setGuideListener(GuideView.GuideListener {
-                            getSharedPreferences(
-                                "FirstPreferenceReading",
-                                Context.MODE_PRIVATE
-                            )
-                                .edit()
-                                .putBoolean("isFirstRunShowCase", false)
-                                .apply()
-                        })
-                        .build()    // l - default dismissible by TargetView
-                        .show()
+                    if (view != null)
+                        GuideView.Builder(this@FolioActivity)
+                                .setTitle(getString(R.string.welcome_read))
+                                .setContentText(getString(R.string.okuma_ayarlari))
+                                .setTargetView(view)
+                                .setContentTextSize(12) //optional
+                                .setTitleTextSize(14) //optional
+                                .setDismissType(GuideView.DismissType.anywhere) //optiona
+                                .setGuideListener(GuideView.GuideListener {
+                                    getSharedPreferences(
+                                            "FirstPreferenceReading",
+                                            Context.MODE_PRIVATE
+                                    )
+                                            .edit()
+                                            .putBoolean("isFirstRunShowCase", false)
+                                            .apply()
+                                })
+                                .build()    // l - default dismissible by TargetView
+                                .show()
                     else getSharedPreferences(
-                        "FirstPreferenceReading",
-                        Context.MODE_PRIVATE
+                            "FirstPreferenceReading",
+                            Context.MODE_PRIVATE
                     )
-                        .edit()
-                        .putBoolean("isFirstRunShowCase", false)
-                        .apply()
+                            .edit()
+                            .putBoolean("isFirstRunShowCase", false)
+                            .apply()
                 }
             })
         }
@@ -583,8 +586,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     fun showConfigBottomSheetDialogFragment() {
         ConfigBottomSheetDialogFragment().show(
-            supportFragmentManager,
-            ConfigBottomSheetDialogFragment.LOG_TAG
+                supportFragmentManager,
+                ConfigBottomSheetDialogFragment.LOG_TAG
         )
     }
 
@@ -610,8 +613,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         bookFileName = FileUtil.getEpubFilename(this, mEpubSourceType!!, mEpubFilePath, mEpubRawId)
         val path = FileUtil.saveEpubFileAndLoadLazyBook(
-            this, mEpubSourceType, mEpubFilePath,
-            mEpubRawId, bookFileName
+                this, mEpubSourceType, mEpubFilePath,
+                mEpubRawId, bookFileName
         )
         val extension: Publication.EXTENSION
         var extensionString: String? = null
@@ -642,8 +645,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         r2StreamerServer = Server(portNumber)
         r2StreamerServer!!.addEpub(
-            pubBox!!.publication, pubBox!!.container,
-            "/" + bookFileName!!, null
+                pubBox!!.publication, pubBox!!.container,
+                "/" + bookFileName!!, null
         )
 
         r2StreamerServer!!.start()
@@ -707,8 +710,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         mFolioPageViewPager!!.setDirection(newDirection)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
+                supportFragmentManager,
+                spine, bookFileName, mBookId
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
         mFolioPageViewPager!!.currentItem = currentChapterIndex
@@ -900,8 +903,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
         } else {
             window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             )
             // Specified 1 just to mock anything other than View.SYSTEM_UI_FLAG_VISIBLE
             onSystemUiVisibilityChange(1)
@@ -1010,11 +1013,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mFolioPageViewPager = findViewById(R.id.folioPageViewPager)
         // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
         mFolioPageViewPager!!.setOnPageChangeListener(object :
-            DirectionalViewpager.OnPageChangeListener {
+                DirectionalViewpager.OnPageChangeListener {
             override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
             ) {
             }
 
@@ -1022,9 +1025,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
 
                 EventBus.getDefault().post(
-                    MediaOverlayPlayPauseEvent(
-                        spine!![currentChapterIndex].href, false, true
-                    )
+                        MediaOverlayPlayPauseEvent(
+                                spine!![currentChapterIndex].href, false, true
+                        )
                 )
                 mediaControllerFragment!!.setPlayButtonDrawable()
                 currentChapterIndex = position
@@ -1037,12 +1040,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 if (state == DirectionalViewpager.SCROLL_STATE_IDLE) {
                     val position = mFolioPageViewPager!!.currentItem
                     Log.v(
-                        LOG_TAG, "-> onPageScrollStateChanged -> DirectionalViewpager -> " +
-                                "position = " + position
+                            LOG_TAG, "-> onPageScrollStateChanged -> DirectionalViewpager -> " +
+                            "position = " + position
                     )
 
                     var folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
+                            mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToLast()
                         if (folioPageFragment.mWebview != null)
@@ -1050,7 +1053,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     }
 
                     folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
+                            mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToFirst()
                         if (folioPageFragment.mWebview != null)
@@ -1062,8 +1065,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         mFolioPageViewPager!!.setDirection(direction)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
+                supportFragmentManager,
+                spine, bookFileName, mBookId
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
 
@@ -1092,8 +1095,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
-            searchReceiver,
-            IntentFilter(ACTION_SEARCH_CLEAR)
+                searchReceiver,
+                IntentFilter(ACTION_SEARCH_CLEAR)
         )
     }
 
@@ -1177,33 +1180,33 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun play() {
         EventBus.getDefault().post(
-            MediaOverlayPlayPauseEvent(
-                spine!![currentChapterIndex].href, true, false
-            )
+                MediaOverlayPlayPauseEvent(
+                        spine!![currentChapterIndex].href, true, false
+                )
         )
     }
 
     override fun pause() {
         EventBus.getDefault().post(
-            MediaOverlayPlayPauseEvent(
-                spine!![currentChapterIndex].href, false, false
-            )
+                MediaOverlayPlayPauseEvent(
+                        spine!![currentChapterIndex].href, false, false
+                )
         )
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupBook()
             } else {
                 Toast.makeText(
-                    this,
-                    getString(R.string.cannot_access_epub_message),
-                    Toast.LENGTH_LONG
+                        this,
+                        getString(R.string.cannot_access_epub_message),
+                        Toast.LENGTH_LONG
                 ).show()
                 finish()
             }
