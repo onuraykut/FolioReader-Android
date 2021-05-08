@@ -33,6 +33,9 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven {
+            url 'https://android-sdk.is.com/'
+        }
     }
 }
 
