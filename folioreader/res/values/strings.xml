@@ -130,8 +130,8 @@
     <string name="kaydediliyor">Saving..</string>
     <string name="kayit_istiyormu">Do you want to save it in my citations? (You can access my quotes from the main menu)\n\n</string>
 
-    <string name="app_id" translatable="false">ca-app-pub-7132242284683823~3852214287</string>
-    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/8992860328</string>
+    <string name="app_id" translatable="false">ca-app-pub-8363194691553414~7469875143</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-8363194691553414/5985403088</string>
     <string name="welcome_read">Welcome to reading page</string>
     <string name="okuma_ayarlari">You can adjust the reading screen settings from this button. From here you can adjust the font / size, change the page by swiping down or pulling it to the side. You can click on an empty area to go to the full screen.</string>
 
