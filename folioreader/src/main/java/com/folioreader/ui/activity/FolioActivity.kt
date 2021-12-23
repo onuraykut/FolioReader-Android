@@ -62,10 +62,6 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
 import com.kobakei.ratethisapp.RateThisApp
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
@@ -121,7 +117,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
-    private lateinit var mInterstitialAd: InterstitialAd
     private var isPremium = false
 
     companion object {
@@ -230,48 +225,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
     }
-
-    /*  fun unityAds() {
-          val myAdsListener = UnityAdsListener()
-          UnityAds.addListener(myAdsListener)
-          // Initialize the SDK:
-          UnityAds.initialize(this, unityGameID, testMode,true)
-          UnityAds.load(placementId)
-      }
-
-      private inner class UnityAdsListener : IUnityAdsListener {
-
-          override fun onUnityAdsReady(placementIds: String) {
-              Log.d("unityadsListener",placementIds)
-          }
-
-          override fun onUnityAdsStart(placementId: String) {
-              isUnityShow = false
-          }
-
-          override fun onUnityAdsFinish(placementIds: String, finishState: UnityAds.FinishState) {
-              *//* Handler().postDelayed(
-                {
-                    showAd=true;
-                    isUnityShow = true
-                },
-                30000 // value in milliseconds
-            )*//*
-            UnityAds.load(placementId)
-        }
-
-        override fun onUnityAdsError(error: UnityAds.UnityAdsError, message: String) {
-            Log.d("unitytesFt", message)
-        }
-    }*/
-
-   /* fun DisplayInterstitialAd() {
-        if (UnityAds.isReady(placementId)) {
-            Log.d("unitytest", "girdi1")
-            UnityAds.show(this, placementId)
-        }
-    }
-*/
     override fun onResume() {
         super.onResume()
         Log.v(LOG_TAG, "-> onResume")
@@ -295,19 +248,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
-        /*  if (showAd && isUnityShow) {
-                DisplayInterstitialAd()
-            }
-        else showAd=true*/
-//        val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!isPremium) {
-            if (mInterstitialAd.isLoaded) {
-                mInterstitialAd.show()
-            } else {
-                Log.d("TAG", "The interstitial wasn't loaded yet.")
-            }
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -372,22 +312,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
-        if (!isPremium) {
-//            premiumMessage()
-            //unityAds()
-              MobileAds.initialize(this) {}
-              mInterstitialAd = InterstitialAd(this)
-              mInterstitialAd.adUnitId = this.getString(R.string.kitap_ortasi)
 
-              mInterstitialAd.loadAd(AdRequest.Builder().build())
-              mInterstitialAd.adListener = object : AdListener() {
-                  override fun onAdClosed() {
-                      mInterstitialAd.loadAd(AdRequest.Builder().build())
-                      Log.d("FolioAdTest1","Ad is closed");
-                  }
-              }
-
-        }
        /* val target = ViewTarget(R.id.appBarLayout, this)
         ShowcaseView.Builder(this)
             .withMaterialShowcase()
@@ -541,10 +466,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
-            if(!isPremium)
-                if (mInterstitialAd.isLoaded) {
-                    mInterstitialAd.show()
-                }
             startContentHighlightActivity()
             return true
 
