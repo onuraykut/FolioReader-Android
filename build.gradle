@@ -20,6 +20,14 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.spotbugs" version "2.0.0" apply(false)
+}
+
+// Workaround to be able to access SpotBugsTask from external gradle script.
+// More info: https://discuss.gradle.org/t/buildscript-dependencies-in-external-script/23243
+project.extensions.extraProperties.set('SpotBugsTask', com.github.spotbugs.SpotBugsTask)
+
 allprojects {
 
     configurations.all {
@@ -33,6 +41,9 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
     }
 }
 
