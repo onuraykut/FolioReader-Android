@@ -39,10 +39,6 @@ android {
         versionName versions.projectVersionName
         vectorDrawables.useSupportLibrary = true
     }
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
