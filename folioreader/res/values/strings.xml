@@ -133,8 +133,8 @@
  <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~7749408299</string>
     <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/6843390859</string>-->
 
-       <string name="app_id" translatable="false">ca-app-pub-7132242284683823~3608919471</string>
-   <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/9599121481</string>
+    <string name="app_id" translatable="false">ca-app-pub-4410410254303714~8228771433</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-4410410254303714/3226235506</string>
     <string name="welcome_read">Welcome to reading page</string>
     <string name="okuma_ayarlari">You can adjust the reading screen settings from this button. From here you can adjust the font / size, change the page by swiping down or pulling it to the side. You can click on an empty area to go to the full screen.</string>
 

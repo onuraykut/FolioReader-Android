@@ -21,9 +21,6 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -32,8 +29,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by avez raj on 9/13/2017.
