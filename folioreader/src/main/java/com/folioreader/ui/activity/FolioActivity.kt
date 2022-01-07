@@ -46,6 +46,7 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.folioreader.*
 import com.folioreader.Constants.*
+import com.folioreader.R
 import com.folioreader.model.DisplayUnit
 import com.folioreader.model.HighlightImpl
 import com.folioreader.model.event.MediaOverlayPlayPauseEvent
@@ -62,6 +63,9 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.kobakei.ratethisapp.RateThisApp
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
@@ -117,6 +121,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
+    private var mInterstitialAd: InterstitialAd? = null
     private var isPremium = false
 
     companion object {
@@ -225,6 +230,64 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
     }
+
+    /*  fun unityAds() {
+          val myAdsListener = UnityAdsListener()
+          UnityAds.addListener(myAdsListener)
+          // Initialize the SDK:
+          UnityAds.initialize(this, unityGameID, testMode,true)
+          UnityAds.load(placementId)
+      }
+
+      private inner class UnityAdsListener : IUnityAdsListener {
+
+          override fun onUnityAdsReady(placementIds: String) {
+              Log.d("unityadsListener",placementIds)
+          }
+
+          override fun onUnityAdsStart(placementId: String) {
+              isUnityShow = false
+          }
+
+          override fun onUnityAdsFinish(placementIds: String, finishState: UnityAds.FinishState) {
+              *//* Handler().postDelayed(
+                {
+                    showAd=true;
+                    isUnityShow = true
+                },
+                30000 // value in milliseconds
+            )*//*
+            UnityAds.load(placementId)
+        }
+
+        override fun onUnityAdsError(error: UnityAds.UnityAdsError, message: String) {
+            Log.d("unitytesFt", message)
+        }
+    }*/
+
+   /* fun DisplayInterstitialAd() {
+        if (UnityAds.isReady(placementId)) {
+            Log.d("unitytest", "girdi1")
+            UnityAds.show(this, placementId)
+        }
+    }
+*/
+    fun loadAd() {
+       var adRequest = AdRequest.Builder().build()
+
+       InterstitialAd.load(this,this.getString(R.string.kitap_ortasi), adRequest, object : InterstitialAdLoadCallback() {
+           override fun onAdFailedToLoad(adError: LoadAdError) {
+               Log.d("FolioAdTest1", adError?.message)
+               mInterstitialAd = null
+           }
+
+           override fun onAdLoaded(interstitialAd: InterstitialAd) {
+               Log.d("FolioAdTest1", "Ad was loaded.")
+               mInterstitialAd = interstitialAd
+           }
+       })
+    }
+
     override fun onResume() {
         super.onResume()
         Log.v(LOG_TAG, "-> onResume")
@@ -248,6 +311,35 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onStart() {
         super.onStart()
         Log.v(LOG_TAG, "-> onStart")
+        /*  if (showAd && isUnityShow) {
+                DisplayInterstitialAd()
+            }
+        else showAd=true*/
+//        val config = AppUtil.getSavedConfig(applicationContext)!!
+        if (!isPremium) {
+            if (mInterstitialAd!=null) {
+                mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        Log.d("FolioAdTest1", "Ad was dismissed.")
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                        Log.d("FolioAdTest1", "Ad failed to show.")
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        Log.d("FolioAdTest1", "Ad showed fullscreen content.")
+                        mInterstitialAd = null
+                        loadAd()
+                    }
+                }
+
+                mInterstitialAd?.show(this)
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.")
+            }
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -312,7 +404,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
-
+        if (!isPremium) {
+            MobileAds.initialize(this) {}
+            loadAd()
+        }
        /* val target = ViewTarget(R.id.appBarLayout, this)
         ShowcaseView.Builder(this)
             .withMaterialShowcase()
@@ -466,6 +561,25 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
+            if(!isPremium)
+                if (mInterstitialAd!=null) {
+                    mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            Log.d("FolioAdTest1", "Ad was dismissed.")
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                            Log.d("FolioAdTest1", "Ad failed to show.")
+                        }
+
+                        override fun onAdShowedFullScreenContent() {
+                            Log.d("FolioAdTest1", "Ad showed fullscreen content.")
+                            mInterstitialAd = null
+                            loadAd()
+                        }
+                    }
+                    mInterstitialAd?.show(this)
+                }
             startContentHighlightActivity()
             return true
 
@@ -885,6 +999,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RequestCode.SEARCH.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.SEARCH)
@@ -915,11 +1030,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             val type = data.getStringExtra(TYPE)
 
             if (type == CHAPTER_SELECTED) {
-                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION))
+                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION)!!)
 
             } else if (type == HIGHLIGHT_SELECTED) {
                 val highlightImpl = data.getParcelableExtra<HighlightImpl>(HIGHLIGHT_ITEM)
-                currentChapterIndex = highlightImpl.pageNumber
+                currentChapterIndex = highlightImpl!!.pageNumber
                 mFolioPageViewPager!!.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment ?: return
                 folioPageFragment.scrollToHighlightId(highlightImpl.rangy)
