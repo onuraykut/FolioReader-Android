@@ -323,10 +323,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                         Log.d("FolioAdTest1", "Ad was dismissed.")
                     }
 
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                        Log.d("FolioAdTest1", "Ad failed to show.")
-                    }
-
                     override fun onAdShowedFullScreenContent() {
                         Log.d("FolioAdTest1", "Ad showed fullscreen content.")
                         mInterstitialAd = null
@@ -568,9 +564,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                             Log.d("FolioAdTest1", "Ad was dismissed.")
                         }
 
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                            Log.d("FolioAdTest1", "Ad failed to show.")
-                        }
 
                         override fun onAdShowedFullScreenContent() {
                             Log.d("FolioAdTest1", "Ad showed fullscreen content.")

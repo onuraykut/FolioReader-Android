@@ -124,7 +124,7 @@
     <string name="premium_desc">Sign up now to remove ads from the app. Only 0.99$ per month.You can get it from the Settings page.</string>
     <string name="premium_kapat">Close</string>
     <string name="bos">Okey</string>
-    <string name="alintila">Cite</string>
+    <string name="alintila">Quote</string>
     <string name="alinti_giris"><![CDATA[You can use this feature after logging in. You can become a member from the Main Menu> My Profile screen.]]></string>
     <string name="kaydedildi">Saved</string>
     <string name="kaydediliyor">Saving...</string>
@@ -135,8 +135,8 @@
 
     <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~6983215053</string>
    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/1733330759</string>-->
-    <string name="app_id" translatable="false">ca-app-pub-1135643216714094~5699210391</string>
-    <string name="kitap_ortasi" translatable="false">ca-app-pub-1135643216714094/9988458124</string>
+    <string name="app_id" translatable="false">ca-app-pub-1135643216714094~8848390017</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-1135643216714094/8598669072</string>
     <string name="testAdInterstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="welcome_read">Welcome to reading page</string>
