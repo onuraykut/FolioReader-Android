@@ -86,7 +86,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'org.slf4j:slf4j-android:1.7.25'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.android.gms:play-services-ads:22.3.0'
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.github.mreram:ShowCaseView:1.0.5'

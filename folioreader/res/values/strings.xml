@@ -135,8 +135,8 @@
 
     <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~6983215053</string>
    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/1733330759</string>-->
-    <string name="app_id" translatable="false">ca-app-pub-1135643216714094~8848390017</string>
-    <string name="kitap_ortasi" translatable="false">ca-app-pub-1135643216714094/8598669072</string>
+    <string name="app_id" translatable="false">ca-app-pub-8363194691553414~7469875143</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-8363194691553414/4835592965</string>
     <string name="testAdInterstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="welcome_read">Welcome to reading page</string>
