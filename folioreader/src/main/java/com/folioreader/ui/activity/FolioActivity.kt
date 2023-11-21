@@ -63,9 +63,6 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
-import com.google.android.gms.ads.*
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.kobakei.ratethisapp.RateThisApp
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
@@ -121,7 +118,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
-    private var mInterstitialAd: InterstitialAd? = null
     private var isPremium = false
 
     companion object {
@@ -272,21 +268,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
     }
 */
-    fun loadAd() {
-       var adRequest = AdRequest.Builder().build()
-
-       InterstitialAd.load(this,this.getString(R.string.kitap_ortasi), adRequest, object : InterstitialAdLoadCallback() {
-           override fun onAdFailedToLoad(adError: LoadAdError) {
-               Log.d("FolioAdTest1", adError?.message)
-               mInterstitialAd = null
-           }
-
-           override fun onAdLoaded(interstitialAd: InterstitialAd) {
-               Log.d("FolioAdTest1", "Ad was loaded.")
-               mInterstitialAd = interstitialAd
-           }
-       })
-    }
 
     override fun onResume() {
         super.onResume()
@@ -316,25 +297,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         else showAd=true*/
 //        val config = AppUtil.getSavedConfig(applicationContext)!!
-        if (!isPremium) {
-            if (mInterstitialAd!=null) {
-                mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("FolioAdTest1", "Ad was dismissed.")
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("FolioAdTest1", "Ad showed fullscreen content.")
-                        mInterstitialAd = null
-                        loadAd()
-                    }
-                }
-
-                mInterstitialAd?.show(this)
-            } else {
-                Log.d("TAG", "The interstitial wasn't loaded yet.")
-            }
-        }
 
     }
 
@@ -389,10 +351,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         val config = AppUtil.getSavedConfig(applicationContext)!!
         isPremium = config.isPremium
-        if (!isPremium) {
-            MobileAds.initialize(this) {}
-            loadAd()
-        }
        /* val target = ViewTarget(R.id.appBarLayout, this)
         ShowcaseView.Builder(this)
             .withMaterialShowcase()
@@ -546,25 +504,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (itemId == android.R.id.home) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
-            if(!isPremium)
-                if (mInterstitialAd!=null) {
-                    mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
-                        override fun onAdDismissedFullScreenContent() {
-                            Log.d("FolioAdTest1", "Ad was dismissed.")
-                        }
-
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            Log.d("FolioAdTest1", "Ad failed to show.")
-                        }
-
-                        override fun onAdShowedFullScreenContent() {
-                            Log.d("FolioAdTest1", "Ad showed fullscreen content.")
-                            mInterstitialAd = null
-                            loadAd()
-                        }
-                    }
-                    mInterstitialAd?.show(this)
-                }
             startContentHighlightActivity()
             return true
 
