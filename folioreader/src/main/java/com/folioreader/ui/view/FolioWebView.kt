@@ -164,8 +164,8 @@ class FolioWebView : WebView {
     private inner class HorizontalGestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
@@ -175,8 +175,8 @@ class FolioWebView : WebView {
         }
 
         override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
@@ -196,7 +196,7 @@ class FolioWebView : WebView {
             return true
         }
 
-        override fun onDown(event: MotionEvent?): Boolean {
+        override fun onDown(event: MotionEvent): Boolean {
             //Log.v(LOG_TAG, "-> onDown -> " + event.toString());
 
             eventActionDown = MotionEvent.obtain(event)
@@ -230,8 +230,8 @@ class FolioWebView : WebView {
     private inner class VerticalGestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
@@ -241,8 +241,8 @@ class FolioWebView : WebView {
         }
 
         override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
@@ -910,7 +910,7 @@ class FolioWebView : WebView {
             val requestQueue = Volley.newRequestQueue(context)
             val mStringRequest = object : StringRequest(
                 Request.Method.POST,
-                "https://ucretsizkitapindir.com/bookapi/users_sp/alinti/save",
+                "https://ucretsizkitapindir.com/bookapi/users/alinti/save",
                 Response.Listener { response ->
                     Toast.makeText(context, context.getString(R.string.kaydedildi), Toast.LENGTH_SHORT).show()
                     dialogAlinti.dismiss()
