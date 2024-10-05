@@ -60,6 +60,7 @@ public class HighLightTable {
 
     public static ArrayList<HighlightImpl> getAllHighlights(String bookId) {
         ArrayList<HighlightImpl> highlights = new ArrayList<>();
+        try {
         Cursor highlightCursor = DbAdapter.getHighLightsForBookId(bookId);
         while (highlightCursor.moveToNext()) {
             highlights.add(new HighlightImpl(highlightCursor.getInt(highlightCursor.getColumnIndex(ID)),
@@ -72,6 +73,9 @@ public class HighLightTable {
                     highlightCursor.getString(highlightCursor.getColumnIndex(COL_RANGY)),
                     highlightCursor.getString(highlightCursor.getColumnIndex(COL_NOTE)),
                     highlightCursor.getString(highlightCursor.getColumnIndex(COL_UUID))));
+        }
+        } catch (NullPointerException ignored) {
+
         }
         return highlights;
     }
@@ -111,15 +115,20 @@ public class HighLightTable {
     }
 
     public static List<String> getHighlightsForPageId(String pageId) {
-        String query = "SELECT " + COL_RANGY + " FROM " + TABLE_NAME + " WHERE " + COL_PAGE_ID + " = \"" + pageId + "\"";
-        Cursor c = DbAdapter.getHighlightsForPageId(query, pageId);
         List<String> rangyList = new ArrayList<>();
-        if(c!=null) {
-            while (c.moveToNext()) {
-                rangyList.add(c.getString(c.getColumnIndex(COL_RANGY)));
+        try {
+            String query = "SELECT " + COL_RANGY + " FROM " + TABLE_NAME + " WHERE " + COL_PAGE_ID + " = \"" + pageId + "\"";
+            Cursor c = DbAdapter.getHighlightsForPageId(query, pageId);
+            if(c!=null) {
+                while (c.moveToNext()) {
+                    rangyList.add(c.getString(c.getColumnIndexOrThrow(COL_RANGY)));
+                }
+                c.close();
             }
-            c.close();
+        } catch (NullPointerException ignored) {
+
         }
+
         return rangyList;
     }
 

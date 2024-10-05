@@ -311,7 +311,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val display = windowManager.defaultDisplay
         displayMetrics = resources.displayMetrics
         display.getRealMetrics(displayMetrics)
-        density = displayMetrics!!.density
+        density = displayMetrics?.density ?: 0f
         LocalBroadcastManager.getInstance(this).registerReceiver(
             closeBroadcastReceiver,
             IntentFilter(FolioReader.ACTION_CLOSE_FOLIOREADER)
@@ -349,8 +349,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         setupBook()
 
-        val config = AppUtil.getSavedConfig(applicationContext)!!
-        isPremium = config.isPremium
+        val config = AppUtil.getSavedConfig(applicationContext)
        /* val target = ViewTarget(R.id.appBarLayout, this)
         ShowcaseView.Builder(this)
             .withMaterialShowcase()
@@ -362,18 +361,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         //o
     }
-    fun premiumMessage() {
-        val config = RateThisApp.Config( 7,10)
-        config.setTitle(R.string.premium_title)
-        config.setMessage(R.string.premium_desc)
-        config.setYesButtonText(R.string.bos)
-        config.setCancelButtonText(R.string.premium_kapat)
-        config.setNoButtonText(R.string.bos)
-
-        RateThisApp.init(config)
-        RateThisApp.onCreate(this)
-        RateThisApp.showRateDialogIfNeeded(this)
-    }
     private fun initActionBar() {
 
         appBarLayout = findViewById(R.id.appBarLayout)
@@ -381,13 +368,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         setSupportActionBar(toolbar)
         actionBar = supportActionBar
 
-        val config = AppUtil.getSavedConfig(applicationContext)!!
+        val config = AppUtil.getSavedConfig(applicationContext)
 
         val drawable = ContextCompat.getDrawable(this, R.drawable.ic_drawer)
-        UiUtil.setColorIntToDrawable(config.themeColor, drawable!!)
+        config?.themeColor?.let { UiUtil.setColorIntToDrawable(it, drawable) }
         toolbar!!.navigationIcon = drawable
 
-        if (config.isNightMode) {
+        if (config?.isNightMode == true) {
             setNightMode()
         } else {
             setDayMode()
@@ -396,7 +383,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val color: Int
-            if (config.isNightMode) {
+            if (config?.isNightMode == true) {
                 color = ContextCompat.getColor(this, R.color.black)
             } else {
                 /*    val attrs = intArrayOf(android.R.attr.navigationBarColor)
@@ -409,7 +396,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (Build.VERSION.SDK_INT < 16) {
             // Fix for appBarLayout.fitSystemWindows() not being called on API < 16
-            appBarLayout!!.setTopMargin(statusBarHeight)
+            appBarLayout?.setTopMargin(statusBarHeight)
         }
 
 
@@ -418,19 +405,19 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun setDayMode() {
         Log.v(LOG_TAG, "-> setDayMode")
 
-        actionBar!!.setBackgroundDrawable(
+        actionBar?.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.white))
         )
-        toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
+        toolbar?.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
     }
 
     override fun setNightMode() {
         Log.v(LOG_TAG, "-> setNightMode")
 
-        actionBar!!.setBackgroundDrawable(
+        actionBar?.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.black))
         )
-        toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
+        toolbar?.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
     }
 
     private fun initMediaController() {
@@ -547,7 +534,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         val intent = Intent(this@FolioActivity, ContentHighlightActivity::class.java)
 
-        intent.putExtra(Constants.PUBLICATION, pubBox!!.publication)
+        intent.putExtra(Constants.PUBLICATION, pubBox?.publication)
         try {
             intent.putExtra(CHAPTER_SELECTED, spine!![currentChapterIndex].href)
         } catch (e: NullPointerException) {
@@ -625,12 +612,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         portNumber = AppUtil.getAvailablePortNumber(portNumber)
 
         r2StreamerServer = Server(portNumber)
-        r2StreamerServer!!.addEpub(
+        r2StreamerServer?.addEpub(
             pubBox!!.publication, pubBox!!.container,
             "/" + bookFileName!!, null
         )
 
-        r2StreamerServer!!.start()
+        r2StreamerServer?.start()
 
         FolioReader.initRetrofit(streamerUrl)
     }
@@ -641,28 +628,30 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private fun onBookInitSuccess() {
 
-        val publication = pubBox!!.publication
-        spine = publication.readingOrder
-        title = publication.metadata.title
+        val publication = pubBox?.publication
+        spine = publication?.readingOrder
+        title = publication?.metadata?.title
 
         if (mBookId == null) {
-            if (!publication.metadata.identifier.isEmpty()) {
+            if (publication?.metadata?.identifier?.isNotEmpty() == true) {
                 mBookId = publication.metadata.identifier
             } else {
-                if (!publication.metadata.title.isEmpty()) {
+                if (publication?.metadata?.title?.isNotEmpty() == true) {
                     mBookId = publication.metadata.title.hashCode().toString()
                 } else {
-                    mBookId = bookFileName!!.hashCode().toString()
+                    mBookId = bookFileName?.hashCode().toString()
                 }
             }
         }
 
         // searchUri currently not in use as it's uri is constructed through Retrofit,
         // code kept just in case if required in future.
-        for (link in publication.links) {
-            if (link.rel.contains("search")) {
-                searchUri = Uri.parse("http://" + link.href!!)
-                break
+        if (publication != null) {
+            for (link in publication.links) {
+                if (link.rel.contains("search")) {
+                    searchUri = Uri.parse("http://" + link.href!!)
+                    break
+                }
             }
         }
         if (searchUri == null)
@@ -684,18 +673,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         Log.v(LOG_TAG, "-> onDirectionChange")
 
         var folioPageFragment: FolioPageFragment? = currentFragment ?: return
-        entryReadLocator = folioPageFragment!!.getLastReadLocator()
-        val searchLocatorVisible = folioPageFragment.searchLocatorVisible
+        entryReadLocator = folioPageFragment?.getLastReadLocator()
+        val searchLocatorVisible = folioPageFragment?.searchLocatorVisible
 
         direction = newDirection
 
-        mFolioPageViewPager!!.setDirection(newDirection)
+        mFolioPageViewPager?.setDirection(newDirection)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
             spine, bookFileName, mBookId
         )
-        mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
-        mFolioPageViewPager!!.currentItem = currentChapterIndex
+        mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
+        mFolioPageViewPager?.currentItem = currentChapterIndex
 
         folioPageFragment = currentFragment ?: return
         searchLocatorVisible?.let {
@@ -721,7 +710,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         Log.v(LOG_TAG, "-> onPostCreate")
 
         if (distractionFreeMode) {
-            handler!!.post { hideSystemUI() }
+            handler?.post { hideSystemUI() }
         }
     }
 
@@ -836,9 +825,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (actionBar != null) {
             if (distractionFreeMode) {
-                actionBar!!.hide()
+                actionBar?.hide()
             } else {
-                actionBar!!.show()
+                actionBar?.show()
             }
         }
     }
@@ -908,9 +897,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
      * @return true if href is of EPUB or false if other link
      */
     override fun goToChapter(href: String): Boolean {
-
+        if (spine != null) {
         for (link in spine!!) {
-            if (href.contains(link.href!!)) {
+            if (link.href != null && href.contains(link.href!!)) {
                 currentChapterIndex = spine!!.indexOf(link)
                 mFolioPageViewPager!!.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment
@@ -918,6 +907,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 folioPageFragment.scrollToAnchorId(href)
                 return true
             }
+        }
         }
         return false
     }
@@ -931,17 +921,17 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             if (resultCode == Activity.RESULT_CANCELED)
                 return
 
-            searchAdapterDataBundle = data!!.getBundleExtra(SearchAdapter.DATA_BUNDLE)
-            searchQuery = data.getCharSequenceExtra(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
+            searchAdapterDataBundle = data?.getBundleExtra(SearchAdapter.DATA_BUNDLE)
+            searchQuery = data?.getCharSequenceExtra(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
 
             if (resultCode == SearchActivity.ResultCode.ITEM_SELECTED.value) {
 
-                searchLocator = data.getParcelableExtra(EXTRA_SEARCH_ITEM)
+                searchLocator = data?.getParcelableExtra(EXTRA_SEARCH_ITEM)
                 // In case if SearchActivity is recreated due to screen rotation then FolioActivity
                 // will also be recreated, so mFolioPageViewPager might be null.
                 if (mFolioPageViewPager == null) return
-                currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
-                mFolioPageViewPager!!.currentItem = currentChapterIndex
+                currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator?.href ?: "")
+                mFolioPageViewPager?.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment ?: return
                 folioPageFragment.highlightSearchLocator(searchLocator!!)
                 searchLocator = null
@@ -954,14 +944,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             val type = data.getStringExtra(TYPE)
 
             if (type == CHAPTER_SELECTED) {
-                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION)!!)
+                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION) ?: "")
 
             } else if (type == HIGHLIGHT_SELECTED) {
                 val highlightImpl = data.getParcelableExtra<HighlightImpl>(HIGHLIGHT_ITEM)
-                currentChapterIndex = highlightImpl!!.pageNumber
-                mFolioPageViewPager!!.currentItem = currentChapterIndex
+                currentChapterIndex = highlightImpl?.pageNumber ?: 0
+                mFolioPageViewPager?.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment ?: return
-                folioPageFragment.scrollToHighlightId(highlightImpl.rangy)
+                folioPageFragment.scrollToHighlightId(highlightImpl?.rangy ?: "")
             }
         }
     }
@@ -994,7 +984,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val page = GetPageNumber(0)
         mFolioPageViewPager = findViewById(R.id.folioPageViewPager)
         // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
-        mFolioPageViewPager!!.setOnPageChangeListener(object :
+        mFolioPageViewPager?.setOnPageChangeListener(object :
             DirectionalViewpager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -1005,13 +995,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
             override fun onPageSelected(position: Int) {
                 Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
-
+                var href: String? = null
+                if (spine != null) {
+                    href = spine!![currentChapterIndex].href
+                }
                 EventBus.getDefault().post(
                     MediaOverlayPlayPauseEvent(
-                        spine!![currentChapterIndex].href, false, true
+                        href, false, true
                     )
                 )
-                mediaControllerFragment!!.setPlayButtonDrawable()
+                mediaControllerFragment?.setPlayButtonDrawable()
                 currentChapterIndex = position
 
                 page.number = position;
@@ -1045,12 +1038,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         })
 
-        mFolioPageViewPager!!.setDirection(direction)
+        mFolioPageViewPager?.setDirection(direction)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
             spine, bookFileName, mBookId
         )
-        mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
+        mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
 
         // In case if SearchActivity is recreated due to screen rotation then FolioActivity
         // will also be recreated, so searchLocator is checked here.
@@ -1069,11 +1062,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
                 entryReadLocator = readLocator
             } else {
-                readLocator = savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                 lastReadLocator = readLocator
             }
             currentChapterIndex = getChapterIndex(readLocator)
-            mFolioPageViewPager!!.currentItem = currentChapterIndex
+            mFolioPageViewPager?.currentItem = currentChapterIndex
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -1094,12 +1087,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     private fun getChapterIndex(caseString: String, value: String): Int {
+        if (spine != null) {
         for (i in spine!!.indices) {
             when (caseString) {
                 Constants.HREF -> if (spine!![i].href == value)
                     return i
             }
         }
+            }
         return 0
     }
 

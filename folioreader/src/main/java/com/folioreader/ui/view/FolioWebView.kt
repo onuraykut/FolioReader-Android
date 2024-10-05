@@ -188,7 +188,7 @@ class FolioWebView : WebView {
                 //Log.d(LOG_TAG, "-> onFling -> completing scroll");
                 uiHandler.postDelayed({
                     // Delayed to avoid inconsistency of scrolling in WebView
-                    scrollTo(getScrollXPixelsForPage(webViewPager!!.currentItem), 0)
+                    scrollTo(getScrollXPixelsForPage(webViewPager.currentItem), 0)
                 }, 100)
             }
 
@@ -265,7 +265,7 @@ class FolioWebView : WebView {
 
         uiHandler = Handler()
         displayMetrics = resources.displayMetrics
-        density = displayMetrics!!.density
+        density = displayMetrics?.density ?: 0f
 
         gestureDetector = if (folioActivityCallback.direction == Config.Direction.HORIZONTAL) {
             GestureDetectorCompat(context, HorizontalGestureListener())
@@ -285,8 +285,8 @@ class FolioWebView : WebView {
         )
         handleHeight = textSelectionMiddleDrawable?.intrinsicHeight ?: (24 * density).toInt()
 
-        val config = AppUtil.getSavedConfig(context)!!
-        val ctw = if (config.isNightMode) {
+        val config = AppUtil.getSavedConfig(context)
+        val ctw = if (config?.isNightMode == true) {
             ContextThemeWrapper(context, R.style.FolioNightTheme)
         } else {
             ContextThemeWrapper(context, R.style.FolioDayTheme)
@@ -525,7 +525,7 @@ class FolioWebView : WebView {
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-        if (mScrollListener != null) mScrollListener!!.onScrollChange(t)
+        if (mScrollListener != null) mScrollListener?.onScrollChange(t)
         super.onScrollChanged(l, t, oldl, oldt)
 
         if (lastScrollType == LastScrollType.USER) {
@@ -603,11 +603,13 @@ class FolioWebView : WebView {
             Log.d(LOG_TAG, "-> onGetContentRect")
 
             evaluateJavascript("javascript:getSelectionRect()") { value ->
-                val rectJson = JSONObject(value)
-                setSelectionRect(
-                    rectJson.getInt("left"), rectJson.getInt("top"),
-                    rectJson.getInt("right"), rectJson.getInt("bottom")
-                )
+                if (value != null) {
+                    val rectJson = JSONObject(value)
+                    setSelectionRect(
+                        rectJson.getInt("left"), rectJson.getInt("top"),
+                        rectJson.getInt("right"), rectJson.getInt("bottom")
+                    )
+                }
             }
         }
     }
@@ -672,7 +674,7 @@ class FolioWebView : WebView {
             val mViewsField = ReflectionUtils.findField(windowManagerGlobalClass, "mViews")
             mViewsField.isAccessible = true
             val mViews = mViewsField.get(mGlobal) as ArrayList<View>
-            val config = AppUtil.getSavedConfig(context)!!
+            val config = AppUtil.getSavedConfig(context)
 
             for (view in mViews) {
                 val handleViewClass =
@@ -682,7 +684,7 @@ class FolioWebView : WebView {
                     val mDrawableField = ReflectionUtils.findField(handleViewClass, "mDrawable")
                     mDrawableField.isAccessible = true
                     val mDrawable = mDrawableField.get(view) as BitmapDrawable
-                    UiUtil.setColorIntToDrawable(config.themeColor, mDrawable)
+                    UiUtil.setColorIntToDrawable(config?.themeColor ?: 0, mDrawable)
                 }
             }
 
@@ -702,7 +704,7 @@ class FolioWebView : WebView {
             val mViewsField = ReflectionUtils.findField(windowManagerGlobalClass, "mViews")
             mViewsField.isAccessible = true
             val mViews = mViewsField.get(mGlobal) as ArrayList<View>
-            val config = AppUtil.getSavedConfig(context)!!
+            val config = AppUtil.getSavedConfig(context)
 
             for (view in mViews) {
                 val popupDecorViewClass =
@@ -735,7 +737,7 @@ class FolioWebView : WebView {
                     ReflectionUtils.findField(popupTouchHandleDrawableClass, "mDrawable")
                 mDrawableField.isAccessible = true
                 val mDrawable = mDrawableField.get(mChildren[0]) as Drawable
-                UiUtil.setColorIntToDrawable(config.themeColor, mDrawable)
+                UiUtil.setColorIntToDrawable(config?.themeColor ?: 0, mDrawable)
             }
         }
     }
@@ -764,7 +766,7 @@ class FolioWebView : WebView {
             Log.i(LOG_TAG, "-> currentSelectionRect doesn't intersects viewportRect")
             uiHandler.post {
                 popupWindow.dismiss()
-                uiHandler.removeCallbacks(isScrollingRunnable!!)
+                isScrollingRunnable?.let { uiHandler.removeCallbacks(it) }
             }
             return
         }
@@ -856,7 +858,7 @@ class FolioWebView : WebView {
         oldScrollY = scrollY
 
         isScrollingRunnable = Runnable {
-            uiHandler.removeCallbacks(isScrollingRunnable!!)
+            isScrollingRunnable?.let { uiHandler.removeCallbacks(it) }
             val currentScrollX = scrollX
             val currentScrollY = scrollY
             val inTouchMode = lastTouchAction == MotionEvent.ACTION_DOWN ||

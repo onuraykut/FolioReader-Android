@@ -269,8 +269,10 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         colorAnimation.duration = FADE_DAY_NIGHT_MODE.toLong()
 
         colorAnimation.addUpdateListener { animator ->
-            val value = animator.animatedValue as Int
-            container.setBackgroundColor(value)
+            if (animator.animatedValue != null && animator.animatedValue is Int) {
+                val value = animator.animatedValue as Int
+                container.setBackgroundColor(value)
+            }
         }
 
         colorAnimation.addListener(object : Animator.AnimatorListener {
