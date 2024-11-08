@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.text_selection.view.*
 import org.json.JSONObject
 import org.springframework.util.ReflectionUtils
 import java.lang.ref.WeakReference
+import java.lang.reflect.InvocationTargetException
 import java.util.*
 
 /**
@@ -604,11 +605,16 @@ class FolioWebView : WebView {
 
             evaluateJavascript("javascript:getSelectionRect()") { value ->
                 if (value != null) {
-                    val rectJson = JSONObject(value)
-                    setSelectionRect(
-                        rectJson.getInt("left"), rectJson.getInt("top"),
-                        rectJson.getInt("right"), rectJson.getInt("bottom")
-                    )
+                    try {
+                        val rectJson = JSONObject(value)
+                        setSelectionRect(
+                            rectJson.optInt("left",0), rectJson.optInt("top",0),
+                            rectJson.optInt("right",0), rectJson.optInt("bottom",0)
+                        )
+                    } catch (e: InvocationTargetException) {
+                        e.cause?.printStackTrace()
+                    }
+
                 }
             }
         }

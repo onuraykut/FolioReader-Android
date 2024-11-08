@@ -72,11 +72,11 @@
     <string name="go_to_anchor" translatable="false">javascript:goToAnchor(\'%s\')</string>
     <string name="go_to_highlight" translatable="false">javascript:goToHighlight(\'%s\')</string>
     <string name="sethighlightstyle">javascript:setHighlightStyle(\'%s\');</string>
-    <string name="css_tag"><![CDATA[<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />]]></string>
-    <string name="script_tag"><![CDATA[<script type=\"text/javascript\" src=\"%s\"></script>]]></string>
+    <string name="css_tag" translatable="false"><![CDATA[<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />]]></string>
+    <string name="script_tag" translatable="false"><![CDATA[<script type=\"text/javascript\" src=\"%s\"></script>]]></string>
     <string name="td_tag"><![CDATA[<td>%s</td></tr>]]></string>
     <string name="tr_tag"><![CDATA[<tr><td></td><td>%s</td></tr>]]></string>
-    <string name="script_tag_method_call"><![CDATA[<script type=\"text/javascript\">%s</script>]]></string>
+    <string name="script_tag_method_call" translatable="false"><![CDATA[<script type=\"text/javascript\">%s</script>]]></string>
     <string name="underline_highlights">
         <span style="border-bottom: 1px solid #ff0000;">%s</span>
     </string>

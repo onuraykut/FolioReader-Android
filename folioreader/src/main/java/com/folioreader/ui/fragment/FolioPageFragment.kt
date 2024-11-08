@@ -107,7 +107,7 @@ class FolioPageFragment : Fragment(),
     private var mFadeInAnimation: Animation? = null
     private var mFadeOutAnimation: Animation? = null
 
-    lateinit var spineItem: Link
+    var spineItem: Link? = null
     private var spineIndex = -1
     private var mBookTitle: String? = null
     private var mIsPageReloaded: Boolean = false
@@ -122,7 +122,7 @@ class FolioPageFragment : Fragment(),
     private lateinit var chapterUrl: Uri
 
     val pageName: String
-        get() = mBookTitle + "$" + spineItem.href
+        get() = mBookTitle + "$" + spineItem?.href
 
     private val isCurrentFragment: Boolean
         get() {
@@ -149,7 +149,7 @@ try {
         spineItem = arguments?.getSerializable(BUNDLE_SPINE_ITEM) as Link
         mBookId = arguments?.getString(FolioReader.EXTRA_BOOK_ID)
 
-        chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem.href?.substring(1))
+        chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem?.href?.substring(1))
 
         searchLocatorVisible = savedInstanceState?.getParcelable(BUNDLE_SEARCH_LOCATOR)
 
@@ -311,7 +311,7 @@ try {
             }*/
             mConfig = AppUtil.getSavedConfig(context)
 
-            val href = spineItem.href ?: ""
+            val href = spineItem?.href ?: ""
             var path = ""
             val forwardSlashLastIndex = href.lastIndexOf('/')
             if (forwardSlashLastIndex != -1) {
@@ -319,7 +319,7 @@ try {
             }
 
             val mimeType: String =
-                if (spineItem.typeLink.equals(getString(R.string.xhtml_mime_type), true)) {
+                if (spineItem?.typeLink.equals(getString(R.string.xhtml_mime_type), true)) {
                     getString(R.string.xhtml_mime_type)
                 } else {
                     getString(R.string.html_mime_type)
@@ -587,7 +587,7 @@ try {
 
     override fun onStop() {
         super.onStop()
-        Log.v(LOG_TAG, "-> onStop -> " + spineItem.href + " -> " + isCurrentFragment)
+        Log.v(LOG_TAG, "-> onStop -> " + spineItem?.href + " -> " + isCurrentFragment)
 
         mediaController?.stop()
         //TODO save last media overlay item
@@ -597,7 +597,7 @@ try {
     }
 
     fun getLastReadLocator(): ReadLocator? {
-        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem.href)
+        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem?.href)
         try {
             synchronized(this) {
                 mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
@@ -614,7 +614,7 @@ try {
     fun storeLastReadCfi(cfi: String) {
 
         synchronized(this) {
-            var href = spineItem.href
+            var href = spineItem?.href
             if (href == null) href = ""
             val created = Date().time
             val locations = Locations()
@@ -633,7 +633,7 @@ try {
     fun setHorizontalPageCount(horizontalPageCount: Int) {
         Log.v(
             LOG_TAG, "-> setHorizontalPageCount = " + horizontalPageCount
-                    + " -> " + spineItem.href
+                    + " -> " + spineItem?.href
         )
 
         mWebview?.setHorizontalPageCount(horizontalPageCount)
@@ -791,7 +791,7 @@ try {
      */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.v(LOG_TAG, "-> onSaveInstanceState -> ${spineItem.href}")
+        Log.v(LOG_TAG, "-> onSaveInstanceState -> ${spineItem?.href}")
 
         this.outState = outState
         outState.putParcelable(BUNDLE_SEARCH_LOCATOR, searchLocatorVisible)
@@ -899,7 +899,7 @@ try {
     }
 
     fun clearSearchLocator() {
-        Log.v(LOG_TAG, "-> clearSearchLocator -> " + spineItem.href)
+        Log.v(LOG_TAG, "-> clearSearchLocator -> " + spineItem?.href)
         mWebview?.loadUrl(getString(R.string.callClearSelection))
         searchLocatorVisible = null
     }
