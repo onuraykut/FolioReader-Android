@@ -72,11 +72,11 @@
     <string name="go_to_anchor" translatable="false">javascript:goToAnchor(\'%s\')</string>
     <string name="go_to_highlight" translatable="false">javascript:goToHighlight(\'%s\')</string>
     <string name="sethighlightstyle">javascript:setHighlightStyle(\'%s\');</string>
-    <string name="css_tag"><![CDATA[<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />]]></string>
-    <string name="script_tag"><![CDATA[<script type=\"text/javascript\" src=\"%s\"></script>]]></string>
+    <string name="css_tag" translatable="false"><![CDATA[<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />]]></string>
+    <string name="script_tag" translatable="false"><![CDATA[<script type=\"text/javascript\" src=\"%s\"></script>]]></string>
     <string name="td_tag"><![CDATA[<td>%s</td></tr>]]></string>
     <string name="tr_tag"><![CDATA[<tr><td></td><td>%s</td></tr>]]></string>
-    <string name="script_tag_method_call"><![CDATA[<script type=\"text/javascript\">%s</script>]]></string>
+    <string name="script_tag_method_call" translatable="false"><![CDATA[<script type=\"text/javascript\">%s</script>]]></string>
     <string name="underline_highlights">
         <span style="border-bottom: 1px solid #ff0000;">%s</span>
     </string>
@@ -133,12 +133,8 @@
  <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~7749408299</string>
     <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/6843390859</string>-->
 
-    <!--   <string name="app_id" translatable="false">ca-app-pub-7132242284683823~6983215053</string>
-   <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/1733330759</string>-->
-    <string name="app_id" translatable="false">ca-app-pub-7132242284683823~6983215053</string>
-    <string name="kitap_ortasi" translatable="false">ca-app-pub-7132242284683823/1733330759</string>
-    <string name="testAdInterstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
-
+    <string name="app_id" translatable="false">ca-app-pub-4410410254303714~8228771433</string>
+    <string name="kitap_ortasi" translatable="false">ca-app-pub-4410410254303714/3226235506</string>
     <string name="welcome_read">Welcome to reading page</string>
     <string name="okuma_ayarlari">You can adjust the reading screen settings from this button. From here you can adjust the font / size, change the page by swiping down or pulling it to the side. You can click on an empty area to go to the full screen.</string>
 

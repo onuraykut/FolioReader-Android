@@ -107,7 +107,7 @@ class FolioPageFragment : Fragment(),
     private var mFadeInAnimation: Animation? = null
     private var mFadeOutAnimation: Animation? = null
 
-    lateinit var spineItem: Link
+    var spineItem: Link? = null
     private var spineIndex = -1
     private var mBookTitle: String? = null
     private var mIsPageReloaded: Boolean = false
@@ -122,11 +122,11 @@ class FolioPageFragment : Fragment(),
     private lateinit var chapterUrl: Uri
 
     val pageName: String
-        get() = mBookTitle + "$" + spineItem.href
+        get() = mBookTitle + "$" + spineItem?.href
 
     private val isCurrentFragment: Boolean
         get() {
-            return isAdded && mActivityCallback!!.currentChapterIndex == spineIndex
+            return isAdded && mActivityCallback?.currentChapterIndex == spineIndex
         }
 
     override fun onCreateView(
@@ -144,12 +144,12 @@ try {
 
         EventBus.getDefault().register(this)
 
-        spineIndex = arguments!!.getInt(BUNDLE_SPINE_INDEX)
-        mBookTitle = arguments!!.getString(BUNDLE_BOOK_TITLE)
-        spineItem = arguments!!.getSerializable(BUNDLE_SPINE_ITEM) as Link
-        mBookId = arguments!!.getString(FolioReader.EXTRA_BOOK_ID)
+        spineIndex = arguments?.getInt(BUNDLE_SPINE_INDEX) ?: 0
+        mBookTitle = arguments?.getString(BUNDLE_BOOK_TITLE)
+        spineItem = arguments?.getSerializable(BUNDLE_SPINE_ITEM) as Link
+        mBookId = arguments?.getString(FolioReader.EXTRA_BOOK_ID)
 
-        chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem.href!!.substring(1))
+        chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem?.href?.substring(1))
 
         searchLocatorVisible = savedInstanceState?.getParcelable(BUNDLE_SEARCH_LOCATOR)
 
@@ -165,16 +165,16 @@ try {
         }
         highlightStyle = HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.Normal)
         mRootView = inflater.inflate(R.layout.folio_page_fragment, container, false)
-        mPagesLeftTextView = mRootView!!.findViewById<View>(R.id.pagesLeft) as TextView
-        mMinutesLeftTextView = mRootView!!.findViewById<View>(R.id.minutesLeft) as TextView
+        mPagesLeftTextView = mRootView?.findViewById<View>(R.id.pagesLeft) as TextView
+        mMinutesLeftTextView = mRootView?.findViewById<View>(R.id.minutesLeft) as TextView
 
         mConfig = AppUtil.getSavedConfig(context)
-        if (mActivityCallback!!.direction == Config.Direction.HORIZONTAL) {
-            mPagesLeftTextView!!.visibility = View.INVISIBLE
-            mMinutesLeftTextView!!.visibility = View.INVISIBLE
+        if (mActivityCallback?.direction == Config.Direction.HORIZONTAL) {
+            mPagesLeftTextView?.visibility = View.INVISIBLE
+            mMinutesLeftTextView?.visibility = View.INVISIBLE
         }
 
-        loadingView = mRootView!!.findViewById(R.id.loadingView)
+        loadingView = mRootView?.findViewById(R.id.loadingView)
         initSeekbar()
         initAnimations()
         initWebView()
@@ -195,8 +195,8 @@ try {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun pauseButtonClicked(event: MediaOverlayPlayPauseEvent) {
-        if (isAdded && spineItem!!.href == event.href) {
-            mediaController!!.stateChanged(event)
+        if (isAdded && spineItem?.href == event.href) {
+            mediaController?.stateChanged(event)
         }
     }
 
@@ -233,7 +233,7 @@ try {
                 MediaOverlayHighlightStyleEvent.Style.BACKGROUND -> highlightStyle =
                         HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.TextColor)
             }
-            mWebview!!.loadUrl(String.format(getString(R.string.setmediaoverlaystyle), highlightStyle))
+            mWebview?.loadUrl(String.format(getString(R.string.setmediaoverlaystyle), highlightStyle))
         }
     }
 
@@ -250,10 +250,10 @@ try {
             getLastReadLocator()
 
         if (isAdded) {
-            mWebview!!.dismissPopupWindow()
-            mWebview!!.initViewTextSelection()
-            loadingView!!.updateTheme()
-            loadingView!!.show()
+            mWebview?.dismissPopupWindow()
+            mWebview?.initViewTextSelection()
+            loadingView?.updateTheme()
+            loadingView?.show()
             mIsPageReloaded = true
             setHtml(true)
             updatePagesLeftTextBg()
@@ -281,9 +281,9 @@ try {
 
         if (!TextUtils.isEmpty(href) && href.indexOf('#') != -1) {
             mAnchorId = href.substring(href.lastIndexOf('#') + 1)
-            if (loadingView != null && loadingView!!.visibility != View.VISIBLE) {
-                loadingView!!.show()
-                mWebview!!.loadUrl(String.format(getString(R.string.go_to_anchor), mAnchorId))
+            if (loadingView != null && loadingView?.visibility != View.VISIBLE) {
+                loadingView?.show()
+                mWebview?.loadUrl(String.format(getString(R.string.go_to_anchor), mAnchorId))
                 mAnchorId = null
             }
         }
@@ -292,7 +292,7 @@ try {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun resetCurrentIndex(resetIndex: RewindIndexEvent) {
         if (isCurrentFragment) {
-            mWebview!!.loadUrl("javascript:rewindCurrentIndex()")
+            mWebview?.loadUrl("javascript:rewindCurrentIndex()")
         }
     }
 
@@ -311,24 +311,24 @@ try {
             }*/
             mConfig = AppUtil.getSavedConfig(context)
 
-            val href = spineItem.href
+            val href = spineItem?.href ?: ""
             var path = ""
-            val forwardSlashLastIndex = href!!.lastIndexOf('/')
+            val forwardSlashLastIndex = href.lastIndexOf('/')
             if (forwardSlashLastIndex != -1) {
                 path = href.substring(1, forwardSlashLastIndex + 1)
             }
 
             val mimeType: String =
-                if (spineItem.typeLink!!.equals(getString(R.string.xhtml_mime_type), true)) {
+                if (spineItem?.typeLink.equals(getString(R.string.xhtml_mime_type), true)) {
                     getString(R.string.xhtml_mime_type)
                 } else {
                     getString(R.string.html_mime_type)
                 }
 
             uiHandler.post {
-                mWebview!!.loadDataWithBaseURL(
+                mWebview?.loadDataWithBaseURL(
                     mActivityCallback?.streamerUrl + path,
-                    HtmlUtil.getHtmlContent(context!!, mHtmlString, mConfig!!),
+                    HtmlUtil.getHtmlContent(context, mHtmlString, mConfig),
                     mimeType,
                     "UTF-8", null
                 )
@@ -338,68 +338,70 @@ try {
 
     fun scrollToLast() {
 
-        val isPageLoading = loadingView == null || loadingView!!.visibility == View.VISIBLE
+        val isPageLoading = loadingView == null || loadingView?.visibility == View.VISIBLE
         Log.v(LOG_TAG, "-> scrollToLast -> isPageLoading = $isPageLoading")
 
         if (!isPageLoading) {
-            loadingView!!.show()
-            mWebview!!.loadUrl("javascript:scrollToLast()")
+            loadingView?.show()
+            mWebview?.loadUrl("javascript:scrollToLast()")
         }
     }
 
     fun scrollToFirst() {
 
-        val isPageLoading = loadingView == null || loadingView!!.visibility == View.VISIBLE
+        val isPageLoading = loadingView == null || loadingView?.visibility == View.VISIBLE
         Log.v(LOG_TAG, "-> scrollToFirst -> isPageLoading = $isPageLoading")
 
         if (!isPageLoading) {
-            loadingView!!.show()
-            mWebview!!.loadUrl("javascript:scrollToFirst()")
+            loadingView?.show()
+            mWebview?.loadUrl("javascript:scrollToFirst()")
         }
     }
 
     @SuppressLint("JavascriptInterface", "SetJavaScriptEnabled")
     private fun initWebView() {
 
-        val webViewLayout = mRootView!!.findViewById<FrameLayout>(R.id.webViewLayout)
-        mWebview = webViewLayout.findViewById(R.id.folioWebView)
-        mWebview!!.setParentFragment(this)
-        webViewPager = webViewLayout.findViewById(R.id.webViewPager)
+        val webViewLayout = mRootView?.findViewById<FrameLayout>(R.id.webViewLayout)
+        mWebview = webViewLayout?.findViewById(R.id.folioWebView)
+        mWebview?.setParentFragment(this)
+        webViewPager = webViewLayout?.findViewById(R.id.webViewPager)
 
         if (activity is FolioActivityCallback)
-            mWebview!!.setFolioActivityCallback((activity as FolioActivityCallback?)!!)
+            mWebview?.setFolioActivityCallback((activity as FolioActivityCallback))
 
         setupScrollBar()
-        mWebview!!.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            val height = Math.floor((mWebview!!.contentHeight * mWebview!!.scale).toDouble()).toInt()
-            val webViewHeight = mWebview!!.measuredHeight
-            mScrollSeekbar!!.maximum = height - webViewHeight
+        mWebview?.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            var height = 0
+            mWebview?.let { height = Math.floor((mWebview!!.contentHeight * mWebview!!.scale).toDouble()).toInt() }
+            val webViewHeight = mWebview?.measuredHeight ?: 0
+            mScrollSeekbar?.maximum = height - webViewHeight
         }
 
-        mWebview!!.settings.javaScriptEnabled = true
-        mWebview!!.isVerticalScrollBarEnabled = false
-        mWebview!!.settings.allowFileAccess = true
+        mWebview?.settings?.javaScriptEnabled = true
+        mWebview?.isVerticalScrollBarEnabled = false
+        mWebview?.settings?.allowFileAccess = true
 
-        mWebview!!.isHorizontalScrollBarEnabled = false
+        mWebview?.isHorizontalScrollBarEnabled = false
 
-        mWebview!!.addJavascriptInterface(this, "Highlight")
-        mWebview!!.addJavascriptInterface(this, "FolioPageFragment")
-        mWebview!!.addJavascriptInterface(webViewPager!!, "WebViewPager")
-        mWebview!!.addJavascriptInterface(loadingView!!, "LoadingView")
-        mWebview!!.addJavascriptInterface(mWebview!!, "FolioWebView")
+        mWebview?.addJavascriptInterface(this, "Highlight")
+        mWebview?.addJavascriptInterface(this, "FolioPageFragment")
+        webViewPager?.let { mWebview?.addJavascriptInterface(it, "WebViewPager") }
+        loadingView?.let { mWebview?.addJavascriptInterface(it, "LoadingView") }
+        mWebview?.addJavascriptInterface(mWebview!!, "FolioWebView")
 
-        mWebview!!.setScrollListener(object : FolioWebView.ScrollListener {
+        mWebview?.setScrollListener(object : FolioWebView.ScrollListener {
             override fun onScrollChange(percent: Int) {
 
-                mScrollSeekbar!!.setProgressAndThumb(percent)
+                mScrollSeekbar?.setProgressAndThumb(percent)
                 updatePagesLeftText(percent)
             }
         })
 
-        mWebview!!.webViewClient = webViewClient
-        mWebview!!.webChromeClient = webChromeClient
-
-        mWebview!!.settings.defaultTextEncodingName = "utf-8"
+        mWebview?.webViewClient = webViewClient
+        mWebview?.webChromeClient = webChromeClient
+        if (mWebview?.settings != null) {
+            mWebview?.settings!!.defaultTextEncodingName = "utf-8"
+        }
         HtmlTask(this).execute(chapterUrl.toString())
     }
 
@@ -407,11 +409,11 @@ try {
 
         override fun onPageFinished(view: WebView, url: String) {
 
-            mWebview!!.loadUrl("javascript:checkCompatMode()")
-            mWebview!!.loadUrl("javascript:alert(getReadingTime())")
+            mWebview?.loadUrl("javascript:checkCompatMode()")
+            mWebview?.loadUrl("javascript:alert(getReadingTime())")
 
-            if (mActivityCallback!!.direction == Config.Direction.HORIZONTAL)
-                mWebview!!.loadUrl("javascript:initHorizontalDirection()")
+            if (mActivityCallback?.direction == Config.Direction.HORIZONTAL)
+                mWebview?.loadUrl("javascript:initHorizontalDirection()")
 
             view.loadUrl(
                 String.format(
@@ -434,32 +436,32 @@ try {
                         getString(R.string.callHighlightSearchLocator),
                         searchLocatorVisible?.locations?.cfi
                     )
-                    mWebview!!.loadUrl(callHighlightSearchLocator)
+                    mWebview?.loadUrl(callHighlightSearchLocator)
 
                 } else if (isCurrentFragment) {
                     var cfi ="epubcfi(/0!/4/4/8/1:0)";
-                    if(lastReadLocator!!.locations.cfi!=null)
-                    cfi = lastReadLocator!!.locations.cfi!!
-                    mWebview!!.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
+                    if(lastReadLocator?.locations?.cfi!=null)
+                    cfi = lastReadLocator?.locations?.cfi ?: ""
+                    mWebview?.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
 
                 } else {
-                    if (spineIndex == mActivityCallback!!.currentChapterIndex - 1) {
+                    if (spineIndex == (mActivityCallback?.currentChapterIndex?.minus(1) ?: 0)) {
                         // Scroll to last, the page before current page
-                        mWebview!!.loadUrl("javascript:scrollToLast()")
+                        mWebview?.loadUrl("javascript:scrollToLast()")
                     } else {
                         // Make loading view invisible for all other fragments
-                        loadingView!!.hide()
+                        loadingView?.hide()
                     }
                 }
 
                 mIsPageReloaded = false
 
             } else if (!TextUtils.isEmpty(mAnchorId)) {
-                mWebview!!.loadUrl(String.format(getString(R.string.go_to_anchor), mAnchorId))
+                mWebview?.loadUrl(String.format(getString(R.string.go_to_anchor), mAnchorId))
                 mAnchorId = null
 
             } else if (!TextUtils.isEmpty(highlightId)) {
-                mWebview!!.loadUrl(String.format(getString(R.string.go_to_highlight), highlightId))
+                mWebview?.loadUrl(String.format(getString(R.string.go_to_highlight), highlightId))
                 highlightId = null
 
             } else if (searchLocatorVisible != null) {
@@ -467,36 +469,36 @@ try {
                     getString(R.string.callHighlightSearchLocator),
                     searchLocatorVisible?.locations?.cfi
                 )
-                mWebview!!.loadUrl(callHighlightSearchLocator)
+                mWebview?.loadUrl(callHighlightSearchLocator)
 
             } else if (isCurrentFragment) {
 
                 val readLocator: ReadLocator?
                 if (savedInstanceState == null) {
                     Log.v(LOG_TAG, "-> onPageFinished -> took from getEntryReadLocator")
-                    readLocator = mActivityCallback!!.entryReadLocator
+                    readLocator = mActivityCallback?.entryReadLocator
                 } else {
                     Log.v(LOG_TAG, "-> onPageFinished -> took from bundle")
-                    readLocator = savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
-                    savedInstanceState!!.remove(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                    readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                    savedInstanceState?.remove(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                 }
 
                 if (readLocator != null) {
                     val cfi = readLocator.locations.cfi
-                    Log.v(LOG_TAG, "-> onPageFinished -> readLocator -> " + cfi!!)
-                    mWebview!!.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
+                    Log.v(LOG_TAG, "-> onPageFinished -> readLocator -> " + cfi)
+                    mWebview?.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
                 } else {
-                    loadingView!!.hide()
+                    loadingView?.hide()
                 }
 
             } else {
 
-                if (spineIndex == mActivityCallback!!.currentChapterIndex - 1) {
+                if (spineIndex == (mActivityCallback?.currentChapterIndex?.minus(1) ?: 0)) {
                     // Scroll to last, the page before current page
-                    mWebview!!.loadUrl("javascript:scrollToLast()")
+                    mWebview?.loadUrl("javascript:scrollToLast()")
                 } else {
                     // Make loading view invisible for all other fragments
-                    loadingView!!.hide()
+                    loadingView?.hide()
                 }
             }
         }
@@ -506,7 +508,7 @@ try {
             if (url.isEmpty())
                 return true
 
-            val urlOfEpub = mActivityCallback!!.goToChapter(url)
+            val urlOfEpub = mActivityCallback?.goToChapter(url) ?: false
             if (!urlOfEpub) {
                 // Otherwise, give the default behavior (open in browser)
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -534,7 +536,7 @@ try {
         override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
             if (!request.isForMainFrame
                 && request.url.path != null
-                && request.url.path!!.endsWith("/favicon.ico")
+                && request.url.path?.endsWith("/favicon.ico") == true
             ) {
                 try {
                     return WebResourceResponse("image/png", null, null)
@@ -574,7 +576,7 @@ try {
                 // to handle TTS playback when highlight is deleted.
                 val p = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
                 if (!p.matcher(message).matches() && message != "undefined" && isCurrentFragment) {
-                    mediaController!!.speakAudio(message)
+                    mediaController?.speakAudio(message)
                 }
             }
 
@@ -585,9 +587,9 @@ try {
 
     override fun onStop() {
         super.onStop()
-        Log.v(LOG_TAG, "-> onStop -> " + spineItem.href + " -> " + isCurrentFragment)
+        Log.v(LOG_TAG, "-> onStop -> " + spineItem?.href + " -> " + isCurrentFragment)
 
-        mediaController!!.stop()
+        mediaController?.stop()
         //TODO save last media overlay item
 
         if (isCurrentFragment)
@@ -595,11 +597,11 @@ try {
     }
 
     fun getLastReadLocator(): ReadLocator? {
-        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem.href!!)
+        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem?.href)
         try {
             synchronized(this) {
-                mWebview!!.loadUrl(getString(R.string.callComputeLastReadCfi))
-                (this as java.lang.Object).wait(5000)
+                mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
+                (this as java.lang.Object).wait(3000)
             }
         } catch (e: InterruptedException) {
             Log.e(LOG_TAG, "-> ", e)
@@ -612,16 +614,16 @@ try {
     fun storeLastReadCfi(cfi: String) {
 
         synchronized(this) {
-            var href = spineItem.href
+            var href = spineItem?.href
             if (href == null) href = ""
             val created = Date().time
             val locations = Locations()
             locations.cfi = cfi
-            lastReadLocator = ReadLocator(mBookId!!, href, created, locations)
+            lastReadLocator = ReadLocator(mBookId ?: "", href, created, locations)
 
             val intent = Intent(FolioReader.ACTION_SAVE_READ_LOCATOR)
             intent.putExtra(FolioReader.EXTRA_READ_LOCATOR, lastReadLocator as Parcelable?)
-            LocalBroadcastManager.getInstance(context!!).sendBroadcast(intent)
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
 
             (this as java.lang.Object).notify()
         }
@@ -631,14 +633,14 @@ try {
     fun setHorizontalPageCount(horizontalPageCount: Int) {
         Log.v(
             LOG_TAG, "-> setHorizontalPageCount = " + horizontalPageCount
-                    + " -> " + spineItem.href
+                    + " -> " + spineItem?.href
         )
 
-        mWebview!!.setHorizontalPageCount(horizontalPageCount)
+        mWebview?.setHorizontalPageCount(horizontalPageCount)
     }
 
     fun loadRangy(rangy: String) {
-        mWebview!!.loadUrl(
+        mWebview?.loadUrl(
             String.format(
                 "javascript:if(typeof ssReader !== \"undefined\"){ssReader.setHighlights('%s');}",
                 rangy
@@ -647,16 +649,16 @@ try {
     }
 
     private fun setupScrollBar() {
-        UiUtil.setColorIntToDrawable(mConfig!!.themeColor, mScrollSeekbar!!.progressDrawable)
-        val thumbDrawable = ContextCompat.getDrawable(activity!!, R.drawable.icons_sroll)
-        UiUtil.setColorIntToDrawable(mConfig!!.themeColor, thumbDrawable!!)
-        mScrollSeekbar!!.thumb = thumbDrawable
+        UiUtil.setColorIntToDrawable(mConfig?.themeColor ?: 0, mScrollSeekbar?.progressDrawable)
+        val thumbDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.icons_sroll)
+        UiUtil.setColorIntToDrawable(mConfig?.themeColor ?: 0, thumbDrawable)
+        mScrollSeekbar?.thumb = thumbDrawable
     }
 
     private fun initSeekbar() {
-        mScrollSeekbar = mRootView!!.findViewById<View>(R.id.scrollSeekbar) as VerticalSeekbar
-        mScrollSeekbar!!.progressDrawable
-            .setColorFilter(
+        mScrollSeekbar = mRootView?.findViewById<View>(R.id.scrollSeekbar) as VerticalSeekbar
+        mScrollSeekbar?.progressDrawable
+            ?.setColorFilter(
                 resources
                     .getColor(R.color.default_theme_accent_color),
                 PorterDuff.Mode.SRC_IN
@@ -665,23 +667,23 @@ try {
 
     private fun updatePagesLeftTextBg() {
 
-        if (mConfig!!.isNightMode) {
-            mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                .setBackgroundColor(Color.parseColor("#131313"))
+        if (mConfig?.isNightMode == true) {
+            mRootView?.findViewById<View>(R.id.indicatorLayout)
+                ?.setBackgroundColor(Color.parseColor("#131313"))
         } else {
-            val backgroundColor = mConfig!!.getBackgroundColor()
+            val backgroundColor = mConfig?.getBackgroundColor()
             when (backgroundColor) {
-                0 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                0 -> mRootView?.findViewById<View>(R.id.indicatorLayout)
+                    ?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
                         R.color.white))
-                1 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                1 -> mRootView?.findViewById<View>(R.id.indicatorLayout)
+                    ?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
                         R.color.background_yellow))
-                2 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                2 -> mRootView?.findViewById<View>(R.id.indicatorLayout)
+                    ?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
                         R.color.background_acik))
-                3 -> mRootView!!.findViewById<View>(R.id.indicatorLayout)
-                    .setBackgroundColor(ContextCompat.getColor(activity!!,
+                3 -> mRootView?.findViewById<View>(R.id.indicatorLayout)
+                    ?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
                         R.color.highlight_green))
                 else -> {
                 }
@@ -691,8 +693,8 @@ try {
 
     private fun updatePagesLeftText(scrollY: Int) {
         try {
-            val currentPage = (Math.ceil(scrollY.toDouble() / mWebview!!.webViewHeight) + 1).toInt()
-            val totalPages = Math.ceil(mWebview!!.contentHeightVal.toDouble() / mWebview!!.webViewHeight).toInt()
+            val currentPage = (Math.ceil(scrollY.toDouble() / (mWebview?.webViewHeight ?: 0)) + 1).toInt()
+            val totalPages = Math.ceil((mWebview?.contentHeightVal?.toDouble() ?: 0.0) / (mWebview?.webViewHeight ?: 0)).toInt()
             val pagesRemaining = totalPages - currentPage
             val pagesRemainingStrFormat = if (pagesRemaining > 1)
                 getString(R.string.pages_left)
@@ -719,8 +721,8 @@ try {
                 minutesRemainingStr = getString(R.string.less_than_minute)
             }
 
-            mMinutesLeftTextView!!.text = minutesRemainingStr
-            mPagesLeftTextView!!.text = pagesRemainingStr
+            mMinutesLeftTextView?.text = minutesRemainingStr
+            mPagesLeftTextView?.text = pagesRemainingStr
         } catch (exp: java.lang.ArithmeticException) {
             Log.e("divide error", exp.toString())
         } catch (exp: IllegalStateException) {
@@ -731,9 +733,9 @@ try {
 
     private fun initAnimations() {
         mFadeInAnimation = AnimationUtils.loadAnimation(activity, R.anim.fadein)
-        mFadeInAnimation!!.setAnimationListener(object : Animation.AnimationListener {
+        mFadeInAnimation?.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-                mScrollSeekbar!!.visibility = View.VISIBLE
+                mScrollSeekbar?.visibility = View.VISIBLE
             }
 
             override fun onAnimationEnd(animation: Animation) {
@@ -745,13 +747,13 @@ try {
             }
         })
         mFadeOutAnimation = AnimationUtils.loadAnimation(activity, R.anim.fadeout)
-        mFadeOutAnimation!!.setAnimationListener(object : Animation.AnimationListener {
+        mFadeOutAnimation?.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
 
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                mScrollSeekbar!!.visibility = View.INVISIBLE
+                mScrollSeekbar?.visibility = View.INVISIBLE
             }
 
             override fun onAnimationRepeat(animation: Animation) {
@@ -761,20 +763,20 @@ try {
     }
 
     override fun fadeInSeekBarIfInvisible() {
-        if (mScrollSeekbar!!.visibility == View.INVISIBLE || mScrollSeekbar!!.visibility == View.GONE) {
-            mScrollSeekbar!!.startAnimation(mFadeInAnimation)
+        if (mScrollSeekbar?.visibility == View.INVISIBLE || mScrollSeekbar?.visibility == View.GONE) {
+            mScrollSeekbar?.startAnimation(mFadeInAnimation)
         }
     }
 
     fun fadeOutSeekBarIfVisible() {
-        if (mScrollSeekbar!!.visibility == View.VISIBLE) {
-            mScrollSeekbar!!.startAnimation(mFadeOutAnimation)
+        if (mScrollSeekbar?.visibility == View.VISIBLE) {
+            mScrollSeekbar?.startAnimation(mFadeOutAnimation)
         }
     }
 
     override fun onDestroyView() {
-        mFadeInAnimation!!.setAnimationListener(null)
-        mFadeOutAnimation!!.setAnimationListener(null)
+        mFadeInAnimation?.setAnimationListener(null)
+        mFadeOutAnimation?.setAnimationListener(null)
         EventBus.getDefault().unregister(this)
         super.onDestroyView()
     }
@@ -789,7 +791,7 @@ try {
      */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.v(LOG_TAG, "-> onSaveInstanceState -> ${spineItem.href}")
+        Log.v(LOG_TAG, "-> onSaveInstanceState -> ${spineItem?.href}")
 
         this.outState = outState
         outState.putParcelable(BUNDLE_SEARCH_LOCATOR, searchLocatorVisible)
@@ -797,14 +799,14 @@ try {
 
     fun highlight(style: HighlightImpl.HighlightStyle, isAlreadyCreated: Boolean) {
         if (!isAlreadyCreated) {
-            mWebview!!.loadUrl(
+            mWebview?.loadUrl(
                 String.format(
                     "javascript:if(typeof ssReader !== \"undefined\"){ssReader.highlightSelection('%s');}",
                     HighlightImpl.HighlightStyle.classForStyle(style)
                 )
             )
         } else {
-            mWebview!!.loadUrl(
+            mWebview?.loadUrl(
                 String.format(
                     "javascript:setHighlightStyle('%s')",
                     HighlightImpl.HighlightStyle.classForStyle(style)
@@ -815,7 +817,7 @@ try {
 
     override fun resetCurrentIndex() {
         if (isCurrentFragment) {
-            mWebview!!.loadUrl("javascript:rewindCurrentIndex()")
+            mWebview?.loadUrl("javascript:rewindCurrentIndex()")
         }
     }
 
@@ -823,7 +825,7 @@ try {
     fun onReceiveHighlights(html: String?) {
         if (html != null) {
             rangy = HighlightUtil.createHighlightRangy(
-                activity!!.applicationContext,
+                activity?.applicationContext,
                 html,
                 mBookId,
                 pageName,
@@ -834,11 +836,11 @@ try {
     }
 
     override fun highLightText(fragmentId: String) {
-        mWebview!!.loadUrl(String.format(getString(R.string.audio_mark_id), fragmentId))
+        mWebview?.loadUrl(String.format(getString(R.string.audio_mark_id), fragmentId))
     }
 
     override fun highLightTTS() {
-        mWebview!!.loadUrl("javascript:alert(getSentenceWithIndex('epub-media-overlay-playing'))")
+        mWebview?.loadUrl("javascript:alert(getSentenceWithIndex('epub-media-overlay-playing'))")
     }
 
     @JavascriptInterface
@@ -847,13 +849,13 @@ try {
             val highlightImpl = HighLightTable.updateHighlightStyle(id, style)
             if (highlightImpl != null) {
                 HighlightUtil.sendHighlightBroadcastEvent(
-                    activity!!.applicationContext,
+                    activity?.applicationContext,
                     highlightImpl,
                     HighLight.HighLightAction.MODIFY
                 )
             }
             val rangyString = HighlightUtil.generateRangyString(pageName)
-            activity!!.runOnUiThread { loadRangy(rangyString) }
+            activity?.runOnUiThread { loadRangy(rangyString) }
 
         }
     }
@@ -863,11 +865,11 @@ try {
 
         if (isCurrentFragment) {
             if (outState != null)
-                outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
-            if (activity != null && !activity!!.isFinishing)
-                mActivityCallback!!.storeLastReadLocator(lastReadLocator)
+                outState?.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
+            if (activity != null && !requireActivity().isFinishing)
+                mActivityCallback?.storeLastReadLocator(lastReadLocator)
         }
-        if (mWebview != null) mWebview!!.destroy()
+        if (mWebview != null) mWebview?.destroy()
     }
 
     override fun onError() {}
@@ -875,9 +877,9 @@ try {
     fun scrollToHighlightId(highlightId: String) {
         this.highlightId = highlightId
 
-        if (loadingView != null && loadingView!!.visibility != View.VISIBLE) {
-            loadingView!!.show()
-            mWebview!!.loadUrl(String.format(getString(R.string.go_to_highlight), highlightId))
+        if (loadingView != null && loadingView?.visibility != View.VISIBLE) {
+            loadingView?.show()
+            mWebview?.loadUrl(String.format(getString(R.string.go_to_highlight), highlightId))
             this.highlightId = null
         }
     }
@@ -886,19 +888,19 @@ try {
         Log.v(LOG_TAG, "-> highlightSearchLocator")
         this.searchLocatorVisible = searchLocator
 
-        if (loadingView != null && loadingView!!.visibility != View.VISIBLE) {
-            loadingView!!.show()
+        if (loadingView != null && loadingView?.visibility != View.VISIBLE) {
+            loadingView?.show()
             val callHighlightSearchLocator = String.format(
                 getString(R.string.callHighlightSearchLocator),
                 searchLocatorVisible?.locations?.cfi
             )
-            mWebview!!.loadUrl(callHighlightSearchLocator)
+            mWebview?.loadUrl(callHighlightSearchLocator)
         }
     }
 
     fun clearSearchLocator() {
-        Log.v(LOG_TAG, "-> clearSearchLocator -> " + spineItem.href!!)
-        mWebview!!.loadUrl(getString(R.string.callClearSelection))
+        Log.v(LOG_TAG, "-> clearSearchLocator -> " + spineItem?.href)
+        mWebview?.loadUrl(getString(R.string.callClearSelection))
         searchLocatorVisible = null
     }
 }

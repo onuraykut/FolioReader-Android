@@ -6,6 +6,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url "https://repo.grails.org/grails/core/" }
     }
 
     dependencies {
@@ -17,6 +18,8 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath("com.android.tools:r8:8.3.37")
+        classpath('com.google.guava:guava:32.0.1-jre')
     }
 }
 
@@ -44,6 +47,7 @@ allprojects {
         maven {
             url = uri("https://plugins.gradle.org/m2/")
         }
+        maven { url "https://repo.grails.org/grails/core/" }
     }
 }
 
