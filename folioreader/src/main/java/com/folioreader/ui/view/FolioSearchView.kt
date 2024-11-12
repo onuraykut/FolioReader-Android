@@ -60,7 +60,7 @@ class FolioSearchView : SearchView {
 
         searchAutoComplete = findViewById(R.id.search_src_text)
         //UiUtil.setEditTextCursorColor(searchAutoComplete, config.themeColor)
-        UiUtil.setEditTextHandleColor(searchAutoComplete, config.themeColor)
+        //UiUtil.setEditTextHandleColor(searchAutoComplete, config.themeColor)
         searchAutoComplete.highlightColor = ColorUtils.setAlphaComponent(config.themeColor, 85)
         if (config.isNightMode) {
             searchAutoComplete.setTextColor(ContextCompat.getColor(context, R.color.night_title_text_color))
