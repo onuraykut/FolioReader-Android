@@ -5,7 +5,7 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://repo.grails.org/grails/core/" }
     }
 
@@ -42,7 +42,7 @@ allprojects {
     repositories {
         mavenLocal()
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
         maven {
             url = uri("https://plugins.gradle.org/m2/")

@@ -63,7 +63,6 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
-import com.kobakei.ratethisapp.RateThisApp
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
 import org.readium.r2.shared.Publication
