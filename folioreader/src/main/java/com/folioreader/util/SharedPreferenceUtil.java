@@ -1,5 +1,6 @@
 package com.folioreader.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -27,8 +28,8 @@ public class SharedPreferenceUtil {
         edit.commit();
     }
 
-    public static void putSharedPreferencesString(Context context, String key, String val) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static void putSharedPreferencesString(Activity activity, String key, String val) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString(key, val);
         edit.commit();

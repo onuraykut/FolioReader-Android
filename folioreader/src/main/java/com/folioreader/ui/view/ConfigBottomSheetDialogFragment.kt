@@ -192,7 +192,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         buttonVertical.setOnClickListener {
             config = AppUtil.getSavedConfig(context)!!
             config.direction = Config.Direction.VERTICAL
-            AppUtil.saveConfig(context, config)
+            AppUtil.saveConfig(requireActivity(), config)
             activityCallback.onDirectionChange(Config.Direction.VERTICAL)
             buttonHorizontal.isSelected = false
             buttonVertical.isSelected = true
@@ -201,7 +201,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         buttonHorizontal.setOnClickListener {
             config = AppUtil.getSavedConfig(context)!!
             config.direction = Config.Direction.HORIZONTAL
-            AppUtil.saveConfig(context, config)
+            AppUtil.saveConfig(requireActivity(), config)
             activityCallback.onDirectionChange(Config.Direction.HORIZONTAL)
             buttonHorizontal.isSelected = true
             buttonVertical.isSelected = false
@@ -245,7 +245,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
         config.font = selectedFont
         if (isAdded && isReloadNeeded) {
-            AppUtil.saveConfig(activity, config)
+            AppUtil.saveConfig(requireActivity(), config)
             EventBus.getDefault().post(ReloadDataEvent())
         }
     }
@@ -286,7 +286,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             override fun onAnimationEnd(animator: Animator) {
                 isNightMode = !isNightMode
                 config.isNightMode = isNightMode
-                AppUtil.saveConfig(activity, config)
+                AppUtil.saveConfig(requireActivity(), config)
                 EventBus.getDefault().post(ReloadDataEvent())
             }
 
@@ -335,7 +335,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
         view_config_font_size_seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 config.fontSize = progress
-                AppUtil.saveConfig(activity, config)
+                AppUtil.saveConfig(requireActivity(), config)
                 EventBus.getDefault().post(ReloadDataEvent())
             }
 

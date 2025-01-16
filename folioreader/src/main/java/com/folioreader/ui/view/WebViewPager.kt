@@ -130,38 +130,49 @@ class WebViewPager : ViewPager {
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             //Log.v(LOG_TAG, "-> onScroll -> e1 = " + e1 + ", e2 = " + e2 + ", distanceX = " + distanceX + ", distanceY = " + distanceY);
-            lastGestureType = LastGestureType.OnScroll
+            try {
+                lastGestureType = LastGestureType.OnScroll
+            }catch (e: NullPointerException) {
+                e.printStackTrace()
+            }
             return false
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             //Log.d(LOG_TAG, "-> onFling -> e1 = " + e1 + ", e2 = " + e2 + ", velocityX = " + velocityX + ", velocityY = " + velocityY);
-            lastGestureType = LastGestureType.OnFling
+            try {
+                lastGestureType = LastGestureType.OnFling
+            }catch (e: NullPointerException) {
+                e.printStackTrace()
+            }
             return false
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         //Log.d(LOG_TAG, "-> onTouchEvent -> " + AppUtil.actionToString(event.getAction()));
+        var superReturn = false
+        try {
+            // Rare condition in fast scrolling
+            if (gestureDetector == null)
+                return false
 
-        // Rare condition in fast scrolling
-        if (gestureDetector == null)
-            return false
+            val gestureReturn = gestureDetector!!.onTouchEvent(event)
+            if (gestureReturn)
+                return true
 
-        val gestureReturn = gestureDetector!!.onTouchEvent(event)
-        if (gestureReturn)
-            return true
+            superReturn = super.onTouchEvent(event)
 
-        val superReturn = super.onTouchEvent(event)
-
-        if (event.action == MotionEvent.ACTION_UP) {
-            if (lastGestureType == LastGestureType.OnScroll || lastGestureType == LastGestureType.OnFling) {
-                //Log.d(LOG_TAG, "-> onTouchEvent -> takeOverScrolling = true, " + "lastGestureType = " + lastGestureType);
-                takeOverScrolling = true
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (lastGestureType == LastGestureType.OnScroll || lastGestureType == LastGestureType.OnFling) {
+                    //Log.d(LOG_TAG, "-> onTouchEvent -> takeOverScrolling = true, " + "lastGestureType = " + lastGestureType);
+                    takeOverScrolling = true
+                }
+                lastGestureType = null
             }
-            lastGestureType = null
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
         }
-
         return superReturn
     }
 

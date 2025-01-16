@@ -21,6 +21,7 @@ public final class HtmlUtil {
     public static String getHtmlContent(Context context, String htmlContent, Config config) {
         int backgroundColor = config.getBackgroundColor();
         String cssPath="";
+        String jsPath="";
         if (context != null) {
         try {
             switch (backgroundColor) {
@@ -46,10 +47,10 @@ public final class HtmlUtil {
         }catch (NullPointerException ignored) {
 
         }
-}
 
 
-        String jsPath = String.format(context.getString(R.string.script_tag),
+
+        jsPath = String.format(context.getString(R.string.script_tag),
                 "file:///android_asset/js/jsface.min.js") + "\n";
 
         jsPath = jsPath + String.format(context.getString(R.string.script_tag),
@@ -81,7 +82,7 @@ public final class HtmlUtil {
 
         jsPath = jsPath
                 + "<meta name=\"viewport\" content=\"height=device-height, user-scalable=no\" />";
-
+        }
         String toInject = "\n" + cssPath + "\n" + jsPath + "\n</head>";
         try {
             htmlContent = htmlContent.replace("</head>", toInject);

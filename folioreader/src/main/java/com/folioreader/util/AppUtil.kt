@@ -87,7 +87,7 @@ class AppUtil {
             return simpleDateFormat.format(hightlightDate)
         }
 
-        fun saveConfig(context: Context?, config: Config) {
+        fun saveConfig(activity: Activity, config: Config) {
             val obj = JSONObject()
             try {
                 obj.put(Config.CONFIG_FONT, config.font)
@@ -105,7 +105,7 @@ class AppUtil {
                 obj.put(Config.CONFIG_AUTHOR,config.author)
 
                 SharedPreferenceUtil.putSharedPreferencesString(
-                    context, Config.INTENT_CONFIG,
+                    activity, Config.INTENT_CONFIG,
                     obj.toString()
                 )
             } catch (e: JSONException) {

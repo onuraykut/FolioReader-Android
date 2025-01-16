@@ -601,7 +601,7 @@ try {
         try {
             synchronized(this) {
                 mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
-                (this as java.lang.Object).wait(3000)
+                //(this as java.lang.Object).wait(3000)
             }
         } catch (e: InterruptedException) {
             Log.e(LOG_TAG, "-> ", e)
