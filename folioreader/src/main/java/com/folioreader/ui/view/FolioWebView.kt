@@ -613,6 +613,8 @@ class FolioWebView : WebView {
                         )
                     } catch (e: InvocationTargetException) {
                         e.cause?.printStackTrace()
+                    } catch (e: RuntimeException) {
+                        e.cause?.printStackTrace()
                     }
 
                 }
