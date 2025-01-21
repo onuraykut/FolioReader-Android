@@ -286,7 +286,7 @@ class ConfigBottomSheetDialogFragment : BottomSheetDialogFragment() {
             override fun onAnimationEnd(animator: Animator) {
                 isNightMode = !isNightMode
                 config.isNightMode = isNightMode
-                AppUtil.saveConfig(requireActivity(), config)
+                activity?.let { AppUtil.saveConfig(it, config) }
                 EventBus.getDefault().post(ReloadDataEvent())
             }
 
