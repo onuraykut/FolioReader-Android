@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity
                     folioReader.setReadLocator(readLocator);
                 }
                 folioReader.setConfig(config, true)
-                        .openBook("file:///android_asset/TheSilverChair.epub");
+                        .openBook(getApplicationContext().getFilesDir().getAbsolutePath()+"/"+"TheSilverChair.epub");
             }
         });
     }
