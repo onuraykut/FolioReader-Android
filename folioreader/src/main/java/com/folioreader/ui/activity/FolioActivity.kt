@@ -72,6 +72,7 @@ import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import java.lang.ref.WeakReference
+import com.google.gson.Gson
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -284,8 +285,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         super.onStop()
         Log.v(LOG_TAG, "-> onStop")
         topActivity = false
+        saveLastReadLocator()
+    }
 
-
+    private fun saveLastReadLocator() {
+        if (mBookId != null && lastReadLocator != null) {
+            val sharedPreferences = getSharedPreferences("FolioReader", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString(mBookId, Gson().toJson(lastReadLocator))
+            editor.apply()
+        }
     }
 
     override fun onStart() {
@@ -1056,9 +1065,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         } else {
 
-            val readLocator: ReadLocator?
+            var readLocator: ReadLocator?
             if (savedInstanceState == null) {
                 readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
+                if (readLocator == null) {
+                    readLocator = getLastReadLocator()
+                }
                 entryReadLocator = readLocator
             } else {
                 readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
@@ -1072,6 +1084,17 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             searchReceiver,
             IntentFilter(ACTION_SEARCH_CLEAR)
         )
+    }
+
+    private fun getLastReadLocator(): ReadLocator? {
+        if (mBookId != null) {
+            val sharedPreferences = getSharedPreferences("FolioReader", Context.MODE_PRIVATE)
+            val json = sharedPreferences.getString(mBookId, null)
+            if (json != null) {
+                return Gson().fromJson(json, ReadLocator::class.java)
+            }
+        }
+        return null
     }
 
     private fun getChapterIndex(readLocator: ReadLocator?): Int {

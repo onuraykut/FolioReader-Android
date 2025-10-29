@@ -31,7 +31,7 @@ var viewportRect;
 
 // Class manipulation
 function hasClass(ele, cls) {
-    return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+    return !!ele.className.match(new RegExp('(\s|^)' + cls + '(\s|$)'));
 }
 
 function addClass(ele, cls) {
@@ -40,7 +40,7 @@ function addClass(ele, cls) {
 
 function removeClass(ele, cls) {
     if (hasClass(ele, cls)) {
-        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+        var reg = new RegExp('(\s|^)' + cls + '(\s|$)');
         ele.className = ele.className.replace(reg, ' ');
     }
 }
@@ -838,18 +838,33 @@ function onClickHtml() {
 
 function computeLastReadCfi() {
 
-    viewportRect = constructDOMRect(FolioWebView.getViewportRect(DisplayUnit.CSS_PX));
-    var node = getFirstVisibleNode(document.body) || document.body;
-
+    var direction = FolioWebView.getDirection();
     var cfi;
-    if (node.nodeType === Node.TEXT_NODE) {
-        cfi = EPUBcfi.Generator.generateCharacterOffsetCFIComponent(node, 0);
-    } else {
-        cfi = EPUBcfi.Generator.generateElementCFIComponent(node);
+
+    if (direction == Direction.VERTICAL) {
+
+        var range = document.caretRangeFromPoint(document.documentElement.clientWidth / 2, FolioWebView.getTopDistraction(DisplayUnit.PX) + 50);
+        var node = range.startContainer;
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            cfi = EPUBcfi.Generator.generateCharacterOffsetCFIComponent(node, range.startOffset);
+        } else {
+            cfi = EPUBcfi.Generator.generateElementCFIComponent(node);
+        }
+
+    } else { // HORIZONTAL
+
+        var range = document.caretRangeFromPoint(document.documentElement.clientWidth / 4, FolioWebView.getTopDistraction(DisplayUnit.PX));
+        var node = range.startContainer;
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            cfi = EPUBcfi.Generator.generateCharacterOffsetCFIComponent(node, range.startOffset);
+        } else {
+            cfi = EPUBcfi.Generator.generateElementCFIComponent(node);
+        }
     }
 
     cfi = EPUBcfi.Generator.generateCompleteCFI("/0!", cfi);
-    viewportRect = null;
     FolioPageFragment.storeLastReadCfi(cfi);
 }
 

@@ -585,23 +585,26 @@ try {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.v(LOG_TAG, "-> onPause -> " + spineItem?.href + " -> " + isCurrentFragment)
+        if (isCurrentFragment) {
+            mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         Log.v(LOG_TAG, "-> onStop -> " + spineItem?.href + " -> " + isCurrentFragment)
 
         mediaController?.stop()
         //TODO save last media overlay item
-
-        if (isCurrentFragment)
-            getLastReadLocator()
     }
 
     fun getLastReadLocator(): ReadLocator? {
         Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem?.href)
         try {
-            synchronized(this) {
-                mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
-            }
+            mWebview?.loadUrl(getString(R.string.callComputeLastReadCfi))
         } catch (e: InterruptedException) {
             Log.e(LOG_TAG, "-> ", e)
         }
@@ -611,21 +614,12 @@ try {
 
     @JavascriptInterface
     fun storeLastReadCfi(cfi: String) {
-
-        synchronized(this) {
-            var href = spineItem?.href
-            if (href == null) href = ""
-            val created = Date().time
-            val locations = Locations()
-            locations.cfi = cfi
-            lastReadLocator = ReadLocator(mBookId ?: "", href, created, locations)
-
-            val intent = Intent(FolioReader.ACTION_SAVE_READ_LOCATOR)
-            intent.putExtra(FolioReader.EXTRA_READ_LOCATOR, lastReadLocator as Parcelable?)
-            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
-
-            (this as java.lang.Object).notify()
-        }
+        val href = spineItem?.href ?: ""
+        val created = Date().time
+        val locations = Locations()
+        locations.cfi = cfi
+        lastReadLocator = ReadLocator(mBookId ?: "", href, created, locations)
+        mActivityCallback?.storeLastReadLocator(lastReadLocator)
     }
 
     @JavascriptInterface
@@ -865,8 +859,6 @@ try {
         if (isCurrentFragment) {
             if (outState != null)
                 outState?.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
-            if (activity != null && !requireActivity().isFinishing)
-                mActivityCallback?.storeLastReadLocator(lastReadLocator)
         }
         if (mWebview != null) mWebview?.destroy()
     }
