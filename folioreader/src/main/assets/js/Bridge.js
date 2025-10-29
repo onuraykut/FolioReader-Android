@@ -400,7 +400,63 @@ $(function () {
 
         $(this).after(container);
     });
-});
+
+    // New function to update page progress
+    function updatePageProgress() {
+        var scrollingElement = bodyOrHtml();
+        var direction = FolioWebView.getDirection();
+        var currentPage = 0;
+        var totalPages = 0;
+        var chapterPageCount = FolioWebView.getChapterPageCount();
+        var chapterPageOffset = FolioWebView.getChapterPageOffset();
+        var totalBookPages = FolioWebView.getTotalBookPages();
+
+        switch (direction) {
+            case Direction.VERTICAL:
+                // For vertical mode, a "page" is considered a full viewport height
+                totalPages = Math.ceil(scrollingElement.scrollHeight / document.documentElement.clientHeight);
+                currentPage = Math.floor(scrollingElement.scrollTop / document.documentElement.clientHeight) + 1;
+                break;
+            case Direction.HORIZONTAL:
+                // For horizontal mode, use the calculated scrollWidth from `postInitHorizontalDirection`
+                // This `window.scrollWidth` is set in `postInitHorizontalDirection`
+                totalPages = Math.round(window.scrollWidth / document.documentElement.clientWidth);
+                // Current page is based on scrollLeft
+                currentPage = Math.floor(scrollingElement.scrollLeft / document.documentElement.clientWidth) + 1;
+                break;
+        }
+
+        // Ensure currentPage is at least 1 if there are pages
+        if (totalPages > 0 && currentPage === 0) {
+            currentPage = 1;
+        }
+        // Ensure currentPage does not exceed totalPages
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        // Ensure totalPages is at least 1 if currentPage is 1 (for single page documents)
+        if (currentPage === 1 && totalPages === 0) {
+            totalPages = 1;
+        }
+
+
+        // Call the native Android method to update page progress
+        // The native side should implement FolioWebView.onPageProgressChanged(currentPage, totalPages)
+        if (typeof FolioWebView !== 'undefined' && typeof FolioWebView.onPageProgressChanged === 'function') {
+            FolioWebView.onPageProgressChanged(currentPage, totalPages);
+        } else {
+            console.warn("FolioWebView.onPageProgressChanged not found. Please ensure the native Android side implements this method.");
+        }
+    }
+
+    // Call on document ready to set initial page numbers
+    updatePageProgress();
+
+    // Attach event listener for scroll events
+    $(window).on('scroll', function() {
+        updatePageProgress();
+    });
+}); // This is the end of $(function() { ... });
 
 function array_diff(array1, array2) {
     var difference = $.grep(array1, function (el) {
