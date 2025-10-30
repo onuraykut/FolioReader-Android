@@ -62,6 +62,7 @@ import com.folioreader.ui.view.FolioAppBarLayout
 import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
+import com.folioreader.util.PageCountManager
 import com.folioreader.util.UiUtil
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
@@ -118,6 +119,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var density: Float = 0.toFloat()
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
+    private var pageCountManager: PageCountManager? = null
     private var isPremium = false
 
     companion object {
@@ -650,6 +652,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     mBookId = bookFileName?.hashCode().toString()
                 }
             }
+        // Initialize PageCountManager
+        if (mBookId != null) {
+            pageCountManager = PageCountManager.getInstance(mBookId!!)
+            pageCountManager?.setTotalChapters(spine?.size ?: 0)
+            Log.d(LOG_TAG, "PageCountManager initialized with ${spine?.size ?: 0} chapters")
+        }
+
         }
 
         // searchUri currently not in use as it's uri is constructed through Retrofit,
@@ -1214,6 +1223,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun getDirection(): Config.Direction {
         return direction
+    }
+
+    override fun getPageCountManager(): PageCountManager? {
+        return pageCountManager
     }
 
     private fun clearSearchLocator() {

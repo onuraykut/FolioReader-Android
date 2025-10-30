@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import com.folioreader.Config;
 import com.folioreader.model.DisplayUnit;
 import com.folioreader.model.locators.ReadLocator;
+import com.folioreader.util.PageCountManager;
 
 import java.lang.ref.WeakReference;
 
@@ -36,4 +37,6 @@ public interface FolioActivityCallback {
     WeakReference<FolioActivity> getActivity();
 
     String getStreamerUrl();
+
+    PageCountManager getPageCountManager();
 }

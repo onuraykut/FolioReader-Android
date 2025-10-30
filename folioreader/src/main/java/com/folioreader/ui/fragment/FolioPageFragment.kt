@@ -169,10 +169,9 @@ try {
         mMinutesLeftTextView = mRootView?.findViewById<View>(R.id.minutesLeft) as TextView
 
         mConfig = AppUtil.getSavedConfig(context)
-        if (mActivityCallback?.direction == Config.Direction.HORIZONTAL) {
-            mPagesLeftTextView?.visibility = View.INVISIBLE
-            mMinutesLeftTextView?.visibility = View.INVISIBLE
-        }
+        // Show pagination in both vertical and horizontal modes
+        mPagesLeftTextView?.visibility = View.VISIBLE
+        mMinutesLeftTextView?.visibility = View.VISIBLE
 
         loadingView = mRootView?.findViewById(R.id.loadingView)
         initSeekbar()
@@ -688,15 +687,40 @@ try {
         try {
             val currentPage = (Math.ceil(scrollY.toDouble() / (mWebview?.webViewHeight ?: 0)) + 1).toInt()
             val totalPages = Math.ceil((mWebview?.contentHeightVal?.toDouble() ?: 0.0) / (mWebview?.webViewHeight ?: 0)).toInt()
+
+            // Update this chapter's page count in the manager
+            val pageCountManager = mActivityCallback?.getPageCountManager()
+            if (pageCountManager != null && totalPages > 0) {
+                pageCountManager.updateChapterPageCount(spineIndex, totalPages)
+            }
+
             val pagesRemaining = totalPages - currentPage
-            val pagesRemainingStrFormat = if (pagesRemaining > 1)
-                getString(R.string.pages_left)
-            else
-                getString(R.string.page_left)
-            val pagesRemainingStr = String.format(
-                Locale.US,
-                pagesRemainingStrFormat, pagesRemaining
-            )
+
+            // Calculate global page numbers
+            val globalCurrentPage: Int
+            val globalTotalPages: Int
+
+            if (pageCountManager != null) {
+                globalCurrentPage = pageCountManager.getGlobalPageNumber(spineIndex, currentPage)
+                globalTotalPages = pageCountManager.getEstimatedTotalPages()
+
+                // Log for debugging
+                if (isCurrentFragment) {
+                    Log.d(LOG_TAG, "Global pagination: $globalCurrentPage / $globalTotalPages " +
+                            "(Chapter ${spineIndex + 1}, Page $currentPage/$totalPages)")
+                }
+            } else {
+                // Fallback to chapter-based pagination if manager not available
+                globalCurrentPage = currentPage
+                globalTotalPages = totalPages
+            }
+
+            // Display global page numbers
+            val pagesRemainingStr = if (globalTotalPages > 0) {
+                String.format(Locale.US, "%d / %d", globalCurrentPage, globalTotalPages)
+            } else {
+                String.format(Locale.US, "%d / %d", currentPage, totalPages)
+            }
 
             val minutesRemaining = Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
             val minutesRemainingStr: String
