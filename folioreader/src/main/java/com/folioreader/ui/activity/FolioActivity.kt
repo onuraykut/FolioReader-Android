@@ -1012,46 +1012,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
             override fun onPageSelected(position: Int) {
                 Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
-                var href: String? = null
-                if (spine != null) {
-                    href = spine!![currentChapterIndex].href
-                }
-                EventBus.getDefault().post(
-                    MediaOverlayPlayPauseEvent(
-                        href, false, true
-                    )
-                )
-                mediaControllerFragment?.setPlayButtonDrawable()
-                currentChapterIndex = position
-
-                page.number = position;
+                // Single merged page, no chapter switching needed
+                currentChapterIndex = 0
+                page.number = 0
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-
-                if (state == DirectionalViewpager.SCROLL_STATE_IDLE) {
-                    val position = mFolioPageViewPager!!.currentItem
-                    Log.v(
-                        LOG_TAG, "-> onPageScrollStateChanged -> DirectionalViewpager -> " +
-                                "position = " + position
-                    )
-
-                    var folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
-                    if (folioPageFragment != null) {
-                        folioPageFragment.scrollToLast()
-                        if (folioPageFragment.mWebview != null)
-                            folioPageFragment.mWebview!!.dismissPopupWindow()
-                    }
-
-                    folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
-                    if (folioPageFragment != null) {
-                        folioPageFragment.scrollToFirst()
-                        if (folioPageFragment.mWebview != null)
-                            folioPageFragment.mWebview!!.dismissPopupWindow()
-                    }
-                }
+                // Single merged page, no scroll state handling needed
             }
         })
 
@@ -1062,32 +1029,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         )
         mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
 
-        // In case if SearchActivity is recreated due to screen rotation then FolioActivity
-        // will also be recreated, so searchLocator is checked here.
-        if (searchLocator != null) {
+        // Set current item to 0 since we only have one merged page
+        currentChapterIndex = 0
+        mFolioPageViewPager?.currentItem = 0
 
-            currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
-            mFolioPageViewPager!!.currentItem = currentChapterIndex
-            val folioPageFragment = currentFragment ?: return
-            folioPageFragment.highlightSearchLocator(searchLocator!!)
-            searchLocator = null
 
-        } else {
 
-            var readLocator: ReadLocator?
-            if (savedInstanceState == null) {
-                readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
-                if (readLocator == null) {
-                    readLocator = getLastReadLocator()
-                }
-                entryReadLocator = readLocator
-            } else {
-                readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
-                lastReadLocator = readLocator
-            }
-            currentChapterIndex = getChapterIndex(readLocator)
-            mFolioPageViewPager?.currentItem = currentChapterIndex
-        }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
             searchReceiver,
@@ -1107,25 +1054,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     private fun getChapterIndex(readLocator: ReadLocator?): Int {
-
-        if (readLocator == null) {
-            return 0
-        } else if (!TextUtils.isEmpty(readLocator.href)) {
-            return getChapterIndex(Constants.HREF, readLocator.href)
-        }
-
+        // Always return 0 for merged mode
         return 0
     }
 
     private fun getChapterIndex(caseString: String, value: String): Int {
-        if (spine != null) {
-        for (i in spine!!.indices) {
-            when (caseString) {
-                Constants.HREF -> if (spine!![i].href == value)
-                    return i
-            }
-        }
-            }
+        // Always return 0 for merged mode
         return 0
     }
 
@@ -1187,19 +1121,23 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun play() {
-        EventBus.getDefault().post(
-            MediaOverlayPlayPauseEvent(
-                spine!![currentChapterIndex].href, true, false
+        if (spine != null && spine!!.isNotEmpty()) {
+            EventBus.getDefault().post(
+                MediaOverlayPlayPauseEvent(
+                    spine!![0].href, true, false
+                )
             )
-        )
+        }
     }
 
     override fun pause() {
-        EventBus.getDefault().post(
-            MediaOverlayPlayPauseEvent(
-                spine!![currentChapterIndex].href, false, false
+        if (spine != null && spine!!.isNotEmpty()) {
+            EventBus.getDefault().post(
+                MediaOverlayPlayPauseEvent(
+                    spine!![0].href, false, false
+                )
             )
-        )
+        }
     }
 
     override fun onRequestPermissionsResult(

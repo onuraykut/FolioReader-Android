@@ -32,34 +32,39 @@ public class FolioPageFragmentAdapter extends FragmentStatePagerAdapter {
         this.mSpineReferences = spineReferences;
         this.mEpubFileName = epubFileName;
         this.mBookId = bookId;
-        fragments = new ArrayList<>(Arrays.asList(new Fragment[mSpineReferences.size()]));
+        // Only need one fragment now since we're merging all chapters
+        fragments = new ArrayList<>(Arrays.asList(new Fragment[1]));
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
-        fragments.set(position, null);
+        if (position == 0) {
+            fragments.set(0, null);
+        }
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        fragments.set(position, fragment);
+        if (position == 0) {
+            fragments.set(0, fragment);
+        }
         return fragment;
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        if (mSpineReferences.size() == 0 || position < 0 || position >= mSpineReferences.size())
+        if (mSpineReferences.size() == 0)
             return null;
 
-        Fragment fragment = fragments.get(position);
+        // Always return the single merged fragment
+        Fragment fragment = fragments.get(0);
         if (fragment == null) {
-            fragment = FolioPageFragment.newInstance(position,
-                    mEpubFileName, mSpineReferences.get(position), mBookId);
-            fragments.set(position, fragment);
+            fragment = FolioPageFragment.newInstanceMerged(
+                    mEpubFileName, mSpineReferences, mBookId);
+            fragments.set(0, fragment);
         }
         return fragment;
     }
@@ -98,6 +103,7 @@ public class FolioPageFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mSpineReferences.size();
+        // Return 1 since we have only one merged page
+        return mSpineReferences.size() > 0 ? 1 : 0;
     }
 }
