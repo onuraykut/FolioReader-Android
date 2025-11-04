@@ -31,6 +31,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_IS_TTS = "is_tts";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
+    public static final String CONFIG_USE_MERGED_CHAPTERS = "use_merged_chapters";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
     private static final Direction DEFAULT_DIRECTION = Direction.VERTICAL;
     private static final int DEFAULT_THEME_COLOR_INT =
@@ -50,6 +51,7 @@ public class Config implements Parcelable {
     private boolean showTts = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
+    private boolean useMergedChapters = true; // Enable merged chapters by default for better pagination
 
     /**
      * Reading modes available
@@ -97,6 +99,7 @@ public class Config implements Parcelable {
         dest.writeString(bookName);
         dest.writeString(uid);
         dest.writeString(author);
+        dest.writeByte((byte) (useMergedChapters ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -113,6 +116,7 @@ public class Config implements Parcelable {
         bookName = in.readString();
         uid = in.readString();
         author = in.readString();
+        useMergedChapters = in.readByte() != 0;
     }
 
     public Config() {
@@ -133,6 +137,7 @@ public class Config implements Parcelable {
         bookName = jsonObject.optString(CONFIG_BOOK_NAME);
         uid = jsonObject.optString(CONFIG_UID);
         author = jsonObject.optString(CONFIG_AUTHOR);
+        useMergedChapters = jsonObject.optBoolean(CONFIG_USE_MERGED_CHAPTERS, true);
 
     }
 
@@ -368,8 +373,16 @@ public class Config implements Parcelable {
                 ", showTts=" + showTts +
                 ", allowedDirection=" + allowedDirection +
                 ", direction=" + direction +
+                ", useMergedChapters=" + useMergedChapters +
                 '}';
     }
+
+    public boolean isUseMergedChapters() {
+        return useMergedChapters;
+    }
+
+    public Config setUseMergedChapters(boolean useMergedChapters) {
+        this.useMergedChapters = useMergedChapters;
+        return this;
+    }
 }
-
-

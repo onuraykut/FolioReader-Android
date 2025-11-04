@@ -689,19 +689,33 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onDirectionChange(newDirection: Config.Direction) {
         Log.v(LOG_TAG, "-> onDirectionChange")
 
+        val config = AppUtil.getSavedConfig(applicationContext)
+        val useMergedChapters = config?.isUseMergedChapters ?: true
+
         var folioPageFragment: FolioPageFragment? = currentFragment ?: return
         entryReadLocator = folioPageFragment?.getLastReadLocator()
         val searchLocatorVisible = folioPageFragment?.searchLocatorVisible
 
         direction = newDirection
-
         mFolioPageViewPager?.setDirection(newDirection)
-        mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
-        )
-        mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
-        mFolioPageViewPager?.currentItem = currentChapterIndex
+
+        if (useMergedChapters) {
+            // Recreate SinglePageAdapter for direction change
+            val singlePageAdapter = com.folioreader.ui.adapter.SinglePageAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
+            mFolioPageViewPager?.adapter = singlePageAdapter
+            mFolioPageViewPager?.currentItem = 0
+        } else {
+            // Recreate FolioPageFragmentAdapter for direction change
+            mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
+            mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
+            mFolioPageViewPager?.currentItem = currentChapterIndex
+        }
 
         folioPageFragment = currentFragment ?: return
         searchLocatorVisible?.let {
@@ -999,94 +1013,124 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private fun configFolio() {
         val page = GetPageNumber(0)
+        val config = AppUtil.getSavedConfig(applicationContext)
+        val useMergedChapters = config?.isUseMergedChapters ?: true
+
         mFolioPageViewPager = findViewById(R.id.folioPageViewPager)
-        // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
-        mFolioPageViewPager?.setOnPageChangeListener(object :
-            DirectionalViewpager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
 
-            override fun onPageSelected(position: Int) {
-                Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
-                var href: String? = null
-                if (spine != null) {
-                    href = spine!![currentChapterIndex].href
+        if (useMergedChapters) {
+            // Use SinglePageAdapter for merged chapters mode
+            Log.v(LOG_TAG, "-> configFolio -> Using merged chapters mode")
+            val singlePageAdapter = com.folioreader.ui.adapter.SinglePageAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
+            mFolioPageViewPager?.adapter = singlePageAdapter
+            mFolioPageViewPager?.currentItem = 0
+            currentChapterIndex = 0
+
+            // Simplified page change listener for single page mode
+            mFolioPageViewPager?.setOnPageChangeListener(object :
+                DirectionalViewpager.OnPageChangeListener {
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                override fun onPageSelected(position: Int) {
+                    Log.v(LOG_TAG, "-> onPageSelected -> SinglePage mode -> position = $position")
                 }
-                EventBus.getDefault().post(
-                    MediaOverlayPlayPauseEvent(
-                        href, false, true
-                    )
-                )
-                mediaControllerFragment?.setPlayButtonDrawable()
-                currentChapterIndex = position
-
-                page.number = position;
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-                if (state == DirectionalViewpager.SCROLL_STATE_IDLE) {
-                    val position = mFolioPageViewPager!!.currentItem
-                    Log.v(
-                        LOG_TAG, "-> onPageScrollStateChanged -> DirectionalViewpager -> " +
-                                "position = " + position
-                    )
-
-                    var folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
-                    if (folioPageFragment != null) {
-                        folioPageFragment.scrollToLast()
-                        if (folioPageFragment.mWebview != null)
-                            folioPageFragment.mWebview!!.dismissPopupWindow()
-                    }
-
-                    folioPageFragment =
-                        mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
-                    if (folioPageFragment != null) {
-                        folioPageFragment.scrollToFirst()
-                        if (folioPageFragment.mWebview != null)
-                            folioPageFragment.mWebview!!.dismissPopupWindow()
-                    }
-                }
-            }
-        })
-
-        mFolioPageViewPager?.setDirection(direction)
-        mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
-        )
-        mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
-
-        // In case if SearchActivity is recreated due to screen rotation then FolioActivity
-        // will also be recreated, so searchLocator is checked here.
-        if (searchLocator != null) {
-
-            currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
-            mFolioPageViewPager!!.currentItem = currentChapterIndex
-            val folioPageFragment = currentFragment ?: return
-            folioPageFragment.highlightSearchLocator(searchLocator!!)
-            searchLocator = null
-
+                override fun onPageScrollStateChanged(state: Int) {}
+            })
         } else {
-
-            var readLocator: ReadLocator?
-            if (savedInstanceState == null) {
-                readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
-                if (readLocator == null) {
-                    readLocator = getLastReadLocator()
+            // Use original FolioPageFragmentAdapter for chapter-by-chapter mode
+            Log.v(LOG_TAG, "-> configFolio -> Using chapter-by-chapter mode")
+            // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
+            mFolioPageViewPager?.setOnPageChangeListener(object :
+                DirectionalViewpager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
                 }
-                entryReadLocator = readLocator
+
+                override fun onPageSelected(position: Int) {
+                    Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
+                    var href: String? = null
+                    if (spine != null) {
+                        href = spine!![currentChapterIndex].href
+                    }
+                    EventBus.getDefault().post(
+                        MediaOverlayPlayPauseEvent(
+                            href, false, true
+                        )
+                    )
+                    mediaControllerFragment?.setPlayButtonDrawable()
+                    currentChapterIndex = position
+
+                    page.number = position
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+
+                    if (state == DirectionalViewpager.SCROLL_STATE_IDLE) {
+                        val position = mFolioPageViewPager!!.currentItem
+                        Log.v(
+                            LOG_TAG, "-> onPageScrollStateChanged -> DirectionalViewpager -> " +
+                                    "position = " + position
+                        )
+
+                        var folioPageFragment =
+                            mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
+                        if (folioPageFragment != null) {
+                            folioPageFragment.scrollToLast()
+                            if (folioPageFragment.mWebview != null)
+                                folioPageFragment.mWebview!!.dismissPopupWindow()
+                        }
+
+                        folioPageFragment =
+                            mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
+                        if (folioPageFragment != null) {
+                            folioPageFragment.scrollToFirst()
+                            if (folioPageFragment.mWebview != null)
+                                folioPageFragment.mWebview!!.dismissPopupWindow()
+                        }
+                    }
+                }
+            })
+
+            mFolioPageViewPager?.setDirection(direction)
+            mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
+            mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
+
+            // In case if SearchActivity is recreated due to screen rotation then FolioActivity
+            // will also be recreated, so searchLocator is checked here.
+            if (searchLocator != null) {
+
+                currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
+                mFolioPageViewPager!!.currentItem = currentChapterIndex
+                val folioPageFragment = currentFragment
+                if (folioPageFragment != null) {
+                    folioPageFragment.highlightSearchLocator(searchLocator!!)
+                }
+                searchLocator = null
+
             } else {
-                readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
-                lastReadLocator = readLocator
+
+                var readLocator: ReadLocator?
+                if (savedInstanceState == null) {
+                    readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
+                    if (readLocator == null) {
+                        readLocator = getLastReadLocator()
+                    }
+                    entryReadLocator = readLocator
+                } else {
+                    readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                    lastReadLocator = readLocator
+                }
+                currentChapterIndex = getChapterIndex(readLocator)
+                mFolioPageViewPager?.currentItem = currentChapterIndex
             }
-            currentChapterIndex = getChapterIndex(readLocator)
-            mFolioPageViewPager?.currentItem = currentChapterIndex
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(

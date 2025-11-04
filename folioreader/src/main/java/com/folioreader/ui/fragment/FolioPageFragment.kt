@@ -37,6 +37,7 @@ import com.folioreader.ui.activity.FolioActivityCallback
 import com.folioreader.ui.base.HtmlTask
 import com.folioreader.ui.base.HtmlTaskCallback
 import com.folioreader.ui.base.HtmlUtil
+import com.folioreader.ui.base.MergedHtmlTask
 import com.folioreader.ui.view.FolioWebView
 import com.folioreader.ui.view.LoadingView
 import com.folioreader.ui.view.VerticalSeekbar
@@ -68,6 +69,8 @@ class FolioPageFragment : Fragment(),
         private const val BUNDLE_SPINE_ITEM = "BUNDLE_SPINE_ITEM"
         private const val BUNDLE_READ_LOCATOR_CONFIG_CHANGE = "BUNDLE_READ_LOCATOR_CONFIG_CHANGE"
         const val BUNDLE_SEARCH_LOCATOR = "BUNDLE_SEARCH_LOCATOR"
+        private const val BUNDLE_IS_MERGED_MODE = "BUNDLE_IS_MERGED_MODE"
+        private const val BUNDLE_SPINE_REFERENCES = "BUNDLE_SPINE_REFERENCES"
 
         @JvmStatic
         fun newInstance(spineIndex: Int, bookTitle: String, spineRef: Link, bookId: String): FolioPageFragment {
@@ -77,6 +80,20 @@ class FolioPageFragment : Fragment(),
             args.putString(BUNDLE_BOOK_TITLE, bookTitle)
             args.putString(FolioReader.EXTRA_BOOK_ID, bookId)
             args.putSerializable(BUNDLE_SPINE_ITEM, spineRef)
+            args.putBoolean(BUNDLE_IS_MERGED_MODE, false)
+            fragment.arguments = args
+            return fragment
+        }
+
+        @JvmStatic
+        fun newInstanceMerged(bookTitle: String, spineReferences: ArrayList<Link>, bookId: String): FolioPageFragment {
+            val fragment = FolioPageFragment()
+            val args = Bundle()
+            args.putInt(BUNDLE_SPINE_INDEX, 0)
+            args.putString(BUNDLE_BOOK_TITLE, bookTitle)
+            args.putString(FolioReader.EXTRA_BOOK_ID, bookId)
+            args.putSerializable(BUNDLE_SPINE_REFERENCES, spineReferences)
+            args.putBoolean(BUNDLE_IS_MERGED_MODE, true)
             fragment.arguments = args
             return fragment
         }
@@ -111,6 +128,8 @@ class FolioPageFragment : Fragment(),
     private var spineIndex = -1
     private var mBookTitle: String? = null
     private var mIsPageReloaded: Boolean = false
+    private var isMergedMode: Boolean = false
+    private var spineReferences: List<Link>? = null
 
     private var highlightStyle: String? = null
 
@@ -146,10 +165,19 @@ try {
 
         spineIndex = arguments?.getInt(BUNDLE_SPINE_INDEX) ?: 0
         mBookTitle = arguments?.getString(BUNDLE_BOOK_TITLE)
-        spineItem = arguments?.getSerializable(BUNDLE_SPINE_ITEM) as Link
         mBookId = arguments?.getString(FolioReader.EXTRA_BOOK_ID)
+        isMergedMode = arguments?.getBoolean(BUNDLE_IS_MERGED_MODE) ?: false
 
-        chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem?.href?.substring(1))
+        if (isMergedMode) {
+            spineReferences = arguments?.getSerializable(BUNDLE_SPINE_REFERENCES) as? List<Link>
+            spineItem = spineReferences?.getOrNull(0)
+        } else {
+            spineItem = arguments?.getSerializable(BUNDLE_SPINE_ITEM) as Link
+        }
+
+        if (spineItem != null) {
+            chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem?.href?.substring(1))
+        }
 
         searchLocatorVisible = savedInstanceState?.getParcelable(BUNDLE_SEARCH_LOCATOR)
 
@@ -401,7 +429,13 @@ try {
         if (mWebview?.settings != null) {
             mWebview?.settings!!.defaultTextEncodingName = "utf-8"
         }
-        HtmlTask(this).execute(chapterUrl.toString())
+
+        // Load HTML content based on mode
+        if (isMergedMode && spineReferences != null && spineReferences!!.isNotEmpty()) {
+            MergedHtmlTask(this, spineReferences, mActivityCallback?.streamerUrl ?: "").execute()
+        } else {
+            HtmlTask(this).execute(chapterUrl.toString())
+        }
     }
 
     private val webViewClient = object : WebViewClient() {
