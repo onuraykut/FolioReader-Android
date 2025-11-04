@@ -1029,6 +1029,23 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             mFolioPageViewPager?.currentItem = 0
             currentChapterIndex = 0
 
+            // Set up entry read locator for merged mode
+            if (searchLocator == null) {
+                var readLocator: ReadLocator? = null
+                if (savedInstanceState == null) {
+                    readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
+                    if (readLocator == null) {
+                        readLocator = getLastReadLocator()
+                    }
+                    entryReadLocator = readLocator
+                    Log.v(LOG_TAG, "-> configFolio (merged) -> entryReadLocator set: ${readLocator?.locations?.cfi}")
+                } else {
+                    readLocator = savedInstanceState?.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                    lastReadLocator = readLocator
+                    Log.v(LOG_TAG, "-> configFolio (merged) -> lastReadLocator from bundle: ${readLocator?.locations?.cfi}")
+                }
+            }
+
             // Simplified page change listener for single page mode
             mFolioPageViewPager?.setOnPageChangeListener(object :
                 DirectionalViewpager.OnPageChangeListener {

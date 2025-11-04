@@ -145,7 +145,12 @@ class FolioPageFragment : Fragment(),
 
     private val isCurrentFragment: Boolean
         get() {
-            return isAdded && mActivityCallback?.currentChapterIndex == spineIndex
+            // In merged mode, there's only one fragment, so it's always current
+            return if (isMergedMode) {
+                isAdded
+            } else {
+                isAdded && mActivityCallback?.currentChapterIndex == spineIndex
+            }
         }
 
     override fun onCreateView(
@@ -472,10 +477,15 @@ try {
                     mWebview?.loadUrl(callHighlightSearchLocator)
 
                 } else if (isCurrentFragment) {
-                    var cfi ="epubcfi(/0!/4/4/8/1:0)";
-                    if(lastReadLocator?.locations?.cfi!=null)
-                    cfi = lastReadLocator?.locations?.cfi ?: ""
-                    mWebview?.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
+                    // Try to load last read position
+                    val cfi = lastReadLocator?.locations?.cfi
+                    if (!cfi.isNullOrEmpty()) {
+                        Log.v(LOG_TAG, "-> onPageFinished (reloaded) -> restoring CFI: $cfi, isMergedMode: $isMergedMode")
+                        mWebview?.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
+                    } else {
+                        Log.v(LOG_TAG, "-> onPageFinished (reloaded) -> no CFI to restore, hiding loading")
+                        loadingView?.hide()
+                    }
 
                 } else {
                     if (spineIndex == (mActivityCallback?.currentChapterIndex?.minus(1) ?: 0)) {
@@ -518,9 +528,10 @@ try {
 
                 if (readLocator != null) {
                     val cfi = readLocator.locations.cfi
-                    Log.v(LOG_TAG, "-> onPageFinished -> readLocator -> " + cfi)
+                    Log.v(LOG_TAG, "-> onPageFinished -> readLocator CFI: $cfi, isMergedMode: $isMergedMode")
                     mWebview?.loadUrl(String.format(getString(R.string.callScrollToCfi), cfi))
                 } else {
+                    Log.v(LOG_TAG, "-> onPageFinished -> no readLocator, hiding loading")
                     loadingView?.hide()
                 }
 
@@ -647,22 +658,49 @@ try {
 
     @JavascriptInterface
     fun storeLastReadCfi(cfi: String) {
-        val href = spineItem?.href ?: ""
+        val href = if (isMergedMode && spineReferences != null && spineReferences!!.isNotEmpty()) {
+            // In merged mode, always use the first spine item's href
+            // CFI will contain the position within the merged document
+            spineReferences!![0].href ?: ""
+        } else {
+            spineItem?.href ?: ""
+        }
+
         val created = Date().time
         val locations = Locations()
         locations.cfi = cfi
         lastReadLocator = ReadLocator(mBookId ?: "", href, created, locations)
         mActivityCallback?.storeLastReadLocator(lastReadLocator)
+
+        Log.v(LOG_TAG, "-> storeLastReadCfi -> cfi: $cfi, href: $href, isMergedMode: $isMergedMode")
     }
 
     @JavascriptInterface
     fun setHorizontalPageCount(horizontalPageCount: Int) {
-        Log.v(
-            LOG_TAG, "-> setHorizontalPageCount = " + horizontalPageCount
-                    + " -> " + spineItem?.href
-        )
+        val normalizedPageCount = if (isMergedMode && spineReferences != null) {
+            // In merged mode, normalize the page count based on average chapter size
+            // to prevent unreasonably high page numbers
+            val averagePagesPerChapter = horizontalPageCount / spineReferences!!.size
+            // Use a more reasonable page count (average of 10-20 pages per chapter)
+            val normalizedCount = Math.max(
+                horizontalPageCount / 4, // Reduce by factor of 4
+                spineReferences!!.size * 10 // Minimum 10 pages per chapter
+            )
+            Log.v(
+                LOG_TAG, "-> setHorizontalPageCount (merged mode) = $horizontalPageCount" +
+                        " -> normalized to $normalizedCount (${spineReferences!!.size} chapters)" +
+                        " -> " + spineItem?.href
+            )
+            normalizedCount
+        } else {
+            Log.v(
+                LOG_TAG, "-> setHorizontalPageCount = $horizontalPageCount" +
+                        " -> " + spineItem?.href
+            )
+            horizontalPageCount
+        }
 
-        mWebview?.setHorizontalPageCount(horizontalPageCount)
+        mWebview?.setHorizontalPageCount(normalizedPageCount)
     }
 
     fun loadRangy(rangy: String) {
@@ -719,61 +757,100 @@ try {
 
     private fun updatePagesLeftText(scrollY: Int) {
         try {
-            val currentPage = (Math.ceil(scrollY.toDouble() / (mWebview?.webViewHeight ?: 0)) + 1).toInt()
-            val totalPages = Math.ceil((mWebview?.contentHeightVal?.toDouble() ?: 0.0) / (mWebview?.webViewHeight ?: 0)).toInt()
+            val webViewHeight = mWebview?.webViewHeight ?: 1
+            val contentHeight = mWebview?.contentHeightVal?.toDouble() ?: 0.0
 
-            // Update this chapter's page count in the manager
-            val pageCountManager = mActivityCallback?.getPageCountManager()
-            if (pageCountManager != null && totalPages > 0) {
-                pageCountManager.updateChapterPageCount(spineIndex, totalPages)
-            }
+            if (isMergedMode) {
+                // For merged mode, calculate pages based on actual scroll position
+                // Use a more reasonable page height calculation
+                val currentPage = (scrollY / webViewHeight) + 1
+                val totalPages = Math.ceil(contentHeight / webViewHeight).toInt()
 
-            val pagesRemaining = totalPages - currentPage
+                val pagesRemaining = totalPages - currentPage
 
-            // Calculate global page numbers
-            val globalCurrentPage: Int
-            val globalTotalPages: Int
+                // Display simple page numbers for merged mode
+                val pagesRemainingStr = String.format(Locale.US, "%d / %d", currentPage, totalPages)
 
-            if (pageCountManager != null) {
-                globalCurrentPage = pageCountManager.getGlobalPageNumber(spineIndex, currentPage)
-                globalTotalPages = pageCountManager.getEstimatedTotalPages()
-
-                // Log for debugging
-                if (isCurrentFragment) {
-                    Log.d(LOG_TAG, "Global pagination: $globalCurrentPage / $globalTotalPages " +
-                            "(Chapter ${spineIndex + 1}, Page $currentPage/$totalPages)")
+                val minutesRemaining = if (totalPages > 0) {
+                    Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
+                } else {
+                    0
                 }
-            } else {
-                // Fallback to chapter-based pagination if manager not available
-                globalCurrentPage = currentPage
-                globalTotalPages = totalPages
-            }
 
-            // Display global page numbers
-            val pagesRemainingStr = if (globalTotalPages > 0) {
-                String.format(Locale.US, "%d / %d", globalCurrentPage, globalTotalPages)
-            } else {
-                String.format(Locale.US, "%d / %d", currentPage, totalPages)
-            }
+                val minutesRemainingStr: String = when {
+                    minutesRemaining > 1 -> String.format(
+                        Locale.US, getString(R.string.minutes_left),
+                        minutesRemaining
+                    )
+                    minutesRemaining == 1 -> String.format(
+                        Locale.US, getString(R.string.minute_left),
+                        minutesRemaining
+                    )
+                    else -> getString(R.string.less_than_minute)
+                }
 
-            val minutesRemaining = Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
-            val minutesRemainingStr: String
-            if (minutesRemaining > 1) {
-                minutesRemainingStr = String.format(
-                    Locale.US, getString(R.string.minutes_left),
-                    minutesRemaining
-                )
-            } else if (minutesRemaining == 1) {
-                minutesRemainingStr = String.format(
-                    Locale.US, getString(R.string.minute_left),
-                    minutesRemaining
-                )
-            } else {
-                minutesRemainingStr = getString(R.string.less_than_minute)
-            }
+                mMinutesLeftTextView?.text = minutesRemainingStr
+                mPagesLeftTextView?.text = pagesRemainingStr
 
-            mMinutesLeftTextView?.text = minutesRemainingStr
-            mPagesLeftTextView?.text = pagesRemainingStr
+                Log.d(LOG_TAG, "Merged mode pagination: $currentPage / $totalPages (scroll: $scrollY, height: $webViewHeight, content: $contentHeight)")
+            } else {
+                // Original chapter-by-chapter mode pagination
+                val currentPage = (Math.ceil(scrollY.toDouble() / webViewHeight) + 1).toInt()
+                val totalPages = Math.ceil(contentHeight / webViewHeight).toInt()
+
+                // Update this chapter's page count in the manager
+                val pageCountManager = mActivityCallback?.getPageCountManager()
+                if (pageCountManager != null && totalPages > 0) {
+                    pageCountManager.updateChapterPageCount(spineIndex, totalPages)
+                }
+
+                val pagesRemaining = totalPages - currentPage
+
+                // Calculate global page numbers
+                val globalCurrentPage: Int
+                val globalTotalPages: Int
+
+                if (pageCountManager != null) {
+                    globalCurrentPage = pageCountManager.getGlobalPageNumber(spineIndex, currentPage)
+                    globalTotalPages = pageCountManager.getEstimatedTotalPages()
+
+                    // Log for debugging
+                    if (isCurrentFragment) {
+                        Log.d(LOG_TAG, "Global pagination: $globalCurrentPage / $globalTotalPages " +
+                                "(Chapter ${spineIndex + 1}, Page $currentPage/$totalPages)")
+                    }
+                } else {
+                    // Fallback to chapter-based pagination if manager not available
+                    globalCurrentPage = currentPage
+                    globalTotalPages = totalPages
+                }
+
+                // Display global page numbers
+                val pagesRemainingStr = if (globalTotalPages > 0) {
+                    String.format(Locale.US, "%d / %d", globalCurrentPage, globalTotalPages)
+                } else {
+                    String.format(Locale.US, "%d / %d", currentPage, totalPages)
+                }
+
+                val minutesRemaining = Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
+                val minutesRemainingStr: String
+                if (minutesRemaining > 1) {
+                    minutesRemainingStr = String.format(
+                        Locale.US, getString(R.string.minutes_left),
+                        minutesRemaining
+                    )
+                } else if (minutesRemaining == 1) {
+                    minutesRemainingStr = String.format(
+                        Locale.US, getString(R.string.minute_left),
+                        minutesRemaining
+                    )
+                } else {
+                    minutesRemainingStr = getString(R.string.less_than_minute)
+                }
+
+                mMinutesLeftTextView?.text = minutesRemainingStr
+                mPagesLeftTextView?.text = pagesRemainingStr
+            }
         } catch (exp: java.lang.ArithmeticException) {
             Log.e("divide error", exp.toString())
         } catch (exp: IllegalStateException) {
