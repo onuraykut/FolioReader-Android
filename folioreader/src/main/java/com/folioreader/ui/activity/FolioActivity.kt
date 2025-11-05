@@ -687,26 +687,47 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onDirectionChange(newDirection: Config.Direction) {
-        Log.v(LOG_TAG, "-> onDirectionChange")
+        Log.v(LOG_TAG, "-> onDirectionChange -> newDirection: $newDirection")
 
         val config = AppUtil.getSavedConfig(applicationContext)
         val useMergedChapters = config?.isUseMergedChapters ?: true
 
-        var folioPageFragment: FolioPageFragment? = currentFragment ?: return
-        entryReadLocator = folioPageFragment?.getLastReadLocator()
+        // Save current reading position before direction change
+        var folioPageFragment: FolioPageFragment? = currentFragment
+        if (folioPageFragment != null) {
+            entryReadLocator = folioPageFragment.getLastReadLocator()
+            Log.v(LOG_TAG, "-> onDirectionChange -> saved position: ${entryReadLocator?.locations?.cfi}")
+        }
         val searchLocatorVisible = folioPageFragment?.searchLocatorVisible
 
         direction = newDirection
         mFolioPageViewPager?.setDirection(newDirection)
 
         if (useMergedChapters) {
-            // Recreate SinglePageAdapter for direction change
+            // For merged mode, completely recreate the adapter and fragment
+            Log.v(LOG_TAG, "-> onDirectionChange -> Recreating SinglePageAdapter for merged mode")
+
+            // Clear the old adapter first to force fragment recreation
+            mFolioPageViewPager?.adapter = null
+
+            // Create new adapter
             val singlePageAdapter = com.folioreader.ui.adapter.SinglePageAdapter(
                 supportFragmentManager,
                 spine, bookFileName, mBookId
             )
             mFolioPageViewPager?.adapter = singlePageAdapter
             mFolioPageViewPager?.currentItem = 0
+
+            // Post a delayed task to restore search locator after fragment is created
+            handler?.postDelayed({
+                val newFragment = currentFragment
+                if (newFragment != null) {
+                    searchLocatorVisible?.let {
+                        newFragment.highlightSearchLocator(it)
+                    }
+                    Log.v(LOG_TAG, "-> onDirectionChange -> Fragment recreated for direction: $newDirection")
+                }
+            }, 300)
         } else {
             // Recreate FolioPageFragmentAdapter for direction change
             mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
@@ -715,11 +736,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             )
             mFolioPageViewPager?.adapter = mFolioPageFragmentAdapter
             mFolioPageViewPager?.currentItem = currentChapterIndex
-        }
 
-        folioPageFragment = currentFragment ?: return
-        searchLocatorVisible?.let {
-            folioPageFragment.highlightSearchLocator(searchLocatorVisible)
+            folioPageFragment = currentFragment ?: return
+            searchLocatorVisible?.let {
+                folioPageFragment.highlightSearchLocator(searchLocatorVisible)
+            }
         }
     }
 

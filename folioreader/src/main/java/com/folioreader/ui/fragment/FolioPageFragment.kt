@@ -701,6 +701,48 @@ try {
         }
 
         mWebview?.setHorizontalPageCount(normalizedPageCount)
+
+        // Update page numbers display for horizontal mode
+        updateHorizontalPageNumbers(1, normalizedPageCount)
+    }
+
+    @JavascriptInterface
+    fun updateHorizontalPageNumber(currentPage: Int, totalPages: Int) {
+        Log.v(LOG_TAG, "-> updateHorizontalPageNumber -> $currentPage / $totalPages")
+        updateHorizontalPageNumbers(currentPage, totalPages)
+    }
+
+    private fun updateHorizontalPageNumbers(currentPage: Int, totalPages: Int) {
+        uiHandler.post {
+            try {
+                val pagesLeftStr = String.format(Locale.US, "%d / %d", currentPage, totalPages)
+                mPagesLeftTextView?.text = pagesLeftStr
+
+                val pagesRemaining = totalPages - currentPage
+                val minutesRemaining = if (totalPages > 0 && mTotalMinutes > 0) {
+                    Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
+                } else {
+                    0
+                }
+
+                val minutesRemainingStr: String = when {
+                    minutesRemaining > 1 -> String.format(
+                        Locale.US, getString(R.string.minutes_left),
+                        minutesRemaining
+                    )
+                    minutesRemaining == 1 -> String.format(
+                        Locale.US, getString(R.string.minute_left),
+                        minutesRemaining
+                    )
+                    else -> getString(R.string.less_than_minute)
+                }
+
+                mMinutesLeftTextView?.text = minutesRemainingStr
+                Log.d(LOG_TAG, "Horizontal mode pagination: $currentPage / $totalPages")
+            } catch (e: Exception) {
+                Log.e(LOG_TAG, "Error updating horizontal page numbers", e)
+            }
+        }
     }
 
     fun loadRangy(rangy: String) {

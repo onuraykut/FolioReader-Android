@@ -63,7 +63,16 @@ class WebViewPager : ViewPager {
             }
 
             override fun onPageSelected(position: Int) {
-                Log.v(LOG_TAG, "-> onPageSelected -> $position")
+                Log.v(LOG_TAG, "-> onPageSelected -> $position / $horizontalPageCount")
+                // Notify FolioPageFragment about page change in horizontal mode
+                if (folioWebView != null && horizontalPageCount > 0) {
+                    val currentPage = position + 1
+                    folioWebView!!.loadUrl(
+                        "javascript:if(typeof FolioPageFragment !== 'undefined' && " +
+                        "typeof FolioPageFragment.updateHorizontalPageNumber === 'function') { " +
+                        "FolioPageFragment.updateHorizontalPageNumber($currentPage, $horizontalPageCount); }"
+                    )
+                }
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
