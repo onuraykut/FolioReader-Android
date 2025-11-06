@@ -40,10 +40,11 @@ import com.folioreader.ui.activity.FolioActivityCallback
 import com.folioreader.ui.fragment.DictionaryFragment
 import com.folioreader.ui.fragment.FolioPageFragment
 import com.folioreader.util.AppUtil
+import com.folioreader.util.CustomScrollGestureListener
+import com.folioreader.util.CustomSimpleOnGestureListener
 import com.folioreader.util.HighlightUtil
 import com.folioreader.util.UiUtil
 import dalvik.system.PathClassLoader
-import kotlinx.android.synthetic.main.text_selection.view.*
 import org.json.JSONObject
 import org.springframework.util.ReflectionUtils
 import java.lang.ref.WeakReference
@@ -162,11 +163,9 @@ class FolioWebView : WebView {
         return popupWindow.isShowing
     }
 
-    private inner class HorizontalGestureListener : GestureDetector.SimpleOnGestureListener() {
+    private inner class HorizontalGestureListener :  CustomSimpleOnGestureListener(object : CustomScrollGestureListener {
 
         override fun onScroll(
-            e1: MotionEvent,
-            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
@@ -176,10 +175,8 @@ class FolioWebView : WebView {
         }
 
         override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
+            distanceX: Float,
+            distanceY: Float
         ): Boolean {
             //Log.d(LOG_TAG, "-> onFling -> e1 = " + e1 + ", e2 = " + e2 + ", velocityX = " + velocityX + ", velocityY = " + velocityY);
 
@@ -204,7 +201,7 @@ class FolioWebView : WebView {
             super@FolioWebView.onTouchEvent(event)
             return true
         }
-    }
+    })
 
     @JavascriptInterface
     fun dismissPopupWindow(): Boolean {
@@ -228,30 +225,22 @@ class FolioWebView : WebView {
         destroyed = true
     }
 
-    private inner class VerticalGestureListener : GestureDetector.SimpleOnGestureListener() {
-
-        override fun onScroll(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            distanceX: Float,
-            distanceY: Float
-        ): Boolean {
-            //Log.v(LOG_TAG, "-> onScroll -> e1 = " + e1 + ", e2 = " + e2 + ", distanceX = " + distanceX + ", distanceY = " + distanceY);
+    private inner class VerticalGestureListener :  CustomSimpleOnGestureListener(object : CustomScrollGestureListener {
+        override fun onScroll(distanceX: Float, distanceY: Float): Boolean {
             lastScrollType = LastScrollType.USER
             return false
         }
 
-        override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            //Log.v(LOG_TAG, "-> onFling -> e1 = " + e1 + ", e2 = " + e2 + ", velocityX = " + velocityX + ", velocityY = " + velocityY);
+        override fun onFling(distanceX: Float, distanceY: Float): Boolean {
             lastScrollType = LastScrollType.USER
             return false
         }
-    }
+
+        override fun onDown(event: MotionEvent): Boolean {
+            super@FolioWebView.onTouchEvent(event)
+            return true
+        }
+    })
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -296,51 +285,65 @@ class FolioWebView : WebView {
         viewTextSelection = LayoutInflater.from(ctw).inflate(R.layout.text_selection, null)
         viewTextSelection.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 
-        viewTextSelection.yellowHighlight.setOnClickListener {
+        // Use explicit findViewById instead of Kotlin synthetic properties
+        val yellowHighlight = viewTextSelection.findViewById<View>(R.id.yellowHighlight)
+        val greenHighlight = viewTextSelection.findViewById<View>(R.id.greenHighlight)
+        val blueHighlight = viewTextSelection.findViewById<View>(R.id.blueHighlight)
+        val pinkHighlight = viewTextSelection.findViewById<View>(R.id.pinkHighlight)
+        val underlineHighlight = viewTextSelection.findViewById<View>(R.id.underlineHighlight)
+        val deleteHighlight = viewTextSelection.findViewById<View>(R.id.deleteHighlight)
+
+        val copySelection = viewTextSelection.findViewById<View>(R.id.copySelection)
+        val shareSelection = viewTextSelection.findViewById<View>(R.id.shareSelection)
+        val alintiSelection = viewTextSelection.findViewById<View>(R.id.alintiSelection)
+        val defineSelection = viewTextSelection.findViewById<View>(R.id.defineSelection)
+        // translateSelection exists in layout but is currently unused/commented
+
+        yellowHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> yellowHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Yellow, false)
         }
-        viewTextSelection.greenHighlight.setOnClickListener {
+        greenHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> greenHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Green, false)
         }
-        viewTextSelection.blueHighlight.setOnClickListener {
+        blueHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> blueHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Blue, false)
         }
-        viewTextSelection.pinkHighlight.setOnClickListener {
+        pinkHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> pinkHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Pink, false)
         }
-        viewTextSelection.underlineHighlight.setOnClickListener {
+        underlineHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> underlineHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Underline, false)
         }
 
-        viewTextSelection.deleteHighlight.setOnClickListener {
+        deleteHighlight?.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> deleteHighlight")
             dismissPopupWindow()
             loadUrl("javascript:clearSelection()")
             loadUrl("javascript:deleteThisHighlight()")
         }
 
-        viewTextSelection.copySelection.setOnClickListener {
+        copySelection?.setOnClickListener { v ->
             dismissPopupWindow()
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+            loadUrl("javascript:onTextSelectionItemClicked(${v.id})")
         }
-        viewTextSelection.shareSelection.setOnClickListener {
+        shareSelection?.setOnClickListener { v ->
             dismissPopupWindow()
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
-        }
-
-        viewTextSelection.alintiSelection.setOnClickListener {
-            dismissPopupWindow()
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+            loadUrl("javascript:onTextSelectionItemClicked(${v.id})")
         }
 
-        viewTextSelection.defineSelection.setOnClickListener {
+        alintiSelection?.setOnClickListener { v ->
             dismissPopupWindow()
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+            loadUrl("javascript:onTextSelectionItemClicked(${v.id})")
+        }
+
+        defineSelection?.setOnClickListener { v ->
+            dismissPopupWindow()
+            loadUrl("javascript:onTextSelectionItemClicked(${v.id})")
         }
         /*  viewTextSelection.translateSelection.setOnClickListener {
             dismissPopupWindow()
