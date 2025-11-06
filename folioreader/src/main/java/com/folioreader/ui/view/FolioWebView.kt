@@ -408,7 +408,9 @@ class FolioWebView : WebView {
     private fun showDictDialog(selectedText: String?) {
         val dictionaryFragment = DictionaryFragment()
         val bundle = Bundle()
-        bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
+        // Büyük veri riskini azaltmak için metni sınırla
+        val safeText = selectedText?.trim()?.take(1024)
+        bundle.putString(Constants.SELECTED_WORD, safeText)
         dictionaryFragment.arguments = bundle
         parentFragment.fragmentManager?.let { dictionaryFragment.show(it, DictionaryFragment::class.java.name) }
     }
@@ -416,7 +418,9 @@ class FolioWebView : WebView {
     private fun showTransDialog(selectedText: String?) {
         val dictionaryFragment = DictionaryFragment()
         val bundle = Bundle()
-        bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
+        // Büyük veri riskini azaltmak için metni sınırla
+        val safeText = selectedText?.trim()?.take(1024)
+        bundle.putString(Constants.SELECTED_WORD, safeText)
         dictionaryFragment.arguments = bundle
         parentFragment.fragmentManager?.let { dictionaryFragment.show(it, DictionaryFragment::class.java.name) }
     }
@@ -607,7 +611,7 @@ class FolioWebView : WebView {
             Log.d(LOG_TAG, "-> onGetContentRect")
 
             evaluateJavascript("javascript:getSelectionRect()") { value ->
-                if (value != null) {
+                if (value != null && value != "null") {
                     try {
                         val rectJson = JSONObject(value)
                         setSelectionRect(
@@ -618,6 +622,8 @@ class FolioWebView : WebView {
                         e.cause?.printStackTrace()
                     } catch (e: RuntimeException) {
                         e.cause?.printStackTrace()
+                    } catch (e: org.json.JSONException) {
+                        e.printStackTrace()
                     }
 
                 }

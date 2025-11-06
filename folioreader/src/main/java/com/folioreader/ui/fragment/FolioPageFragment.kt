@@ -298,7 +298,8 @@ try {
     override fun onReceiveHtml(html: String) {
         if (isAdded) {
             mHtmlString = html
-            setHtml(false)
+            setHtml(false
+            )
         }
     }
 
@@ -364,6 +365,7 @@ try {
         mWebview = webViewLayout?.findViewById(R.id.folioWebView)
         mWebview?.setParentFragment(this)
         webViewPager = webViewLayout?.findViewById(R.id.webViewPager)
+        mWebview?.isSaveEnabled = false
 
         if (activity is FolioActivityCallback)
             mWebview?.setFolioActivityCallback((activity as FolioActivityCallback))
