@@ -15,7 +15,6 @@
  */
 package com.folioreader.ui.activity
 
-import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
@@ -74,6 +73,7 @@ import org.readium.r2.streamer.server.Server
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import java.lang.ref.WeakReference
 import com.google.gson.Gson
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
@@ -462,16 +462,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                             .setTargetView(view)
                             .setContentTextSize(12) //optional
                             .setTitleTextSize(14) //optional
-                            .setDismissType(GuideView.DismissType.anywhere) //optiona
-                            .setGuideListener(GuideView.GuideListener {
+                            .setDismissType(DismissType.anywhere) //optiona
+                            .setGuideListener {
                                 getSharedPreferences(
                                     "FirstPreferenceReading",
-                                    Context.MODE_PRIVATE
+                                    MODE_PRIVATE
                                 )
                                     .edit()
                                     .putBoolean("isFirstRunShowCase", false)
                                     .apply()
-                            })
+                            }
                             .build()    // l - default dismissible by TargetView
                             .show()
                     else getSharedPreferences(
