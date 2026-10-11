@@ -116,9 +116,12 @@ dependencies {
     }
     api("com.github.codetoart:r2-streamer-kotlin:$versions.r2StreamerKotlin") {
         exclude group: "org.slf4j", module: "slf4j-api"
+        exclude group: 'com.github.NanoHttpd.nanohttpd'
         changing = true
     }
 
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'org.nanohttpd:nanohttpd-nanolets:2.3.1'
     // Only ReflectionUtils in Spring framework is used
     implementation 'org.springframework:spring-core:4.3.19.RELEASE'
 
