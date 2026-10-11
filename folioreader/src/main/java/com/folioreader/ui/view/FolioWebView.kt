@@ -180,13 +180,15 @@ class FolioWebView : WebView {
         ): Boolean {
             //Log.d(LOG_TAG, "-> onFling -> e1 = " + e1 + ", e2 = " + e2 + ", velocityX = " + velocityX + ", velocityY = " + velocityY);
 
-            if (!webViewPager.isScrolling) {
+            if (::webViewPager.isInitialized && !webViewPager.isScrolling) {
                 // Need to complete the scroll as ViewPager thinks these touch events should not
                 // scroll it's pages.
                 //Log.d(LOG_TAG, "-> onFling -> completing scroll");
                 uiHandler.postDelayed({
                     // Delayed to avoid inconsistency of scrolling in WebView
-                    scrollTo(getScrollXPixelsForPage(webViewPager.currentItem), 0)
+                    if (::webViewPager.isInitialized) {
+                        scrollTo(getScrollXPixelsForPage(webViewPager.currentItem), 0)
+                    }
                 }, 100)
             }
 
@@ -205,7 +207,9 @@ class FolioWebView : WebView {
 
     @JavascriptInterface
     fun dismissPopupWindow(): Boolean {
-        Log.d(LOG_TAG, "-> dismissPopupWindow -> " + parentFragment.spineItem?.href)
+        if (::parentFragment.isInitialized) {
+            Log.d(LOG_TAG, "-> dismissPopupWindow -> " + parentFragment.spineItem?.href)
+        }
         val wasShowing = popupWindow.isShowing
         if (Looper.getMainLooper().thread == Thread.currentThread()) {
             popupWindow.dismiss()
@@ -482,6 +486,9 @@ class FolioWebView : WebView {
 
         lastTouchAction = event.action
 
+        if (!::folioActivityCallback.isInitialized)
+            return super.onTouchEvent(event)
+
         return if (folioActivityCallback.direction == Config.Direction.HORIZONTAL) {
             computeHorizontalScroll(event)
         } else {
@@ -491,7 +498,9 @@ class FolioWebView : WebView {
 
     private fun computeVerticalScroll(event: MotionEvent): Boolean {
 
-        gestureDetector.onTouchEvent(event)
+        if (::gestureDetector.isInitialized) {
+            gestureDetector.onTouchEvent(event)
+        }
         return super.onTouchEvent(event)
     }
 
@@ -499,7 +508,7 @@ class FolioWebView : WebView {
         //Log.v(LOG_TAG, "-> computeHorizontalScroll");
 
         // Rare condition in fast scrolling
-        if (!::webViewPager.isInitialized)
+        if (!::webViewPager.isInitialized || !::gestureDetector.isInitialized)
             return super.onTouchEvent(event)
 
         webViewPager.dispatchTouchEvent(event)
@@ -538,7 +547,9 @@ class FolioWebView : WebView {
 
         if (lastScrollType == LastScrollType.USER) {
             //Log.d(LOG_TAG, "-> onScrollChanged -> scroll initiated by user");
-            parentFragment.searchLocatorVisible = null
+            if (::parentFragment.isInitialized) {
+                parentFragment.searchLocatorVisible = null
+            }
         }
 
         lastScrollType = null

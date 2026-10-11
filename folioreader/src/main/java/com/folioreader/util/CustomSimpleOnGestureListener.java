@@ -16,11 +16,17 @@ public class CustomSimpleOnGestureListener extends GestureDetector.SimpleOnGestu
 
     @Override
     public boolean onScroll(@Nullable MotionEvent e1, @Nullable MotionEvent e2, float distanceX, float distanceY) {
-        return listener.onScroll(distanceX, distanceY);
+        if (listener != null) {
+            return listener.onScroll(distanceX, distanceY);
+        }
+        return false;
     }
 
     @Override
     public boolean onFling(@Nullable MotionEvent e1, @Nullable MotionEvent e2, float distanceX, float distanceY) {
-        return listener.onFling(distanceX, distanceY);
+        if (listener != null) {
+            return listener.onFling(distanceX, distanceY);
+        }
+        return false;
     }
 }

@@ -19,117 +19,121 @@ public final class HtmlUtil {
      * @return modified raw html string
      */
     public static String getHtmlContent(Context context, String htmlContent, Config config) {
-        int backgroundColor = config.getBackgroundColor();
-        String cssPath="";
-        String jsPath="";
+        if (htmlContent == null) {
+            return "";
+        }
+
+        int backgroundColor = config != null ? config.getBackgroundColor() : 0;
+        String cssPath = "";
+        String jsPath = "";
         if (context != null) {
-        try {
-            switch (backgroundColor) {
-                case 0:
-                    cssPath =
-                            String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style.css");
+            try {
+                switch (backgroundColor) {
+                    case 0:
+                        cssPath =
+                                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style.css");
+                        break;
+                    case 1:
+                        cssPath =
+                                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleYellow.css");
+                        break;
+                    case 2:
+                        cssPath =
+                                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleAcik.css");
+                        break;
+                    case 3:
+                        cssPath =
+                                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleGreen.css");
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception ignored) {
+
+            }
+
+            try {
+                jsPath = String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/jsface.min.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/jquery-3.4.1.min.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/rangy-core.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/rangy-highlighter.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/rangy-classapplier.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/rangy-serializer.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/Bridge.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/rangefix.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag),
+                        "file:///android_asset/js/readium-cfi.umd.js") + "\n";
+
+                jsPath = jsPath + String.format(context.getString(R.string.script_tag_method_call),
+                        "setMediaOverlayStyleColors('#C0ED72','#C0ED72')") + "\n";
+
+                jsPath = jsPath
+                        + "<meta name=\"viewport\" content=\"height=device-height, user-scalable=no\" />";
+            } catch (Exception ignored) {
+
+            }
+        }
+        String toInject = "\n" + cssPath + "\n" + jsPath + "\n</head>";
+        htmlContent = htmlContent.replace("</head>", toInject);
+
+        String classes = "";
+        if (config != null) {
+            switch (config.getFont()) {
+                case Constants.FONT_ANDADA:
+                    classes = "andada";
                     break;
-                case 1:
-                    cssPath =
-                            String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleYellow.css");
+                case Constants.FONT_LATO:
+                    classes = "lato";
                     break;
-                case 2:
-                    cssPath =
-                            String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleAcik.css");
+                case Constants.FONT_LORA:
+                    classes = "lora";
                     break;
-                case 3:
-                    cssPath =
-                            String.format(context.getString(R.string.css_tag), "file:///android_asset/css/StyleGreen.css");
+                case Constants.FONT_RALEWAY:
+                    classes = "raleway";
                     break;
                 default:
                     break;
             }
-        }catch (NullPointerException ignored) {
 
-        }
+            if (config.isNightMode()) {
+                classes += " nightMode";
+            }
 
-
-
-        jsPath = String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/jsface.min.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/jquery-3.4.1.min.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/rangy-core.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/rangy-highlighter.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/rangy-classapplier.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/rangy-serializer.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/Bridge.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/rangefix.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag),
-                "file:///android_asset/js/readium-cfi.umd.js") + "\n";
-
-        jsPath = jsPath + String.format(context.getString(R.string.script_tag_method_call),
-                "setMediaOverlayStyleColors('#C0ED72','#C0ED72')") + "\n";
-
-        jsPath = jsPath
-                + "<meta name=\"viewport\" content=\"height=device-height, user-scalable=no\" />";
-        }
-        String toInject = "\n" + cssPath + "\n" + jsPath + "\n</head>";
-        try {
-            htmlContent = htmlContent.replace("</head>", toInject);
-        }catch (NullPointerException ignored) {
-
-        }
-
-        String classes = "";
-        switch (config.getFont()) {
-            case Constants.FONT_ANDADA:
-                classes = "andada";
-                break;
-            case Constants.FONT_LATO:
-                classes = "lato";
-                break;
-            case Constants.FONT_LORA:
-                classes = "lora";
-                break;
-            case Constants.FONT_RALEWAY:
-                classes = "raleway";
-                break;
-            default:
-                break;
-        }
-
-        if (config.isNightMode()) {
-            classes += " nightMode";
-        }
-
-        switch (config.getFontSize()) {
-            case 0:
-                classes += " textSizeOne";
-                break;
-            case 1:
-                classes += " textSizeTwo";
-                break;
-            case 2:
-                classes += " textSizeThree";
-                break;
-            case 3:
-                classes += " textSizeFour";
-                break;
-            case 4:
-                classes += " textSizeFive";
-                break;
-            default:
-                break;
+            switch (config.getFontSize()) {
+                case 0:
+                    classes += " textSizeOne";
+                    break;
+                case 1:
+                    classes += " textSizeTwo";
+                    break;
+                case 2:
+                    classes += " textSizeThree";
+                    break;
+                case 3:
+                    classes += " textSizeFour";
+                    break;
+                case 4:
+                    classes += " textSizeFive";
+                    break;
+                default:
+                    break;
+            }
         }
 
         htmlContent = htmlContent.replace("<html", "<html class=\"" + classes + "\"" +

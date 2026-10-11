@@ -304,6 +304,7 @@ try {
     }
 
     private fun setHtml(reloaded: Boolean) {
+        if (mHtmlString == null) return
         if (spineItem != null) {
             /*if (!reloaded && spineItem.properties.contains("media-overlay")) {
                 mediaController.setSMILItems(SMILParser.parseSMIL(mHtmlString));

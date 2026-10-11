@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author gautam chibde on 21/6/17.
@@ -56,6 +58,7 @@ public class MediaController {
     //*********************************//
     private TextToSpeech mTextToSpeech;
     private boolean mIsSpeaking = false;
+    private ExecutorService ttsExecutor = Executors.newSingleThreadExecutor();
 
     public MediaController(Context context, MediaType mediaType, MediaControllerCallbacks callbacks) {
         this.mediaType = mediaType;
@@ -103,26 +106,22 @@ public class MediaController {
     public void setTextToSpeech(final Context context) {
         mTextToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
-            public void onInit(int status) {
+            public void onInit(final int status) {
                 if (status != TextToSpeech.ERROR) {
-                    mTextToSpeech.setLanguage(Locale.UK);
-                    mTextToSpeech.setSpeechRate(0.70f);
-                }
-
-               /* mTextToSpeech.setOnUtteranceCompletedListener(
-                        new TextToSpeech.OnUtteranceCompletedListener() {
-                            @Override
-                            public void onUtteranceCompleted(String utteranceId) {
-                                ((AppCompatActivity) context).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mIsSpeaking) {
-                                            callbacks.highLightTTS();
-                                        }
-                                    }
-                                });
+                    ttsExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTextToSpeech != null) {
+                                try {
+                                    mTextToSpeech.setLanguage(Locale.UK);
+                                    mTextToSpeech.setSpeechRate(0.70f);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error setting TTS language", e);
+                                }
                             }
-                        });*/
+                        }
+                    });
+                }
             }
         });
     }
@@ -160,13 +159,24 @@ public class MediaController {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void setPlaybackSpeed(float speed) {
+    private void setPlaybackSpeed(final float speed) {
         if (mediaType == MediaType.SMIL) {
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(speed));
             }
         } else {
-            mTextToSpeech.setSpeechRate(speed);
+            ttsExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTextToSpeech != null) {
+                        try {
+                            mTextToSpeech.setSpeechRate(speed);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error setting TTS speech rate", e);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -175,9 +185,17 @@ public class MediaController {
             if (mediaPlayer != null) {
                 mediaPlayer.pause();
             }
-            if (mTextToSpeech != null && mTextToSpeech.isSpeaking()) {
-                mTextToSpeech.stop();
+            if (mTextToSpeech != null) {
+                ttsExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mTextToSpeech != null && mTextToSpeech.isSpeaking()) {
+                            mTextToSpeech.stop();
+                        }
+                    }
+                });
             }
+            mIsSpeaking = false;
         } else {
             if (event.isPlay()) {
                 UiUtil.keepScreenAwake(true, context);
@@ -187,8 +205,15 @@ public class MediaController {
             if (mediaType == MediaType.SMIL) {
                 playSMIL();
             } else {
-                if (mTextToSpeech.isSpeaking()) {
-                    mTextToSpeech.stop();
+                if (mIsSpeaking) {
+                    ttsExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTextToSpeech != null) {
+                                mTextToSpeech.stop();
+                            }
+                        }
+                    });
                     mIsSpeaking = false;
                     callbacks.resetCurrentIndex();
                 } else {
@@ -217,20 +242,47 @@ public class MediaController {
         }
     }
 
-    public void speakAudio(String sentence) {
+    public void speakAudio(final String sentence) {
         if (mediaType == MediaType.TTS) {
-            HashMap<String, String> params = new HashMap<>();
-            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "stringId");
-            mTextToSpeech.speak(sentence, TextToSpeech.QUEUE_FLUSH, params);
+            ttsExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTextToSpeech != null) {
+                        try {
+                            HashMap<String, String> params = new HashMap<>();
+                            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "stringId");
+                            mTextToSpeech.speak(sentence, TextToSpeech.QUEUE_FLUSH, params);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error speaking audio", e);
+                        }
+                    }
+                }
+            });
         }
     }
 
     public void stop() {
+        mIsSpeaking = false;
         if (mTextToSpeech != null) {
-            if (mTextToSpeech.isSpeaking()) {
-                mTextToSpeech.stop();
-            }
-            mTextToSpeech.shutdown();
+            ttsExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTextToSpeech != null) {
+                        try {
+                            if (mTextToSpeech.isSpeaking()) {
+                                mTextToSpeech.stop();
+                            }
+                            mTextToSpeech.shutdown();
+                            mTextToSpeech = null;
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error stopping TTS", e);
+                        }
+                    }
+                }
+            });
+        }
+        if (ttsExecutor != null && !ttsExecutor.isShutdown()) {
+            ttsExecutor.shutdown();
         }
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
