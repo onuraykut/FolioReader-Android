@@ -43,6 +43,7 @@ import com.folioreader.util.AppUtil
 import com.folioreader.util.CustomScrollGestureListener
 import com.folioreader.util.CustomSimpleOnGestureListener
 import com.folioreader.util.HighlightUtil
+import com.folioreader.util.PageCountManager
 import com.folioreader.util.UiUtil
 import dalvik.system.PathClassLoader
 import org.json.JSONObject
@@ -161,6 +162,35 @@ class FolioWebView : WebView {
     @JavascriptInterface
     fun isPopupShowing(): Boolean {
         return popupWindow.isShowing
+    }
+
+    @JavascriptInterface
+    fun getChapterPageCount(): Int {
+        if (!::parentFragment.isInitialized) return 0
+        val bookId = parentFragment.mBookId ?: ""
+        val chapterIndex = parentFragment.spineIndex
+        return if (bookId.isNotEmpty() && chapterIndex >= 0) {
+            PageCountManager.getInstance(bookId).getChapterPageCount(chapterIndex)
+        } else 0
+    }
+
+    @JavascriptInterface
+    fun getChapterPageOffset(): Int {
+        if (!::parentFragment.isInitialized) return 0
+        val bookId = parentFragment.mBookId ?: ""
+        val chapterIndex = parentFragment.spineIndex
+        return if (bookId.isNotEmpty() && chapterIndex >= 0) {
+            PageCountManager.getInstance(bookId).getPagesBeforeChapter(chapterIndex)
+        } else 0
+    }
+
+    @JavascriptInterface
+    fun getTotalBookPages(): Int {
+        if (!::parentFragment.isInitialized) return 0
+        val bookId = parentFragment.mBookId ?: ""
+        return if (bookId.isNotEmpty()) {
+            PageCountManager.getInstance(bookId).getTotalPages()
+        } else 0
     }
 
     private inner class HorizontalGestureListener :  CustomSimpleOnGestureListener(object : CustomScrollGestureListener {

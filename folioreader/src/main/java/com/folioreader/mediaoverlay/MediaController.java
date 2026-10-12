@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * @author gautam chibde on 21/6/17.
@@ -103,12 +104,25 @@ public class MediaController {
         mediaItemPosition++;
     }
 
+    private void executeTts(Runnable runnable) {
+        if (ttsExecutor != null && !ttsExecutor.isShutdown()) {
+            try {
+                ttsExecutor.execute(runnable);
+            } catch (RejectedExecutionException e) {
+                Log.e(TAG, "TTS executor task rejected", e);
+            }
+        }
+    }
+
     public void setTextToSpeech(final Context context) {
+        if (ttsExecutor == null || ttsExecutor.isShutdown()) {
+            ttsExecutor = Executors.newSingleThreadExecutor();
+        }
         mTextToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(final int status) {
                 if (status != TextToSpeech.ERROR) {
-                    ttsExecutor.execute(new Runnable() {
+                    executeTts(new Runnable() {
                         @Override
                         public void run() {
                             if (mTextToSpeech != null) {
@@ -165,7 +179,7 @@ public class MediaController {
                 mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(speed));
             }
         } else {
-            ttsExecutor.execute(new Runnable() {
+            executeTts(new Runnable() {
                 @Override
                 public void run() {
                     if (mTextToSpeech != null) {
@@ -186,7 +200,7 @@ public class MediaController {
                 mediaPlayer.pause();
             }
             if (mTextToSpeech != null) {
-                ttsExecutor.execute(new Runnable() {
+                executeTts(new Runnable() {
                     @Override
                     public void run() {
                         if (mTextToSpeech != null && mTextToSpeech.isSpeaking()) {
@@ -206,7 +220,7 @@ public class MediaController {
                 playSMIL();
             } else {
                 if (mIsSpeaking) {
-                    ttsExecutor.execute(new Runnable() {
+                    executeTts(new Runnable() {
                         @Override
                         public void run() {
                             if (mTextToSpeech != null) {
@@ -244,7 +258,7 @@ public class MediaController {
 
     public void speakAudio(final String sentence) {
         if (mediaType == MediaType.TTS) {
-            ttsExecutor.execute(new Runnable() {
+            executeTts(new Runnable() {
                 @Override
                 public void run() {
                     if (mTextToSpeech != null) {
@@ -264,7 +278,7 @@ public class MediaController {
     public void stop() {
         mIsSpeaking = false;
         if (mTextToSpeech != null) {
-            ttsExecutor.execute(new Runnable() {
+            executeTts(new Runnable() {
                 @Override
                 public void run() {
                     if (mTextToSpeech != null) {

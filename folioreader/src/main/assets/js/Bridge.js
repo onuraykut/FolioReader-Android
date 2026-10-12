@@ -407,9 +407,9 @@ $(function () {
         var direction = FolioWebView.getDirection();
         var currentPage = 0;
         var totalPages = 0;
-        var chapterPageCount = FolioWebView.getChapterPageCount();
-        var chapterPageOffset = FolioWebView.getChapterPageOffset();
-        var totalBookPages = FolioWebView.getTotalBookPages();
+        var chapterPageCount = (typeof FolioWebView !== 'undefined' && typeof FolioWebView.getChapterPageCount === 'function') ? FolioWebView.getChapterPageCount() : 0;
+        var chapterPageOffset = (typeof FolioWebView !== 'undefined' && typeof FolioWebView.getChapterPageOffset === 'function') ? FolioWebView.getChapterPageOffset() : 0;
+        var totalBookPages = (typeof FolioWebView !== 'undefined' && typeof FolioWebView.getTotalBookPages === 'function') ? FolioWebView.getTotalBookPages() : 0;
 
         switch (direction) {
             case Direction.VERTICAL:

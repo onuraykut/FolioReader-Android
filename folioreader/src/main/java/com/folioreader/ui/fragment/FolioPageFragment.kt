@@ -108,7 +108,7 @@ class FolioPageFragment : Fragment(),
     private var mFadeOutAnimation: Animation? = null
 
     var spineItem: Link? = null
-    private var spineIndex = -1
+    var spineIndex = -1
     private var mBookTitle: String? = null
     private var mIsPageReloaded: Boolean = false
 
@@ -116,7 +116,7 @@ class FolioPageFragment : Fragment(),
 
     private var mediaController: MediaController? = null
     private var mConfig: Config? = null
-    private var mBookId: String? = null
+    var mBookId: String? = null
     var searchLocatorVisible: SearchLocator? = null
 
     private lateinit var chapterUrl: Uri
