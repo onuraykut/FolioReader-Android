@@ -29,10 +29,8 @@ task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code
     include '**/*.java'
 
     reports {
-        xml.enabled = true
-        xml {
-            destination = file("$reportsDir/checkstyle/checkstyle.xml")
-        }
+        xml.required.set(true)
+        xml.outputLocation.set(file("$reportsDir/checkstyle/checkstyle.xml"))
     }
 
     classpath = files()
@@ -42,12 +40,9 @@ spotbugs {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
-
-    includeFilter = file("**/*.java")
-    excludeFilter = file("**/gen/**")
 }
 
-tasks.withType(SpotBugsTask) {
+tasks.matching { it.class.name.contains('SpotBugsTask') }.configureEach {
     dependsOn 'assemble'
     group = "verification"
     excludeFilter = new File("$qualityConfigDir/spotbugs/android-exclude-filter.xml")
@@ -56,14 +51,10 @@ tasks.withType(SpotBugsTask) {
     source = fileTree('src')
 
     reports {
-        xml.enabled = false
-        html.enabled = true
-        xml {
-            destination = file("$reportsDir/spotbugs/spotbugs.xml")
-        }
-        html {
-            destination = file("$reportsDir/spotbugs/spotbugs.html")
-        }
+        xml.required.set(false)
+        html.required.set(true)
+        xml.outputLocation.set(file("$reportsDir/spotbugs/spotbugs.xml"))
+        html.outputLocation.set(file("$reportsDir/spotbugs/spotbugs.html"))
     }
 
     classpath = files()
@@ -79,13 +70,9 @@ task pmd(type: Pmd, group: 'Verification', description: 'Inspect sourcecode for 
     exclude '**/gen/**'
 
     reports {
-        xml.enabled = true
-        html.enabled = true
-        xml {
-            destination = file("$reportsDir/pmd/pmd.xml")
-        }
-        html {
-            destination = file("$reportsDir/pmd/pmd.html")
-        }
+        xml.required.set(true)
+        html.required.set(true)
+        xml.outputLocation.set(file("$reportsDir/pmd/pmd.xml"))
+        html.outputLocation.set(file("$reportsDir/pmd/pmd.html"))
     }
 }

@@ -78,7 +78,7 @@ class MediaControllerFragment : BottomSheetDialogFragment() {
         bottomSheetDialog.setContentView(view)
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
 
-        mTouchOutsideView = ((view.parent as View).parent as View).findViewById(R.id.touch_outside)
+        mTouchOutsideView = ((view.parent as View).parent as View).findViewById(com.google.android.material.R.id.touch_outside)
         mTouchOutsideView.setOnTouchListener { _, event ->
 
             if (event.action == MotionEvent.ACTION_DOWN) {

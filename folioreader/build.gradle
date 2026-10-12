@@ -1,36 +1,17 @@
+apply from: rootProject.file('versions.gradle')
 apply plugin: 'com.android.library'
 apply from: '../config/quality/quality.gradle'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'folioreader'
-
-    publishedGroupId = 'com.folioreader'
-    libraryName = 'FolioReader'
-    artifact = 'folioreader'
-
-    libraryDescription = 'An epub reader for Android'
-
-    siteUrl = 'https://github.com/onuraykut/FolioReader-Android'
-    gitUrl = 'https://github.com/onuraykut/FolioReader-Android.git'
-
-    libraryVersion = versions.folioreaderSdk
-
-    developerId = 'mobisystech'
-    developerName = 'Folio Reader'
-    developerEmail = 'mahavir@codetoart.com'
-
-    licenseName = 'FreeBSD License'
-    licenseUrl = 'https://en.wikipedia.org/wiki/FreeBSD_Documentation_License#License'
-    allLicenses = ["FreeBSD"]
-}
+apply plugin: 'kotlin-parcelize'
 
 android {
+    namespace 'com.folioreader'
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion versions.androidCompileSdk
+
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         minSdkVersion versions.androidMinSdk
@@ -51,8 +32,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
     }
 
     packagingOptions {
@@ -80,9 +65,8 @@ android {
     }
 }
 
-apply from: '../folioreader/bintray/installv1.gradle'
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
@@ -94,10 +78,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.github.mreram:ShowCaseView:1.4.1'
 
-//    implementation 'com.github.QuadFlask:colorpicker:0.0.13'
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-//    implementation 'com.github.Unity-Technologies:unity-ads-android:3.4.0'
     implementation 'org.greenrobot:eventbus:3.3.1'
 
     implementation "com.fasterxml.jackson.core:jackson-core:$versions.jackson"
@@ -116,16 +98,14 @@ dependencies {
     }
     api("com.github.codetoart:r2-streamer-kotlin:$versions.r2StreamerKotlin") {
         exclude group: "org.slf4j", module: "slf4j-api"
-        exclude group: 'com.github.NanoHttpd.nanohttpd'
+        exclude group: "com.github.NanoHttpd.nanohttpd"
         changing = true
     }
-
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'org.nanohttpd:nanohttpd-nanolets:2.3.1'
     // Only ReflectionUtils in Spring framework is used
     implementation 'org.springframework:spring-core:4.3.19.RELEASE'
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
 }
-apply from: '../folioreader/bintray/bintrayv1.gradle'

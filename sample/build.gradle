@@ -1,10 +1,11 @@
+apply from: rootProject.file('versions.gradle')
 apply plugin: 'com.android.application'
 apply plugin: 'checkstyle'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 android {
-
+    namespace 'com.folioreader.android.sample'
     compileSdkVersion versions.androidCompileSdk
 
     defaultConfig {
@@ -17,8 +18,11 @@ android {
         multiDexEnabled true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
     }
     buildTypes {
         release {

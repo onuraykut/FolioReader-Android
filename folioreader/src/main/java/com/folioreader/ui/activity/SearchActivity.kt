@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +31,6 @@ import com.folioreader.ui.view.FolioSearchView
 import com.folioreader.util.AppUtil
 import com.folioreader.util.UiUtil
 import com.folioreader.viewmodels.SearchViewModel
-import kotlinx.android.synthetic.main.activity_search.*
 import java.lang.reflect.Field
 
 class SearchActivity : AppCompatActivity(), OnItemClickListener {
@@ -62,6 +61,8 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     private var savedInstanceState: Bundle? = null
     private var softKeyboardVisible: Boolean = true
     private lateinit var searchViewModel: SearchViewModel
+    private lateinit var toolbar: Toolbar
+    private lateinit var recyclerView: RecyclerView
 
     // To get collapseButtonView from toolbar for any click events
     private val toolbarOnLayoutChangeListener: View.OnLayoutChangeListener = object : View.OnLayoutChangeListener {
@@ -105,6 +106,8 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         setContentView(R.layout.activity_search)
+        toolbar = findViewById(R.id.toolbar)
+        recyclerView = findViewById(R.id.recyclerView)
         init(config)
     }
 
@@ -135,7 +138,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = searchAdapter
 
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         searchAdapterDataBundle = searchViewModel.liveAdapterDataBundle.value!!
 
         val bundleFromFolioActivity = intent.getBundleExtra(SearchAdapter.DATA_BUNDLE)

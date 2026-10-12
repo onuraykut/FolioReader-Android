@@ -15,23 +15,20 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath("com.android.tools:r8:8.3.37")
         classpath('com.google.guava:guava:32.0.1-jre')
     }
 }
 
 plugins {
-    id "com.github.spotbugs" version "2.0.0" apply(false)
+    id "com.github.spotbugs" version "5.0.14" apply(false)
 }
 
-// Workaround to be able to access SpotBugsTask from external gradle script.
-// More info: https://discuss.gradle.org/t/buildscript-dependencies-in-external-script/23243
-project.extensions.extraProperties.set('SpotBugsTask', com.github.spotbugs.SpotBugsTask)
+// versions ext'ini tüm subproject'lerin görmesi için project seviyesinde de apply et
+apply from: 'versions.gradle'
 
 allprojects {
+    apply from: "$rootDir/versions.gradle"
 
     configurations.all {
         resolutionStrategy {
