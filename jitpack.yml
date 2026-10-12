@@ -1,3 +1,7 @@
 # configuration file for building snapshots and releases with jitpack.io
 jdk:
   - openjdk17
+
+install:
+  - FILE="-Dfile.encoding=UTF-8"
+  - ./gradlew :folioreader:publishToMavenLocal --no-daemon

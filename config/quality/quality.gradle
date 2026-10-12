@@ -43,12 +43,9 @@ spotbugs {
 }
 
 tasks.matching { it.class.name.contains('SpotBugsTask') }.configureEach {
-    dependsOn 'assemble'
     group = "verification"
-    excludeFilter = new File("$qualityConfigDir/spotbugs/android-exclude-filter.xml")
+    excludeFilter.set(new File("$qualityConfigDir/spotbugs/android-exclude-filter.xml"))
     classes = files("$project.rootDir/folioreader/build/intermediates/javac")
-
-    source = fileTree('src')
 
     reports {
         xml.required.set(false)
@@ -56,8 +53,6 @@ tasks.matching { it.class.name.contains('SpotBugsTask') }.configureEach {
         xml.outputLocation.set(file("$reportsDir/spotbugs/spotbugs.xml"))
         html.outputLocation.set(file("$reportsDir/spotbugs/spotbugs.html"))
     }
-
-    classpath = files()
 }
 
 task pmd(type: Pmd, group: 'Verification', description: 'Inspect sourcecode for bugs') {

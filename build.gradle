@@ -26,6 +26,7 @@ plugins {
 
 // versions ext'ini tüm subproject'lerin görmesi için project seviyesinde de apply et
 apply from: 'versions.gradle'
+apply plugin: 'maven-publish'
 
 allprojects {
     apply from: "$rootDir/versions.gradle"
@@ -50,4 +51,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+tasks.named('publishToMavenLocal') {
+    dependsOn ':folioreader:publishToMavenLocal'
 }
