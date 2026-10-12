@@ -1,5 +1,6 @@
 apply from: rootProject.file('versions.gradle')
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
@@ -62,6 +63,25 @@ android {
 
     checkstyle {
         ignoreFailures = true
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.folioreader'
+                artifactId = 'folioreader'
+                version = versions.folioreaderSdk
+            }
+        }
     }
 }
 
