@@ -303,10 +303,36 @@ class FolioWebView : WebView {
     fun initViewTextSelection() {
         Log.v(LOG_TAG, "-> initViewTextSelection")
 
-        val textSelectionMiddleDrawable = ContextCompat.getDrawable(
-            context,
-            androidx.appcompat.R.drawable.abc_text_select_handle_middle_mtrl_dark
-        )
+        val drawableId = context.resources.getIdentifier(
+            "abc_text_select_handle_middle_mtrl_dark",
+            "drawable",
+            "androidx.appcompat"
+        ).let { id ->
+            if (id == 0) {
+                context.resources.getIdentifier(
+                    "abc_text_select_handle_middle_mtrl",
+                    "drawable",
+                    "androidx.appcompat"
+                )
+            } else id
+        }.let { id ->
+            if (id == 0) {
+                context.resources.getIdentifier(
+                    "text_select_handle_middle",
+                    "drawable",
+                    "android"
+                )
+            } else id
+        }
+
+        val textSelectionMiddleDrawable = if (drawableId != 0) {
+            try {
+                ContextCompat.getDrawable(context, drawableId)
+            } catch (_: Exception) {
+                null
+            }
+        } else null
+
         handleHeight = textSelectionMiddleDrawable?.intrinsicHeight ?: (24 * density).toInt()
 
         val config = AppUtil.getSavedConfig(context)
