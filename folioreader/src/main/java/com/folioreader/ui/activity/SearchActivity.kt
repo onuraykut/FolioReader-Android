@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -108,6 +109,41 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         setContentView(R.layout.activity_search)
         toolbar = findViewById(R.id.toolbar)
         recyclerView = findViewById(R.id.recyclerView)
+
+        if (config.isNightMode) {
+            findViewById<View>(R.id.root_layout)?.setBackgroundColor(ContextCompat.getColor(this, R.color.black))
+        } else {
+            findViewById<View>(R.id.root_layout)?.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val navColor: Int
+            val statusColor: Int
+            if (config.isNightMode) {
+                navColor = ContextCompat.getColor(this, R.color.black)
+                statusColor = ContextCompat.getColor(this, R.color.black)
+            } else {
+                val attrs = intArrayOf(android.R.attr.navigationBarColor)
+                val typedArray = theme.obtainStyledAttributes(attrs)
+                navColor = typedArray.getColor(0, ContextCompat.getColor(this, R.color.white))
+                typedArray.recycle()
+                statusColor = ContextCompat.getColor(this, R.color.white)
+            }
+            window.navigationBarColor = navColor
+            UiUtil.setStatusBarColor(window, statusColor)
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            val decor = window.decorView
+            var flags = decor.systemUiVisibility
+            flags = if (!config.isNightMode) {
+                flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }
+            decor.systemUiVisibility = flags
+        }
+
         init(config)
     }
 

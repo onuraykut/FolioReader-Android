@@ -27,6 +27,14 @@ public class ContentHighlightActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mConfig = AppUtil.getSavedConfig(this);
+        mIsNightMode = mConfig != null && mConfig.isNightMode();
+        if (mIsNightMode) {
+            setTheme(R.style.FolioNightTheme);
+        } else {
+            setTheme(R.style.FolioDayTheme);
+        }
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_content_highlight);
@@ -36,8 +44,6 @@ public class ContentHighlightActivity extends AppCompatActivity {
 
         publication = (Publication) getIntent().getSerializableExtra(Constants.PUBLICATION);
 
-        mConfig = AppUtil.getSavedConfig(this);
-        mIsNightMode = mConfig != null && mConfig.isNightMode();
         initViews();
     }
 
@@ -47,6 +53,7 @@ public class ContentHighlightActivity extends AppCompatActivity {
         findViewById(R.id.layout_content_highlights).setBackgroundDrawable(UiUtil.getShapeDrawable(mConfig.getThemeColor()));
 
         if (mIsNightMode) {
+            findViewById(R.id.root_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.black));
             findViewById(R.id.toolbar).setBackgroundColor(Color.BLACK);
             findViewById(R.id.btn_contents).setBackgroundDrawable(UiUtil.createStateDrawable(mConfig.getThemeColor(), ContextCompat.getColor(this, R.color.black)));
             findViewById(R.id.btn_highlights).setBackgroundDrawable(UiUtil.createStateDrawable(mConfig.getThemeColor(), ContextCompat.getColor(this, R.color.black)));
@@ -54,6 +61,8 @@ public class ContentHighlightActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.btn_highlights)).setTextColor(UiUtil.getColorList(ContextCompat.getColor(this, R.color.black), mConfig.getThemeColor()));
 
         } else {
+            findViewById(R.id.root_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+            findViewById(R.id.toolbar).setBackgroundColor(Color.WHITE);
             ((TextView) findViewById(R.id.btn_contents)).setTextColor(UiUtil.getColorList(ContextCompat.getColor(this, R.color.white), mConfig.getThemeColor()));
             ((TextView) findViewById(R.id.btn_highlights)).setTextColor(UiUtil.getColorList(ContextCompat.getColor(this, R.color.white), mConfig.getThemeColor()));
             findViewById(R.id.btn_contents).setBackgroundDrawable(UiUtil.createStateDrawable(mConfig.getThemeColor(), ContextCompat.getColor(this, R.color.white)));
@@ -61,15 +70,31 @@ public class ContentHighlightActivity extends AppCompatActivity {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color;
+            int navColor;
+            int statusColor;
             if (mIsNightMode) {
-                color = ContextCompat.getColor(this, R.color.black);
+                navColor = ContextCompat.getColor(this, R.color.black);
+                statusColor = ContextCompat.getColor(this, R.color.black);
             } else {
                 int[] attrs = {android.R.attr.navigationBarColor};
                 TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
-                color = typedArray.getColor(0, ContextCompat.getColor(this, R.color.white));
+                navColor = typedArray.getColor(0, ContextCompat.getColor(this, R.color.white));
+                typedArray.recycle();
+                statusColor = ContextCompat.getColor(this, R.color.white);
             }
-            getWindow().setNavigationBarColor(color);
+            getWindow().setNavigationBarColor(navColor);
+            UiUtil.setStatusBarColor(getWindow(), statusColor);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            View decor = getWindow().getDecorView();
+            int flags = decor.getSystemUiVisibility();
+            if (!mIsNightMode) {
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+            decor.setSystemUiVisibility(flags);
         }
 
         loadContentFragment();
