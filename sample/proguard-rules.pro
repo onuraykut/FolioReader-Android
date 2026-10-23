@@ -12,15 +12,20 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve line numbers and source files for stack trace debugging
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
--keepattributes *Annotation*
+-keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*
+
+# Keep JavaScript interface methods for WebViews
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# EventBus
 -keepclassmembers class ** {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
